@@ -1,0 +1,1 @@
+export const TIME_FRAME_OPTIONS: number[] = [3, 6, 24];
