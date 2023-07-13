@@ -1,20 +1,15 @@
 import DashboardBox from "@/components/DashboardBox";
 import { Fab, Typography, useTheme} from "@mui/material";
 import InsertChartIcon from '@mui/icons-material/InsertChart';
-import { StatusColor } from "@/types/patientState";
 import NeurologicalStateBar from "@/components/patientRecord/NeurologicalStateBar";
 import KpiCircularProgressBar from "@/components/kpi/KpiCircularProgressBar";
 import GlasgowScoresBar from "@/components/glasgowScore/GlasgowScoresBar";
 import PatientRecordBox from "@/components/patientRecord/PatientRecordBox";
 import PatientRecordHeader from "@/components/patientRecord/PatientRecordHeader";
 import { useState } from "react";
-import PatientRecordTendenciesChart from "@/components/patientRecord/PatientRecordTendenciesChart";
-import { Data } from "@/data/pupilleDroite";
 import GlobalAdherenceChart from "@/components/patientRecord/GlobalAdherenceChart";
 import GlasgowScoreChart from "@/components/patientRecord/GlasgowScoreChart";
 import NeurologicalStateChart from "@/components/patientRecord/NeurologicalStateChart";
-
-
 
 
 type PatientGraphicsData = {
@@ -61,7 +56,6 @@ const PatientRecordZone = () => {
     { day: "J09", score: 14 },
     { day: "J10",  score: 14 },
   ];
-
 
   const { palette } = useTheme();
   
@@ -119,7 +113,7 @@ const PatientRecordZone = () => {
               sx={{
                 width: "165px",
                 height: "27px",
-                backgroundColor: palette.black[900],
+                backgroundColor: palette.primary.dark,
                 textTransform: "none",
               }}
               onClick={() => updateVisualDisplay('scan')}
@@ -133,7 +127,7 @@ const PatientRecordZone = () => {
       
         {/* Second item */}
         <PatientRecordBox
-          header={<PatientRecordHeader title="Adhérence global" indicator="70%" indicatorColor={StatusColor.RED} />}
+          header={<PatientRecordHeader title="Adhérence global" indicator="70%" indicatorColor={palette.greenStatus.main} />}
           content={!tendenciesGraphVisible && <KpiCircularProgressBar score={90} arrow="true" />}
           visualContent={tendenciesGraphVisible && <GlobalAdherenceChart data={globalAdherenceData} />}
           fab={
@@ -143,7 +137,7 @@ const PatientRecordZone = () => {
             sx={{
               width: "165px",
               height: "27px",
-              backgroundColor: palette.black[900],
+              backgroundColor: palette.primary.dark,
               textTransform: "none",
             }}
           onClick={() => updateVisualDisplay('tendencies')}
@@ -157,14 +151,14 @@ const PatientRecordZone = () => {
       
         {/* Third item */}
         <PatientRecordBox
-          header={<PatientRecordHeader title="État neurologique" indicator="Hyperthémie" indicatorColor={StatusColor.ORANGE} />}
+          header={<PatientRecordHeader title="État neurologique" indicator="Hyperthémie" indicatorColor={palette.orangeStatus.main} />}
           content={!tendenciesGraphVisible && <NeurologicalStateBar score={80} />}
           visualContent={tendenciesGraphVisible && <NeurologicalStateChart data={neurologicalStateData} />}
           
         />
         {/* Fourth item */}
         <PatientRecordBox
-          header={<PatientRecordHeader title="Score de Glasgow" indicator="grave" indicatorColor={StatusColor.RED} />}
+          header={<PatientRecordHeader title="Score de Glasgow" indicator="grave" indicatorColor={palette.redStatus.main} />}
           content={!tendenciesGraphVisible && <GlasgowScoresBar score={25} />}
           visualContent={tendenciesGraphVisible && <GlasgowScoreChart data={glasgowScoreData} />}
         />

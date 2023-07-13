@@ -1,6 +1,3 @@
-import { GetKpisResponse } from "@/state/types";
-
-  
   
   const NEUROMONITORING_HEADER: string[] = [
     "PPC: 60-70 mmHg",

@@ -69,7 +69,7 @@ function PatientList() {
           </Box>
 
           <Box display="flex" alignItems="center">
-            <Box gap="3rem" sx={{ cursor: 'pointer', marginRight: '5rem' }} onClick={handlePatientListDisplay} >
+            <Box gap="3rem" sx={{ cursor: 'pointer', marginRight: '5rem' }} >
             <Button onClick={toggleDrawer(true)}>
               <KeyboardArrowDownIcon sx={{ fontSize: '28px', color: 'white', transform: state ? 'rotate(180deg)' : 'rotate(0deg)' }} />
             </Button>

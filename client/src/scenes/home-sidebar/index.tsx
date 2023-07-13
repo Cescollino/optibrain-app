@@ -33,7 +33,7 @@ function HomeSidebar() {
         TabIndicatorProps={{
           title: "indicator",
           sx: { 
-            backgroundColor: palette.indigo[500],
+            backgroundColor: palette.blue.main,
             height: 3, 
             borderRadius: "1rem",
             left: 2,

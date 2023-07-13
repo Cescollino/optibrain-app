@@ -7,7 +7,7 @@ const KpiProgressBox = styled(Box)<{ progress: number }> (({ theme, progress }) 
         alignItems: 'center',
         minWidth: '2rem',
         
-        backgroundColor: theme.palette.black[900],
+        backgroundColor: theme.palette.primary.dark,
         borderRadius: "20px",
         boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.25)",
     })

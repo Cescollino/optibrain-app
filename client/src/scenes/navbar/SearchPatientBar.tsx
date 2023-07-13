@@ -44,9 +44,9 @@ function SearchPatientBar() {
             <Search>
                 <Fab 
                   sx={{  
-                    backgroundColor: palette.black[900], 
+                    backgroundColor: palette.primary.dark, 
                     borderRadius: "100px", 
-                    '&:hover': { backgroundColor: palette.black[500] },
+                    '&:hover': { backgroundColor: palette.primary.light },
                     width: '36px',
                     height: '36px',
                   }} 

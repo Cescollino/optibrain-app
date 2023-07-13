@@ -2,8 +2,8 @@ import CircularProgress, { CircularProgressProps,} from '@mui/material/CircularP
 import { Typography, Box } from '@mui/material';
 import { StatusColor } from '@/types/patientState';
 import { useState, useEffect } from 'react';
-import KpiProgressBox from './KpiProgressBox';
-import KpiBox from './KpiBox';
+import KpiProgressBox from '@/components/kpi/KpiProgressBox';
+import KpiBox from '@/components/kpi/KpiBox';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 
