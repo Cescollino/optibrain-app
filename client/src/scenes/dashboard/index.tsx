@@ -30,7 +30,7 @@ const Dashboard = (props: Props) => {
           <Grid item>
             <SideBar />
           </Grid>
-          <Grid item alignItems="center" xs={true}>
+          <Grid item alignItems="center" xs={true} sx={{flexGrow: 1}}>
             <AdherenceZone />
           </Grid>
         </Grid>

@@ -63,7 +63,7 @@ const AdherenceZone = () => {
           <TimeFrameBar />
         </Grid>
       </Grid>
-      <Grid container item direction="row" alignItems="flex-start" xs="auto" justifyContent="space-between">
+      <Grid container item direction="row" alignItems="flex-start" style={{ flexGrow: 1 }} xs="auto" justifyContent="space-between">
         {/* Adherence boxes */}
         <TargetKpisBoxes />
       </Grid>
