@@ -11,8 +11,8 @@ import re
 import sqlite3
 import os
 
-#/home/kasm-user/cathydb.sh
-connection = sqlite3.connect('/home/kasm-user/Desktop/Downloads/Patients.db', check_same_thread=False)
+#create patinent info table
+connection = sqlite3.connect('Patients.db', check_same_thread=False)
 
 cursor = connection.cursor()
 
