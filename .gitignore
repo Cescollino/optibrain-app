@@ -11,7 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
-.DS_Store
+.DS_Store*
 .venv/*
 *Db.*
 
@@ -29,4 +29,6 @@ dist-ssr
 
 flask-server/mot_de_passe_SQL.txt
 flask-server/Patients.db
+flask-server/.env
+
 
