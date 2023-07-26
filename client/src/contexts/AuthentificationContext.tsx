@@ -25,7 +25,6 @@ const AuthContext = createContext<IAuthContext>(initialValue)
 const AuthProvider = ({ children }: Props) => {
   //Initializing an auth state with false value (unauthenticated)
   const [ authenticated, setAuthenticated ] = useState(initialValue.authenticated)
-  const [currentUser, setCurrentUser] = useState(null)
 
   const navigate = useNavigate()
 

@@ -21,15 +21,15 @@ const PatientRecordZone = () => {
   const globalAdherenceData: { day: string; score: number; }[] = [
     { day: "J0", score: 40 },
     { day: "J01", score: 40 },
-    { day: "J02",  score: 40 },
-    { day: "J03",  score: 60 },
-    { day: "J04",  score: 60 },
-    { day: "J05",  score: 60 },
-    { day: "J06",  score: 60 },
-    { day: "J07",  score: 80 },
-    { day: "J08",  score: 80 },
+    { day: "J02", score: 40 },
+    { day: "J03", score: 60 },
+    { day: "J04", score: 60 },
+    { day: "J05", score: 60 },
+    { day: "J06", score: 60 },
+    { day: "J07", score: 80 },
+    { day: "J08", score: 80 },
     { day: "J09", score: 80 },
-    { day: "J10",  score: 80 },
+    { day: "J10", score: 80 },
   ];
   
   const neurologicalStateData: { time: string; state: number; }[] = [

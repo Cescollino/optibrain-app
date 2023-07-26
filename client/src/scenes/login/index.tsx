@@ -32,7 +32,7 @@ const Login = () => {
   const [password, setPassword] = useState<string>('');
   const {authenticated, setAuthenticated} = useContext(AuthContext);
 
-  // TODO : needs to be replace with the confidential employees login information
+  // TODO : needs to be replace with the employees login information
   const admin = {
     title:'Dr', 
     name: 'DOE', 
