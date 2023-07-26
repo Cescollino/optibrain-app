@@ -1,19 +1,35 @@
 import { Grid } from "@mui/material";
-import { styled } from "@mui/system";
+import { useNavigate } from 'react-router-dom'
+import { AuthContext } from '@/state/AuthentificationContext'
+import { useContext } from "react";
 
-const Img = styled('img')({
-  display: 'block',
-  maxWidth: '100%',
-  maxHeight: '100%',
-});
+const styles = {
+  loginContainer: {
+    backgroundImage: `url(${"src/assets/images/LoginBackground.png"})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  }
+ };
 
-export default function Login() {
+const Login = () => {
+  
+  const {authenticated, setAuthenticated} = useContext(AuthContext)
+
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    setAuthenticated(true)
+    navigate('/')
+  }
+
   return (
-    <Grid container spacing={2} sx={{ maxWidth: '100%', maxHeight: '100%', flexGrow: 1 }} >
+    <Grid container spacing={2} sx={{ width: '100%', height: '100%', flexGrow: 1, padding: 0, margin: 0 }} style={styles.loginContainer} >
       <Grid item>
-          <Img alt="complex" src="src/assets/images/LoginBackground.png" />
+          <button onClick={() => handleLogin()}>Authenticate</button>
       </Grid>
     </Grid>
   );
-}
 
+} 
+
+export default Login;
