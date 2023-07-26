@@ -28,3 +28,5 @@ dist-ssr
 *.sw?
 
 flask-server/mot_de_passe_SQL.txt
+flask-server/Patients.db
+
