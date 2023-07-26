@@ -105,7 +105,7 @@ const PatientRecordZone = () => {
               </Typography>
             </>
           }
-          visualContent={scanImageVisible && (<img src="src/assets/CT scan.png" alt="scan" />)}
+          visualContent={scanImageVisible && (<img src="src/assets/ctScan.png" alt="scan" />)}
           fab={
             <Fab
               variant="extended"

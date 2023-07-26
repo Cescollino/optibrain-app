@@ -8,17 +8,18 @@ import Routes from "@/Routes"
 
 function App() {
   const theme = useMemo(() => createTheme(themeSettings), [])
+  
   return (
       <div className="app">
         <BrowserRouter>
-          <AuthProvider>
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
-              <Box width="100%" height="100%" padding="0.5rem">
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Box width="100%" height="100%" padding="0.5rem">
+              <AuthProvider>
                 <Routes />
-              </Box>
-              </ThemeProvider>
-          </AuthProvider >
+              </AuthProvider >
+            </Box>
+          </ThemeProvider>
         </BrowserRouter>
       </div>
   )
