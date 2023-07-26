@@ -11,7 +11,10 @@ import re
 import sqlite3
 import os
 
-#create patinent info table
+# 1. execute the virtual environment : source .venv/bin/activate
+# 2. install the requiered packages : pip install -r requirements.txt
+
+# create patinent info file
 connection = sqlite3.connect('Patients.db', check_same_thread=False)
 
 cursor = connection.cursor()
@@ -70,7 +73,7 @@ cursor.execute("""CREATE INDEX IF NOT EXISTS idx_licox_horodate ON LICOX (horoda
 cursor.execute("""CREATE TABLE IF NOT EXISTS
 Pupilles(mesure_id INTEGER PRIMARY KEY AUTOINCREMENT, noadmsip INTEGER, value FLOAT, horodate DATETIME, FOREIGN KEY(noadmsip) REFERENCES Patients(noadmsip))""")
 
-cursor.execute("""CREATE INDEX IF NOT EXISTS idx_pupilles_noadmsip ON FiO2 (noadmsip)""")
+cursor.execute("""CREATE INDEX IF NOT EXISTS idx_pupilles_noadmsip ON Pupilles (noadmsip)""")
 cursor.execute("""CREATE INDEX IF NOT EXISTS idx_pupilles_horodate ON Pupilles (horodate)""")
 
 
@@ -205,7 +208,7 @@ try:
     
     @app.route("/DBsize")
     def searchSize():  
-        file_name = "/home/kasm-user/Desktop/Downloads/Patients.db"
+        file_name = "Patients.db"
         file_stats = os.stat(file_name)
         size = file_stats.st_size / (1024 * 1024)
         PatientEncoder().encode(size)
