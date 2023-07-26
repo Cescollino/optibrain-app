@@ -27,4 +27,4 @@ dist-ssr
 *.sln
 *.sw?
 
-/home/marmar38/optibrain-app/flask-server/mot_de_passe_SQL.txt
+flask-server/mot_de_passe_SQL.txt
