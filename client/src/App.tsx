@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { themeSettings } from "@/theme";
 import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { BrowserRouter } from "react-router-dom";
-import { AuthProvider } from "@/state/AuthentificationContext"
+import { AuthProvider } from "@/contexts/AuthentificationContext"
 import Routes from "@/Routes"
 
 function App() {

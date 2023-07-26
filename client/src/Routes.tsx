@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import {Routes as Router, Route, Navigate, Outlet} from 'react-router-dom'
-import { AuthContext } from '@/state/AuthentificationContext'
+import { AuthContext } from '@/contexts/AuthentificationContext'
 import Dashboard from "@/scenes/dashboard";
 import Login from '@/scenes/login'
 

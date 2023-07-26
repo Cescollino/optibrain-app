@@ -2,7 +2,7 @@ import { Fab, Grid, Typography } from "@mui/material";
 import TargetKpisBoxes from "@/components/adherence/TargetKpisBoxes";
 import KpiBox from "@/components/kpi/KpiBox";
 import { useContext, useState } from "react";
-import TimeFrameContext from "@/state/TimeFrameContext";
+import TimeFrameContext from "@/contexts/TimeFrameContext";
 
 
 const TimeFrameBar = () => {

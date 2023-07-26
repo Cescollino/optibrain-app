@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material";
 import { useNavigate } from 'react-router-dom'
-import { AuthContext } from '@/state/AuthentificationContext'
+import { AuthContext } from '@/contexts/AuthentificationContext'
 import { useContext } from "react";
 
 const styles = {

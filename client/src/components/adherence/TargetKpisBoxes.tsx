@@ -7,7 +7,7 @@ import DashboardBox from '@/components/DashboardBox';
 import Kpi from '@/components/kpi/Kpi';
 import { KpisBoxProps, KpiProps } from '@/state/types';
 import { kpisBoxes, optionalKpis } from '@/data/data';
-import TimeFrameContext from '@/state/TimeFrameContext';
+import TimeFrameContext from '@/contexts/TimeFrameContext';
 import KpiChart from '@/components/kpi/KpiChart';
 
 const StyledFab = styled(Fab)(({ theme }) => ({
