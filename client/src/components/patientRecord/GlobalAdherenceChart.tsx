@@ -29,12 +29,12 @@ const GlobalAdherenceChart = ( { data }: GlobalAdherenceData) => {
     const ticksXValue = ["J01", "J02", "J03", "J04", "J05", "J06", "J07", "J08", "J09"];
 
   return (
+    <Box sx={{ display: "flex",  flexDirection: "column", padding: '1rem', gap: "1rem", borderRadius: "20px", backgroundColor: "#070818", opacity: '40%', boxShadow: '2px 2px 5px 0px rgba(0, 0, 0, 0.25)' }}>
       <LineChart
         width={259}
         height={278}
         margin={margin}
         data={data}
-        style={{ flexGrow: 1,  alignContent: "center", flexShrink: 0, flexDirection: "column", borderRadius: "20px", backgroundColor: "#070818", opacity: '40%', boxShadow: '2px 2px 5px 0px rgba(0, 0, 0, 0.25)' }}
       >
         <CartesianGrid />
         <XAxis dataKey="day" ticks={ticksXValue} tickLine={false} tickFormatter={formatXAxis} tickMargin={5} interval={0} />
@@ -42,6 +42,7 @@ const GlobalAdherenceChart = ( { data }: GlobalAdherenceData) => {
         <Tooltip />
         <Line type="monotone" dataKey="score" stroke="#8884d8" fill="#8884d8"  />
       </LineChart>
+    </Box>
   );
 }
 
