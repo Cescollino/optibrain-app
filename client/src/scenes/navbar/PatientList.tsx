@@ -9,9 +9,10 @@ import SearchPatientBar from './SearchPatientBar';
 import DashboardBox from '@/components/DashboardBox';
 import SquarePatientStateCount from './SquarePatientStateCount';
 import { PatientStatus } from '@/types/patientState';
+import { useTheme } from '@mui/material/styles'
 
 function PatientList() {
-  const backgroundColor = "#27263899";
+  const { palette } = useTheme();
   const [state, setState] = useState(false);
 
   const toggleDrawer = (open: boolean) =>
@@ -26,7 +27,7 @@ function PatientList() {
 
   const list = () => (
     <Box
-      sx={{ width: 'auto',  backgroundColor, border: 'none' }}
+      sx={{ width: 'auto',  backgroundColor: palette.primary.main, border: 'none' }}
       role="presentation"
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
@@ -62,9 +63,9 @@ function PatientList() {
               Mes patients
             </Typography>
             <Box display='inline-flex' gap="0.3rem">
-            <SquarePatientStateCount status={PatientStatus.STABLE} count={10} />
-            <SquarePatientStateCount status={PatientStatus.WATCH} count={8} />
-            <SquarePatientStateCount status={PatientStatus.CRITICAL} count={1} />
+            <SquarePatientStateCount status={palette.greenStatus.main} count={10} />
+            <SquarePatientStateCount status={palette.orangeStatus.main} count={8} />
+            <SquarePatientStateCount status={palette.redStatus.main} count={1} />
             </Box>
           </Box>
 
@@ -88,7 +89,7 @@ function PatientList() {
         </DashboardBox>
           </Toolbar>
         </AppBar>
-        <Drawer sx={{ backgroundColor }} anchor="top" open={state} onClose={toggleDrawer(false)}>{list()}</Drawer>
+        <Drawer sx={{ backgroundColor: palette.primary.main }} anchor="top" open={state} onClose={toggleDrawer(false)}>{list()}</Drawer>
     </div>
   );
 }

@@ -1,8 +1,13 @@
 import { Table, TableBody, TableCell, TableContainer, TableRow, Typography, IconButton, Box, TableHead } from '@mui/material';
 import CircleIcon from '@mui/icons-material/Circle';
 import InfoIcon from '@mui/icons-material/Info';
+import { useTheme } from '@mui/material/styles'
+
+
+
 
 const PatientsRecordTable = () => {
+  const { palette } = useTheme();
   const PatientsRecordData = [
     {
       id: 0,
@@ -35,9 +40,10 @@ const PatientsRecordTable = () => {
       numberOfStayDays: 18,
       scanType: 'CT scan',
       affectedSystems: ['Brain', 'Kidney'],
-      status: "Stable",
+      status: "Critique",
     },
   ];
+
 
   return (
     <TableContainer>
@@ -45,20 +51,20 @@ const PatientsRecordTable = () => {
         <TableHead />
         <TableBody>
           {PatientsRecordData.map((patient) => (
-            <TableRow key={patient.id} sx={{ '& > *': { border: 'none', margin: 2, alignContent: "center" } }}>
-              <TableCell sx={{ color: 'white' }}>#{patient.id}</TableCell>
-              <TableCell sx={{ color: 'white' }}>{patient.name}</TableCell>
-              <TableCell sx={{ color: 'white' }}>{patient.age}</TableCell>
-              <TableCell sx={{ color: 'white' }}>{patient.weight}</TableCell>
-              <TableCell sx={{ color: 'white' }}>J{patient.numberOfStayDays}</TableCell>
-              <TableCell sx={{ color: 'white' }}>{patient.diagnosis}</TableCell>
-              <TableCell sx={{ color: 'white' }}>{patient.scanType}
+            <TableRow key={patient.id} >
+              <TableCell sx={{ color: 'white', justifyContent: "center", textAlign: 'center', border: 'solid', borderRadius: '60px', borderColor: palette.orangeStatus.main }}>#{patient.id}</TableCell>
+              <TableCell sx={{ color: 'white', border: 'none' }}>{patient.name}</TableCell>
+              <TableCell sx={{ color: 'white', border: 'none' }}>{patient.age}</TableCell>
+              <TableCell sx={{ color: 'white', border: 'none' }}>{patient.weight}</TableCell>
+              <TableCell sx={{ color: 'white', border: 'none' }}>J{patient.numberOfStayDays}</TableCell>
+              <TableCell sx={{ color: 'white', border: 'none' }}>{patient.diagnosis}</TableCell>
+              <TableCell sx={{ color: 'white', border: 'none' }}>{patient.scanType}
                 <IconButton>
-                <InfoIcon sx={{ color: 'white'}} />
+                <InfoIcon sx={{ color: 'white', border: 'none'}} />
                 </IconButton>
               </TableCell>
-              <TableCell sx={{ color: 'white' }}>{patient.affectedSystems.join(', ')}</TableCell>
-              <TableCell sx={{ color: 'white' }}>
+              <TableCell sx={{ color: 'white', border: 'none' }}>{patient.affectedSystems.join(', ')}</TableCell>
+              <TableCell sx={{ color: 'white', border: 'none' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <CircleIcon sx={{ marginRight: '0.2rem', width: '12px', height: '12px' }} />
                   <Typography>{patient.status}</Typography>

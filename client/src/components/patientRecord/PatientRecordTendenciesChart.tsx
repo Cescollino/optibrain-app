@@ -1,4 +1,4 @@
-import { Box } from "@mui/material"
+import { Box, useTheme } from "@mui/material"
 
 import {
   LineChart,
@@ -17,8 +17,9 @@ type Props = {
 }
 
 const PatientRecordTendenciesChart = ( { data, yDomain }: Props) => {
+  const { palette } = useTheme();
   return (
-    <Box sx={{ display: "flex",  flexShrink: 0, flexDirection: "column", padding: '1rem', gap: "1rem", borderRadius: "20px", backgroundColor: "#070818", opacity: '40%', boxShadow: '2px 2px 5px 0px rgba(0, 0, 0, 0.25)' }}>
+    <Box sx={{ display: "flex",  flexShrink: 0, flexDirection: "column", padding: '1rem', gap: "1rem", borderRadius: "20px", backgroundColor: palette.primary.main, opacity: '40%', boxShadow: '2px 2px 5px 0px rgba(0, 0, 0, 0.25)' }}>
       <LineChart
         width={244}
         height={201}

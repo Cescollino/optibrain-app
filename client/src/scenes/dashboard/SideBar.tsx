@@ -56,7 +56,7 @@ export default function Sidebar() {
             },
           }}
         >
-          <Tab icon={<HomeIcon />} {...a11yProps(0)} />
+          <Tab icon={<HomeIcon color={ homeIndex === 0 ? palette.blue.main : 'white'}/>} {...a11yProps(0)} />
           <Tab icon={<PatientIcon />} {...a11yProps(1)} />
         </Tabs>
       </DashboardBox>
@@ -81,12 +81,12 @@ export default function Sidebar() {
             },
           }}
         >
-          <Tab icon={<BrainIcon />} {...a11yProps(0)} />
-          <Tab icon={<HeartIcon />} {...a11yProps(1)} />
+          <Tab icon={<BrainIcon color={ systemIndex === 0 ? palette.blue.main : 'white'} />} {...a11yProps(0)} />
+          <Tab icon={<HeartIcon color={ systemIndex === 1 ? palette.blue.main : 'white'} />} {...a11yProps(1)} />
           <Tab icon={<LungsIcon />} {...a11yProps(2)} />
           <Tab icon={<KidneyIcon />} {...a11yProps(3)} />
           <Tab icon={<InfectionIcon />} {...a11yProps(4)} />
-          <Tab icon={<GastroIcon />} {...a11yProps(5)} />
+          <Tab icon={<GastroIcon color={ systemIndex === 5 ? palette.blue.main : 'white'} />} {...a11yProps(5)} />
         </Tabs>
       </DashboardBox>
     </>

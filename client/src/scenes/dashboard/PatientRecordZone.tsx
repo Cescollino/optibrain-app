@@ -1,5 +1,6 @@
 import DashboardBox from "@/components/DashboardBox";
-import { Fab, Typography, useTheme} from "@mui/material";
+import { Fab, Typography, useTheme } from "@mui/material";
+import { styled } from "@mui/system";
 import InsertChartIcon from '@mui/icons-material/InsertChart';
 import NeurologicalStateBar from "@/components/patientRecord/NeurologicalStateBar";
 import KpiCircularProgressBar from "@/components/kpi/KpiCircularProgressBar";
@@ -11,11 +12,12 @@ import GlobalAdherenceChart from "@/components/patientRecord/GlobalAdherenceChar
 import GlasgowScoreChart from "@/components/patientRecord/GlasgowScoreChart";
 import NeurologicalStateChart from "@/components/patientRecord/NeurologicalStateChart";
 
-
-type PatientGraphicsData = {
-  time: string; 
-  score: number | string; 
-}
+const Img = styled('img')({
+  display: 'flex',
+  maxWidth: '100%',
+  maxHeight: '100%',
+  flexGrow: 1,
+});
 
 const PatientRecordZone = () => {
   const globalAdherenceData: { day: string; score: number; }[] = [
@@ -84,6 +86,7 @@ const PatientRecordZone = () => {
 
           justifyContent: 'space-between',
           padding: '2rem',
+          gap: 1,
         }}
       >
         {/* First item */}
@@ -105,7 +108,11 @@ const PatientRecordZone = () => {
               </Typography>
             </>
           }
+<<<<<<< Updated upstream
           visualContent={scanImageVisible && (<img src="src/assets/ctScan.png" alt="scan" />)}
+=======
+          visualContent={scanImageVisible && (<Img alt="scan" src="src/assets/images/CT scan.png" />)}
+>>>>>>> Stashed changes
           fab={
             <Fab
               variant="extended"
