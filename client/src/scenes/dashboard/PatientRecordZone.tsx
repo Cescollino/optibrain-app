@@ -108,11 +108,7 @@ const PatientRecordZone = () => {
               </Typography>
             </>
           }
-<<<<<<< Updated upstream
-          visualContent={scanImageVisible && (<img src="src/assets/ctScan.png" alt="scan" />)}
-=======
-          visualContent={scanImageVisible && (<Img alt="scan" src="src/assets/images/CT scan.png" />)}
->>>>>>> Stashed changes
+          visualContent={scanImageVisible && (<Img src="src/assets/images/ctScan.png" alt="scan" />)}
           fab={
             <Fab
               variant="extended"

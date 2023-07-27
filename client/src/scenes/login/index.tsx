@@ -46,13 +46,12 @@ const Login = () => {
   const handleLogin = (e: React.SyntheticEvent) => {
     e.preventDefault(); // Prevent default form submission behavior
 
-    if (username == admin.username && password == admin.password)
+    if (username === admin.username && password === admin.password)
       setAuthenticated(true);
       navigate('/')
   }
 
   return (
-<<<<<<< Updated upstream
     <LoginContainer container >
       <Grid container justifyContent='center' alignItems="center">
           <Grid item xs={3} sm={3} md={3}>
@@ -76,13 +75,6 @@ const Login = () => {
           </Grid>
         </Grid>
     </LoginContainer>
-=======
-    <Grid container spacing={2} sx={{ maxWidth: '100%', maxHeight: '100%', flexGrow: 1 }} >
-      <Grid item>
-          <Img alt="CHUSJ" src="src/assets/images/LoginBackground.png" />
-      </Grid>
-    </Grid>
->>>>>>> Stashed changes
   );
 
 } 
