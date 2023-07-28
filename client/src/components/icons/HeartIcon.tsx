@@ -1,13 +1,14 @@
 import { IconProps } from "@/types/patientState";
 
 const HeartIcon = ( { color } : IconProps ) => {
+    const selectedColor = color ? color : '#000';
     return (
         <svg 
             xmlns="http://www.w3.org/2000/svg"
             width={25} 
             height={35} 
             viewBox="0 0 25 35"
-            fill={color}
+            fill={selectedColor}
             fillOpacity={0.2}
         >
             <g clipPath="url(#clip0_123_4598)">

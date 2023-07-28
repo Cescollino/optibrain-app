@@ -3,6 +3,7 @@ import { IconProps } from "@/types/patientState";
 const GastroIcon = ( { color } : IconProps ) => {
     const width = 30;
     const height = 32;
+    const selectedColor = color ? color : '#000';
 
     return (
         <svg 
@@ -10,7 +11,7 @@ const GastroIcon = ( { color } : IconProps ) => {
             width={width} 
             height={height} 
             viewBox="0 0 30 32"
-            fill={color}
+            fill={selectedColor}
             fillOpacity={0.2}
         >
             <g clipPath="url(#clip0_123_2489)">

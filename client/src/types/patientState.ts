@@ -21,4 +21,4 @@ export interface PatientState {
 }
 
 
-export interface IconProps { color: string };
+export interface IconProps { color?: string };

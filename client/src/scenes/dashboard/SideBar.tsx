@@ -21,26 +21,54 @@ function a11yProps(index: number) {
 
 export default function Sidebar() {
   const { palette } = useTheme();
-  const [homeIndex, setHomeIndex] = useState<null | number>(null);
-  const [systemIndex, setSystemIndex] = useState<null | number>(0);
+  const [selectedTabIndex, setSelectedTabIndex] = useState<number>(0);
 
-  const handleTabChange = (tabType: string, newValue: number) => {
-    if (tabType === 'home') {
-      setHomeIndex(newValue);
-      setSystemIndex(null);
-    } else {
-      setSystemIndex(newValue);
-      setHomeIndex(null);
-    }
+  const handleTabChange = (newValue: number) => {
+    setSelectedTabIndex(newValue);
   };
+
+  const tabsData = [
+    {
+      icon: <HomeIcon />,
+      color: palette.blue.main,
+    },
+    {
+      icon: <PatientIcon />,
+      color: palette.blue.main,
+    },
+    {
+      icon: <BrainIcon />,
+      color: palette.blue.main,
+    },
+    {
+      icon: <HeartIcon />,
+      color: palette.blue.main,
+    },
+    {
+      icon: <LungsIcon />,
+      color: palette.blue.main,
+    },
+    {
+      icon: <KidneyIcon />,
+      color: palette.blue.main,
+    },
+    {
+      icon: <InfectionIcon />,
+      color: palette.blue.main,
+    },
+    {
+      icon: <GastroIcon />,
+      color: palette.blue.main,
+    },
+  ];
 
   return (
     <>
       <DashboardBox sx={{ width: 'min-content', mb: '0.5rem' }}>
         <Tabs
           orientation="vertical"
-          value={homeIndex}
-          onChange={(event, newValue) => handleTabChange('home', newValue)}
+          value={selectedTabIndex}
+          onChange={(event, newValue) => handleTabChange(newValue)}
           sx={{
             borderLeft: 1,
             borderColor: 'divider',
@@ -48,7 +76,7 @@ export default function Sidebar() {
           TabIndicatorProps={{
             title: 'indicator',
             sx: {
-              backgroundColor: palette.blue.main,
+              backgroundColor: tabsData[selectedTabIndex].color,
               height: 3,
               borderRadius: '1rem',
               left: 2,
@@ -56,37 +84,15 @@ export default function Sidebar() {
             },
           }}
         >
-          <Tab icon={<HomeIcon color={ homeIndex === 0 ? palette.blue.main : 'white'}/>} {...a11yProps(0)} />
-          <Tab icon={<PatientIcon />} {...a11yProps(1)} />
-        </Tabs>
-      </DashboardBox>
-
-      <DashboardBox sx={{ width: 'min-content', mb: '0.5rem' }}>
-        <Tabs
-          orientation="vertical"
-          value={systemIndex}
-          onChange={(event, newValue) => handleTabChange('system', newValue)}
-          sx={{
-            borderLeft: 1,
-            borderColor: 'divider',
-          }}
-          TabIndicatorProps={{
-            title: 'indicator',
-            sx: {
-              backgroundColor: palette.blue.main,
-              height: 3,
-              borderRadius: '1rem',
-              left: 2,
-              width: 3,
-            },
-          }}
-        >
-          <Tab icon={<BrainIcon color={ systemIndex === 0 ? palette.blue.main : 'white'} />} {...a11yProps(0)} />
-          <Tab icon={<HeartIcon color={ systemIndex === 1 ? palette.blue.main : 'white'} />} {...a11yProps(1)} />
-          <Tab icon={<LungsIcon />} {...a11yProps(2)} />
-          <Tab icon={<KidneyIcon />} {...a11yProps(3)} />
-          <Tab icon={<InfectionIcon />} {...a11yProps(4)} />
-          <Tab icon={<GastroIcon color={ systemIndex === 5 ? palette.blue.main : 'white'} />} {...a11yProps(5)} />
+          {tabsData.map((tab, index) => (
+            <Tab
+              key={index}
+              icon={React.cloneElement(tab.icon, {
+                color: selectedTabIndex === index ? tab.color : 'white',
+              })}
+              {...a11yProps(index)}
+            />
+          ))}
         </Tabs>
       </DashboardBox>
     </>
