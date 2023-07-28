@@ -4,7 +4,7 @@ export interface KpiProps {
     display?: boolean;
 
     targetData?: number[];
-    continueData?: KpisChartData[];
+    continueData?: KpisChartData;
     boxCategory?: string;
     timeFrame: number;
 
@@ -18,8 +18,8 @@ export interface KpisBoxProps {
 }
 
 export interface KpisChartData {
-  variable: string;
-  time: number;
+  data: number[];
+  time: string;
   value: number;
 }
 

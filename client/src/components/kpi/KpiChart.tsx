@@ -1,73 +1,47 @@
-import { Box, useTheme } from "@mui/material";
+import { Box } from "@mui/material";
 import {
   ResponsiveContainer,
   CartesianGrid,
-  BarChart,
-  Bar,
   XAxis,
   YAxis,
   Tooltip,
+  LineChart,
+  Line,
 } from "recharts";
-import ChartHeader from '../ChartHeader';
+import ChartHeader from '@/components/ChartHeader';
+import { KpisChartData } from "@/state/types";
 import { KpiProps } from "@/state/types";
 
 
 const KpiChart = ({ variable, continueData, targetThreshold }: KpiProps) => {
-  const { palette } = useTheme();
-  if (!continueData) return null;
+  const margin = {
+    top: 20,
+    right: 20,
+    bottom: 0,
+    left: -10,
+};
+  console.log(variable);
+  if (!continueData) continueData = { data: [], time: '2023-07-01 00:00:00', value: 90 } as KpisChartData ;
 
   return (
     <Box sx={{ display: 'flex', width: '100%', flexGrow: 1, flexDirection: 'column', gap: 1, justifyContent: 'space-between'}}>
       <ChartHeader
           title={variable}
-          lastValue={continueData[continueData.length - 1].value}
+          lastValue={continueData ? continueData.data[continueData.data.length - 1] : 0}
           targetThreshold={targetThreshold}
       />
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart
-            width={500}
-            height={300}
-            data={continueData}    
-            margin={{
-              top: 17,
-              right: 15,
-              left: -5,
-              bottom: 58,
-            }}
-        >
-        <defs>
-          <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-            <stop
-              offset="5%"
-              stopColor={palette.primary[300]}
-              stopOpacity={0.8}
-            />
-            <stop
-              offset="95%"
-              stopColor={palette.primary[300]}
-              stopOpacity={0}
-            />
-          </linearGradient>
-        </defs>
-        <CartesianGrid vertical={false} stroke={palette.grey[800]} />
-        <XAxis
-          dataKey="time"
-          axisLine={false}
-          tickLine={false}
-          tick={false}
-          style={{ fontSize: "10px" }}
-        />
-        <YAxis
-          dataKey="value"
-          axisLine={false}
-          tickLine={false}
-          tick={false}
-          style={{ fontSize: "10px" }}
-        />
+      <LineChart
+        width={259}
+        height={278}
+        margin={margin}
+        data={continueData.data}
+      >
+        <CartesianGrid />
+        <XAxis dataKey="day" tickLine={false} tickMargin={5} interval={0} />
+        <YAxis dataKey="score" domain={[0, 100]} tickLine={false} tickMargin={10} interval={0} />
         <Tooltip />
-        <Bar dataKey="revenue" fill="url(#colorRevenue)" />
-      </BarChart>
-    </ResponsiveContainer>
+        <Line type="monotone" dataKey="score" stroke="#8884d8" fill="#8884d8"  />
+      </LineChart>
   </Box>
   );
 }

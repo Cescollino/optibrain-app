@@ -151,6 +151,7 @@ const TargetKpisBoxes = () => {
             justifyContent: 'space-between',
           }}>
           {kpiCharts.map((kpi, index) => (kpi.boxCategory === box.category) && (<KpiChart key={index} variable={kpi.variable} continueData={kpi.continueData} targetThreshold={kpi.targetThreshold} timeFrame={kpi.timeFrame}/>))}
+     
         </DashboardBox>
         </Box>
       ))}
