@@ -1,0 +1,256 @@
+---
+title: "Extraction données prototype interface"
+author: "Sally A.O."
+date: "2023-05-26"
+output: html_document
+---
+
+##  PIC, PPC, Licox, PVC, PAM, ETCO2, PaCO2, température; et pupilles ; Glycémie, INR, plaquettes ; position tête du lit ##
+
+#Chargement des librairies
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(DBI)
+```
+
+
+#Fonction de connection SQL
+Ne JAMAIS enregistrer ses fichiers de mot de passe dans le script. Il faut y faire référence dans un fichier qui DOIT être dans son dossier personnel
+
+```{r message=FALSE, warning=FALSE}
+#Format: userName;password
+mon_ficher_mot_de_passe_SQL = path.expand("~/mot_de_passe_SQL.txt")
+
+# Ensure the use of a single connection throughout this file.
+get_db_con <- (function() {
+  conn_internal <- NULL
+  return(
+    function() {
+      if(is.null(conn_internal) || ! DBI::dbIsValid(conn_internal)) {
+      #Creation d'une connexion if not valid or existant
+       conn_internal <<- dbConnect(RPostgres::Postgres(),
+                 dbname = 'cathydb', 
+                 host = 'spxp-app05',
+                 port = 5432,
+                 user = suppressMessages(readr::read_delim(mon_ficher_mot_de_passe_SQL, ';', col_names = F)$X1),
+                 password = suppressMessages(readr::read_delim(mon_ficher_mot_de_passe_SQL, ';', col_names = F)$X2),
+                 check_interrupts = TRUE)
+      }
+      return(conn_internal)
+    }
+  )      
+})()
+
+requete = function(sql){
+  res = dbSendQuery(get_db_con(), sql)
+  data = dbFetch(res)
+  #Important de vider les résultats
+  dbClearResult(res)
+  return(data)
+}
+
+```
+
+
+
+```{r}
+conn<-get_db_con()
+```
+
+
+```{sql connection=conn}
+
+SELEct encounterid
+FROm D_encounter
+where lifetimenumber='2107336'
+
+```
+
+
+```{sql connection=conn,output.var=PPC}
+
+SELECT DISTINCT
+noadmsip
+	,l.par AS var
+	,l.valnum AS valeur
+	,l.horodate AT TIME ZONE 'America/Montreal' AS dateVariable
+FROM  icca_htr l
+WHERE l.par LIKE 'PPC'
+AND l.horodate AT TIME ZONE 'America/Montreal' BETWEEN '2016-03-12 00:58:00' AND '2016-03-18 12:00:00'
+AND noadmsip=3563
+ORDER BY horodate AT TIME ZONE 'America/Montreal'
+
+
+```
+
+
+
+```{sql connection=conn,output.var=PICm}
+
+SELECT DISTINCT
+noadmsip
+	,l.par AS var
+	,l.valnum AS valeur
+	,l.horodate AT TIME ZONE 'America/Montreal' AS dateVariable
+FROM  icca_htr l
+WHERE l.par LIKE 'PICm'
+AND l.horodate AT TIME ZONE 'America/Montreal' BETWEEN '2016-03-12 00:58:00' AND '2016-03-18 12:00:00'
+AND noadmsip=3563
+ORDER BY horodate AT TIME ZONE 'America/Montreal'
+
+
+```
+
+
+```{sql connection=conn,output.var=PVCm}
+
+SELECT DISTINCT
+noadmsip
+	,l.par AS var
+	,l.valnum AS valeur
+	,l.horodate AT TIME ZONE 'America/Montreal' AS dateVariable
+FROM  icca_htr l
+WHERE l.par LIKE 'PVCm'
+AND l.horodate AT TIME ZONE 'America/Montreal' BETWEEN '2016-03-12 00:58:00' AND '2016-03-18 12:00:00'
+AND noadmsip=3563
+ORDER BY horodate AT TIME ZONE 'America/Montreal'
+
+
+```
+
+```{sql connection=conn,output.var=PAm}
+
+SELECT DISTINCT
+noadmsip
+	,l.par AS var
+	,l.valnum AS valeur
+	,l.horodate AT TIME ZONE 'America/Montreal' AS dateVariable
+FROM  icca_htr l
+WHERE l.par LIKE 'PAm'
+AND l.horodate AT TIME ZONE 'America/Montreal' BETWEEN '2016-03-12 00:58:00' AND '2016-03-18 12:00:00'
+AND noadmsip=3563
+ORDER BY horodate AT TIME ZONE 'America/Montreal'
+
+
+```
+
+
+```{sql connection=conn,output.var=etco2}
+
+SELECT 
+   CASE
+      WHEN a.attributeID = 45611 THEN 'Pupille D'
+		WHEN a.attributeID = 62470 THEN 'Pupille G'
+		WHEN a.interventionID IN (9932,9914) AND a.verboseForm LIKE '%degrés' THEN 'Position Tête'    --positionnement (Inf) dans assessment
+		WHEN a.attributeID IN (30522, 30525, 30526, 46054, 46057, 46058, 48925, 48928, 48930) THEN 'PAM'
+		WHEN a.interventionId IN ('7061','7062','7162','7290','7294') THEN 'PVC'
+		WHEN a.interventionID IN ('5832') THEN 'EtCO2'--- CO2 expiré ou EtCO2
+		WHEN (a.interventionId='5831' AND a.attributeId='16219') THEN 'Temp Manuelle'---  Temperature Manuelle
+      WHEN (a.interventionId='4816' AND a.attributeId='30847') THEN 'Temp Continue' ---   Temperature continue
+	END AS Variable
+	, a.verboseForm AS Valeur
+	, a.chartTime AS DateVariable 
+--INTO #Var_Assessment1
+FROM  PtAssessment a 
+WHERE ((a.attributeId IN (45611
+		,62470
+		,30522, 30525, 30526, 46054, 46057, 46058, 48925, 48928, 48930)) OR (a.interventionId IN (7061,7062,7162,7290,7294,5832)) OR 
+		(a.interventionID= 9932 AND a.verboseForm LIKE '%degrés') OR
+		(a.interventionId='5831' AND a.attributeId='16219') OR
+		(a.interventionId='4816' AND a.attributeId='30847'))
+AND a.chartTime BETWEEN '2016-03-12 00:58:00' AND '2016-03-18 12:00:00' 
+AND encounterid=3563
+order by variable
+
+
+
+```
+
+
+```{sql connection=conn,output.var=ktir}
+
+SELECT DISTINCT 
+       CASE 
+          WHEN l.attributeId IN ('7824','51394','94660','95135') THEN 'PaCO2'
+          WHEN l.attributeID IN ('43515') THEN 'Plaquettes' ---.Plaquettes (10^9/L)
+          WHEN l.attributeID IN ('76332') THEN 'INR'
+          WHEN l.attributeId IN (14418, 69967, 102087) THEN 'Glycémie'---glucose, glucomètre ADBD, glycémie ADBD
+       END AS Variable
+       , l.verboseForm AS Valeur
+       ,l.chartTime AS DateVariable
+--INTO #test
+FROM  PtLabResult l 
+WHERE l.attributeId IN ('7824','51394','94660','95135','43515','76332','14418', '69967', '102087')
+AND l.chartTime BETWEEN '2016-03-12 00:58:00' AND '2016-03-18 12:00:00' 
+AND encounterid=3563
+order by variable
+```
+
+
+```{sql connection=conn,output.var=licox}
+
+SELECT DISTINCT a.terseform, b.verboseForm AS Valeur,a.chartTime AS DateVariable
+FROM PtTreatment a
+INNER JOIN PtTreatment b ON a.chartTime=b.chartTime AND a.encounterId=b.encounterId
+WHERE a.attributeId IN ('100602','102229','102455','102520','106839') AND 
+( a.terseForm LIKE 'PbtO2' OR a.terseForm LIKE 'licox%' OR a.terseForm LIKE 'licox %' OR a.terseForm LIKE 'LICOX%' OR a.terseForm LIKE 'PBTO2' OR a.terseForm LIKE 'Lycox' OR a.terseForm LIKE 'PbO2' OR a.terseForm LIKE 'Po2 cérébr' OR a.terseForm LIKE 'Licox') --- type de pression
+AND b.attributeId IN ('100600', --- Capteur pression autre.valeur de presssion 
+                      '102514', '102235','102456','106828') --- Capteur pression autre.Valeur pression
+AND a.EncounterId IN (1607,1631,1898,2111,2466,3563,3920,3947,4118,4351,4436,4621,4750,5242,6126,6155,6228,6312,7375,
+	 7942,8300,8410,8448,8465,8529,8585,8587,8749,5553,5725)
+AND a.chartTime BETWEEN '2016-03-12 00:58:00' AND '2016-03-18 12:00:00' 
+AND a.encounterid=3563
+
+```
+
+```{sql connection=conn,output.var=licox_continu}
+
+SELECT noadmsip,horodate AT TIME ZONE 'America/Montreal', par, valnum
+FROM icca_htr
+WHERE par LIKE 'Pm'
+AND SOURCE LIKE 'MyPeriodicData'
+AND noadmsip=3563
+AND horodate AT TIME ZONE 'America/Montreal' BETWEEN '2016-03-12 00:58:00' AND '2016-03-18 12:00:00'
+ORDER BY horodate
+
+
+```
+
+```{sql connection=conn,output.var=licox_icca}
+
+SELECT DISTINCT encounterid, a.terseform as licox,a.chartTime 
+FROM PtTreatment a
+WHERE a.attributeId IN ('100600', --- Capteur pression autre.valeur de presssion 
+                      '102514', '102235','102456','106828') --- Capteur pression autre.Valeur pression
+AND a.chartTime BETWEEN '2016-03-12 00:58:00' AND '2016-03-18 12:00:00' 
+AND a.encounterid=3563
+ORDER BY charttime
+
+```
+
+```{sql connection=conn,output.var=etco42}
+
+SELECT noadmsip,horodate AT TIME ZONE 'America/Montreal', par, valnum
+FROM icca_htr
+WHERE par LIKE 'CO2fe'
+AND noadmsip=3563
+AND horodate AT TIME ZONE 'America/Montreal' BETWEEN '2016-03-12 00:58:00' AND '2016-03-18 12:00:00'
+ORDER BY horodate
+
+
+```
+
+
+```{r}
+write.csv(etco2,"~/sadcsip_partage/Interface/multi_var.csv", row.names = TRUE)
+write.csv(PAm,"~/sadcsip_partage/Interface/PAm.csv", row.names = TRUE)
+write.csv(PICm,"~/sadcsip_partage/Interface/PICm.csv", row.names = TRUE)
+write.csv(PPC,"~/sadcsip_partage/Interface/PPC.csv", row.names = TRUE)
+write.csv(PVCm,"~/sadcsip_partage/Interface/PVCm.csv", row.names = TRUE)
+write.csv(ktir,"~/sadcsip_partage/Interface/lab_var.csv", row.names = TRUE)
+write.csv(licox_continu,"~/sadcsip_partage/Interface/licox_continu.csv", row.names = TRUE)
+write.csv(licox_icca,"~/sadcsip_partage/Interface/licox_icca.csv", row.names = TRUE)
+write.csv(etco42,"~/sadcsip_partage/Interface/etco2_continu.csv", row.names = TRUE)
+
+```
+
