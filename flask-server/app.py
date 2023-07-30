@@ -19,7 +19,15 @@ connection = sqlite3.connect('Patients.db', check_same_thread=False)
 
 cursor = connection.cursor()
 
-#create patinent info table
+
+# Loads most recent 100 patients intime in the SIP without a outtime
+cursor.execute("""CREATE TABLE IF NOT EXISTS
+Lits(ptbedstayid INTEGER PRIMARY KEY, encounterid INTEGER, bedlabel TEXT, unite INTERGER, nodossier TEXT, intime DATETIME)""")
+
+cursor.execute("""CREATE INDEX IF NOT EXISTS idx_patients_noadmsip ON Patients (noadmsip)""")
+cursor.execute("""CREATE INDEX IF NOT EXISTS idx_patients_lastLoadingTime ON Patients (lastLoadingTime)""")
+
+# create patinent info table
 
 cursor.execute("""CREATE TABLE IF NOT EXISTS
 Patients(noadmsip INTEGER PRIMARY KEY, fistname TEXT, lastname TEXT, age TEXT, gender TEXT, lifetimenb INT, weight FLOAT, idealWeight FLOAT, height FLOAT, lastLoadingTime DATETIME)""")
@@ -27,9 +35,17 @@ Patients(noadmsip INTEGER PRIMARY KEY, fistname TEXT, lastname TEXT, age TEXT, g
 cursor.execute("""CREATE INDEX IF NOT EXISTS idx_patients_noadmsip ON Patients (noadmsip)""")
 cursor.execute("""CREATE INDEX IF NOT EXISTS idx_patients_lastLoadingTime ON Patients (lastLoadingTime)""")
 
+# always in Kg
+cursor.execute("""CREATE TABLE IF NOT EXISTS
+Poids(mesure_id INTEGER PRIMARY KEY AUTOINCREMENT, noadmsip INTEGER, value FLOAT, horodate DATETIME, FOREIGN KEY(noadmsip) REFERENCES Patients(noadmsip))""")
+
+cursor.execute("""CREATE INDEX IF NOT EXISTS idx_poids_noadmsip ON Poids (noadmsip)""")
+cursor.execute("""CREATE INDEX IF NOT EXISTS idx_poids_horodate ON Poids (horodate)""")
+
 
 # create table for global scores
 
+# TODO : need to have a global score for each KPI and then calculate the GLOBAL SCORE
 cursor.execute("""CREATE TABLE IF NOT EXISTS
 ScoreGlobal(mesure_id INTEGER PRIMARY KEY AUTOINCREMENT, noadmsip INTEGER, value INTEGER, horodate DATETIME, FOREIGN KEY(noadmsip) REFERENCES Patients(noadmsip))""")
 
@@ -42,8 +58,10 @@ EtatNeurologique(mesure_id INTEGER PRIMARY KEY AUTOINCREMENT, noadmsip INTEGER, 
 cursor.execute("""CREATE INDEX IF NOT EXISTS idx_neuro_noadmsip ON EtatNeurologique (noadmsip)""")
 cursor.execute("""CREATE INDEX IF NOT EXISTS idx_neuro_horodate ON EtatNeurologique (horodate)""")
 
+# score is between 3 and 15 and has severity thresholds
 cursor.execute("""CREATE TABLE IF NOT EXISTS
-Glasgow(mesure_id INTEGER PRIMARY KEY AUTOINCREMENT, noadmsip INTEGER, value INTEGER, horodate DATETIME, FOREIGN KEY(noadmsip) REFERENCES Patients(noadmsip))""")
+GlasgowScore(mesure_id INTEGER PRIMARY KEY AUTOINCREMENT, noadmsip INTEGER,  score INTEGER CHECK (score BETWEEN 3 AND 15),
+               severe INTEGER, horodate DATETIME, FOREIGN KEY(noadmsip) REFERENCES Patients(noadmsip))""")
 
 cursor.execute("""CREATE INDEX IF NOT EXISTS idx_glasgow_noadmsip ON Glasgow (noadmsip)""")
 cursor.execute("""CREATE INDEX IF NOT EXISTS idx_glasgow_horodate ON Glasgow (horodate)""")
@@ -59,10 +77,10 @@ cursor.execute("""CREATE INDEX IF NOT EXISTS idx_vent_noadmsip ON PPC (noadmsip)
 cursor.execute("""CREATE INDEX IF NOT EXISTS idx_vent_horodate ON PPC (horodate)""")
 
 cursor.execute("""CREATE TABLE IF NOT EXISTS
-PIC(mesure_id INTEGER PRIMARY KEY AUTOINCREMENT, noadmsip INTEGER, value FLOAT, horodate DATETIME, FOREIGN KEY(noadmsip) REFERENCES Patients(noadmsip))""")
+PICm(mesure_id INTEGER PRIMARY KEY AUTOINCREMENT, noadmsip INTEGER, value FLOAT, horodate DATETIME, FOREIGN KEY(noadmsip) REFERENCES Patients(noadmsip))""")
 
-cursor.execute("""CREATE INDEX IF NOT EXISTS idx_pic_noadmsip ON PIC (noadmsip)""")
-cursor.execute("""CREATE INDEX IF NOT EXISTS idx_pic_horodate ON PIC (horodate)""")
+cursor.execute("""CREATE INDEX IF NOT EXISTS idx_picm_noadmsip ON PICm (noadmsip)""")
+cursor.execute("""CREATE INDEX IF NOT EXISTS idx_picm_horodate ON PICm (horodate)""")
 
 cursor.execute("""CREATE TABLE IF NOT EXISTS
 LICOX(mesure_id INTEGER PRIMARY KEY AUTOINCREMENT, noadmsip INTEGER, value FLOAT, horodate DATETIME, FOREIGN KEY(noadmsip) REFERENCES Patients(noadmsip))""")
@@ -80,16 +98,16 @@ cursor.execute("""CREATE INDEX IF NOT EXISTS idx_pupilles_horodate ON Pupilles (
 # 2. CARDIO-RESPIRATORY TARGETS
 
 cursor.execute("""CREATE TABLE IF NOT EXISTS
-PVC(mesure_id INTEGER PRIMARY KEY AUTOINCREMENT, noadmsip INTEGER, nom TEXT, value FLOAT, horodate DATETIME, FOREIGN KEY(noadmsip) REFERENCES Patients(noadmsip))""")
+PVCm(mesure_id INTEGER PRIMARY KEY AUTOINCREMENT, noadmsip INTEGER, value FLOAT, horodate DATETIME, FOREIGN KEY(noadmsip) REFERENCES Patients(noadmsip))""")
 
-cursor.execute("""CREATE INDEX IF NOT EXISTS idx_pvc_noadmsip ON PVC (noadmsip)""")
-cursor.execute("""CREATE INDEX IF NOT EXISTS idx_pvc_horodate ON PVC (horodate)""")
+cursor.execute("""CREATE INDEX IF NOT EXISTS idx_pvcm_noadmsip ON PVCm (noadmsip)""")
+cursor.execute("""CREATE INDEX IF NOT EXISTS idx_pvcm_horodate ON PVCm (horodate)""")
 
 cursor.execute("""CREATE TABLE IF NOT EXISTS
-PaM(mesure_id INTEGER PRIMARY KEY AUTOINCREMENT, noadmsip INTEGER, value FLOAT, horodate DATETIME, FOREIGN KEY(noadmsip) REFERENCES Patients(noadmsip))""")
+PAm(mesure_id INTEGER PRIMARY KEY AUTOINCREMENT, noadmsip INTEGER, value FLOAT, horodate DATETIME, FOREIGN KEY(noadmsip) REFERENCES Patients(noadmsip))""")
 
-cursor.execute("""CREATE INDEX IF NOT EXISTS idx_pam_noadmsip ON PaM (noadmsip)""")
-cursor.execute("""CREATE INDEX IF NOT EXISTS idx_pam_horodate ON PaM (horodate)""")
+cursor.execute("""CREATE INDEX IF NOT EXISTS idx_pam_noadmsip ON PAm (noadmsip)""")
+cursor.execute("""CREATE INDEX IF NOT EXISTS idx_pam_horodate ON PAm (horodate)""")
 
 cursor.execute("""CREATE TABLE IF NOT EXISTS
 EtCO2(mesure_id INTEGER PRIMARY KEY AUTOINCREMENT, noadmsip INTEGER, realV INTEGER, value FLOAT, horodate DATETIME, FOREIGN KEY(noadmsip) REFERENCES Patients(noadmsip))""")
@@ -178,25 +196,24 @@ try:
     )
     cur = conn.cursor()
 
-
-    # as.POSIXct(strptime("2010-10-31 01:30:00", "%Y-%m-%d %H:%M:%S"))
-
-
     # Creates a new table
-    cur.execute(''' CREATE TABLE IF NOT EXISTS lits (
+    cur.execute(''' CREATE TABLE IF NOT EXISTS Lits (
                 id serial PRIMARY KEY, 
                 noadmsip INTEGER,
                 uniteclinique INTEGER,
-                lit double,
+                lit  DECIMAL(2, 2),
                 entree TIMESTAMP,
                 sortie TIMESTAMP) '''
     )
+
+    cur.execute('COMMIT;')
+
 
     # Beds API Route
     @app.route("/beds")
     def showBeds():
         cur.execute('BEGIN;')
-        cur.execute('SELECT lits.lit, d_encounter.encounterid, d_encounter.firstname, d_encounter.lastname FROM "readonly"."d_encounter" JOIN "readonly"."lits" ON d_encounter.encounterid = lits.noadmsip WHERE "lits"."sortie" IS NULL AND "lits"."lit" <> 0 AND "lits"."entree" > '+ "'" + str(dateNow-sixMonths) +"'" +' ORDER BY "lits"."lit" ASC;')
+        cur.execute('SELECT PtBedStay.ptBedStayId, ptBedStay.encounterId, bedlabel, clinicalUnitId	AS Unite, d_Encounter.LifeTimeNumber AS NoDossier, ptBedStay.inTime, ptBedStay.outTime FROM "readonly"."ptBedStay" INNER JOIN "readonly"."d_Encounter" ON d_Encounter.encounterId = ptBedStay.encounterId WHERE clinicalUnitId IN (4, 10) AND ptBedStay.outTime IS NULL ORDER BY ptBedStay.inTime DESC;')
         listBeds = cur.fetchall()
         cur.execute("ROLLBACK;")
         listBedsStr = []
@@ -237,14 +254,14 @@ try:
         cursor.execute("BEGIN;")
         cursor.execute("DROP TABLE IF EXISTS ScoreGlobal;")
         cursor.execute("DROP TABLE IF EXISTS EtatNeurologique;")
-        cursor.execute("DROP TABLE IF EXISTS Glasgow;")
+        cursor.execute("DROP TABLE IF EXISTS GlasgowScore;")
         cursor.execute("DROP TABLE IF EXISTS Patients;")
         cursor.execute("DROP TABLE IF EXISTS PPC;")
-        cursor.execute("DROP TABLE IF EXISTS PIC;")
+        cursor.execute("DROP TABLE IF EXISTS PICm;")
         cursor.execute("DROP TABLE IF EXISTS LICOX;")
         cursor.execute("DROP TABLE IF EXISTS Pupilles;")
-        cursor.execute("DROP TABLE IF EXISTS PVC;")
-        cursor.execute("DROP TABLE IF EXISTS PaM;")
+        cursor.execute("DROP TABLE IF EXISTS PVCm;")
+        cursor.execute("DROP TABLE IF EXISTS PAm;")
         cursor.execute("DROP TABLE IF EXISTS EtCO2;")
         cursor.execute("DROP TABLE IF EXISTS PaCO2;")
         cursor.execute("DROP TABLE IF EXISTS Glycemie;")
@@ -304,7 +321,7 @@ def addToPatient(noadmsip):
             poids = cur.fetchall()
             cursor.execute("BEGIN;") #begin transaction
             for p in poids:
-                cursor.execute("INSERT INTO Poids(noadmsip, value, horodate) VALUES("+ str(noadmsip)+","+str(p[0])+", datetime('"+ str(p[1])[:19]+"'))")
+                cursor.execute("INSERT INTO Poids(noadmsip, value, horodate) VALUES("+ str(noadmsip)+","+ str(p[0])+", datetime('"+ str(p[1])[:19]+"'))")
             cursor.execute("COMMIT;" )#end transaction
             if(poids[0][0]):
                 weight = round(float(poids[0][0]),1) 
@@ -331,92 +348,49 @@ def addToPatient(noadmsip):
             cursor.execute("COMMIT;") #end transaction
 
         #On rentre les dernières données   
-        cur.execute('SELECT par, valnum, horodate FROM "readonly"."icca_htr" WHERE "noadmsip"='+ str(noadmsip) + ' AND "par" IN('+ "'Pouls (SpO2)','SpO2', 'FC', 'Inspired O2 (FiO2) Setting', 'Mean Airway Pressure', 'Positive End Expiratory Pressure (PEEP)', 'Tidal Volume Indexed By Body Weight', 'Ventilation Mode'" + ') AND "horodate" >' +"'" + str(limitDate) +"'" +' ORDER BY "horodate" DESC;')
+        cur.execute('SELECT par, valnum, horodate FROM "readonly"."icca_htr" WHERE "noadmsip"='+ str(noadmsip) + ' AND "par" IN('+ "'PPC','PICm', 'Pm' 'PVCm', 'PAm', 'CO2fe'" + ') AND "horodate" >' +"'" + str(limitDate) +"'" +' ORDER BY "horodate" DESC;')
         print('icca selected')
         dataICCA = cur.fetchall()
 
         cursor.execute("BEGIN;") #begin transaction
         for i in dataICCA:
             if(i[1] is not None):
-                if(str(i[0])=='Ventilation Mode'): #Ventilation
+                if(str(i[0])=='PPC'): #PPC
                     try:
-                        if(str(i[1])== '12' or str(i[1])== '13' or str(i[1])== '14'or str(i[1])== '17'):
-                            cursor.execute("INSERT INTO Ventilation (noadmsip, value, horodate) VALUES("+ str(noadmsip) + ",0,datetime('" + str(i[2])[:19]+"'))")
-                        else:
-                            cursor.execute("INSERT INTO Ventilation (noadmsip, value, horodate) VALUES("+ str(noadmsip) + ",1,datetime('" + str(i[2])[:19]+"'))")
+                        cursor.execute("INSERT INTO PPC (noadmsip, value, horodate)VALUES("+ str(noadmsip) + "," + str(i[1]) + ", datetime('" + str(i[2])[:19]+"'))")
                     except:
-                        print('Ventilation:'+ str(i))
-                if(str(i[0])=='Pouls (SpO2)'): #Pouls
+                        print('Pression de perfusion cérébrale (PPC):'+ str(i))
+                if(str(i[0])=='PICm'): #PIC
                     try:
-                        cursor.execute("INSERT INTO Pouls (noadmsip, value, horodate) VALUES("+ str(noadmsip) + "," + str(i[1]) + ",datetime('" + str(i[2])[:19]+"'))")
+                        cursor.execute("INSERT INTO PIC (noadmsip, value, horodate) VALUES("+ str(noadmsip) + "," + str(i[1]) + ",datetime('" + str(i[2])[:19]+"'))")
                     except:
-                        print('Pouls:'+ str(i))
-                if(str(i[0])=='Mean Airway Pressure'): #MAwP
+                        print('Pression intercranienne moyenne (PICm):'+ str(i))
+                if(str(i[0])=='PVCm'): #PVCm
                     try:
-                        cursor.execute("INSERT INTO Pressions (noadmsip, nom, value, horodate) VALUES("+ str(noadmsip) + ", 'MAwP'," + str(i[1]) + ",datetime('" + str(i[2])[:19]+"'))")
+                        cursor.execute("INSERT INTO PVCm (noadmsip, value, horodate) VALUES("+ str(noadmsip) + "," + str(i[1]) + ",datetime('" + str(i[2])[:19]+"'))")
                     except:
-                        print('MAwP:'+ str(i))
-                if(str(i[0])=='Positive End Expiratory Pressure (PEEP)'): #PEEP
+                        print('Pression veineuse centrale moyenne (PVCm):'+ str(i))
+                if(str(i[0])=='PAm'): #PAm
                     try:
-                        cursor.execute("INSERT INTO Pressions (noadmsip, nom, value, horodate) VALUES("+ str(noadmsip) + ", 'PEEP'," + str(i[1]) + ",datetime('" + str(i[2])[:19]+"'))")
+                        cursor.execute("INSERT INTO PAm (noadmsip, value, horodate) VALUES("+ str(noadmsip) + "," + str(i[1]) + ",datetime('" + str(i[2])[:19]+"'))")
                     except:
-                        print('PEEP:'+ str(i))
-                if(str(i[0])=='SpO2'): #SPO2
+                        print('Pression artérielle moyenne (PAm) :'+ str(i))
+                if(str(i[0])=='Pm'): #Licox continu --> Pm
+                    try:
+                        cursor.execute("INSERT INTO LICOX (noadmsip, value, horodate) VALUES("+ str(noadmsip) + "," + str(i[1]) + ",datetime('" + str(i[2])[:19]+"'))")
+                    except:
+                        print('LICOX (Pm) :'+ str(i))
+                    
+                if(str(i[0])=='CO2fe'): #CO2fe
                     try:
                         cursor.execute("INSERT INTO SpO2 (noadmsip, value, horodate) VALUES("+ str(noadmsip) + "," + str(i[1]) + ", datetime('" + str(i[2])[:19]+"'))")
                     except:
-                        print('SpO2:'+ str(i))
-                if(str(i[0])=='Inspired O2 (FiO2) Setting'): #FIO
-                    if i[1]<1:
-                        f=i[1]*100
-                        print(i[1])
-                    else:
-                        f=i[1]
-                    try:
-                        cursor.execute("INSERT INTO FiO2 (noadmsip, value, horodate) VALUES("+ str(noadmsip) + "," + str(f) + ",datetime('" + str(i[2])[:19]+"'))")
-                    except:
-                        print('FiO2:'+ str(i))
-                if(str(i[0])=='FC'): #FC
-                    try:
-                        cursor.execute("INSERT INTO FC (noadmsip, value, horodate) VALUES("+ str(noadmsip) + "," + str(i[1]) + ",datetime('" + str(i[2])[:19]+"'))")
-                    except:
-                        print('FC:'+ str(i))
-                if(str(i[0])=='Tidal Volume Indexed By Body Weight'): #Vt
-                    try:
-                        cursor.execute("INSERT INTO Vt (noadmsip, value, horodate) VALUES("+ str(noadmsip) + "," + str(i[1]) + ",datetime('" + str(i[2])[:19]+"'))")
-                    except:
-                        print('Vt:'+ str(i))
+                        print('ETCO2 continu (CO2fe):'+ str(i))
 
         cursor.execute("COMMIT;") #end transaction
         print('icca rangé')
-    
-        
-        cur.execute('SELECT hourtotal, charttime, interventionid FROM "readonly"."pttotalbalance" WHERE "encounterid"='+ str(noadmsip) + ' AND "interventionid" IN(68503,98385,30509) AND "charttime" >' +"'" + str(limitDate) +"'" +' ORDER BY "charttime" DESC;')
-        print('bilan selected')
-        bilan = cur.fetchall()
-        
 
 
-        cursor.execute("SELECT * FROM FC WHERE noadmsip =" + str(noadmsip) + ' AND "horodate" >' +"'" + str(limitDate) +"'" +" ORDER BY horodate DESC")
-        fc = cursor.fetchall()
-        print('fc selected')
-
-  
-
-
-        
-        """cursor.execute("SELECT * FROM Ventilation")
-        cursor.execute("SELECT * FROM FC")
-        cursor.execute("SELECT * FROM Pression")
-        cursor.execute("SELECT * FROM Pouls")
-        cursor.execute("SELECT * FROM SpO2")
-        cursor.execute("SELECT * FROM Vt")
-        cursor.execute("SELECT * FROM PaO2")
-        cursor.execute("SELECT * FROM pH")
-        cursor.execute("SELECT * FROM ePaO2")
-        cursor.execute("SELECT * FROM eOI")
-        cursor.execute("SELECT * FROM Bilan")
-        """
         cursor.execute("SELECT * FROM Patients WHERE " +'"noadmsip"=' + str(noadmsip))
         info = cursor.fetchall()
         cursor.execute("SELECT * FROM Hypoxemie")
@@ -431,4 +405,3 @@ cors = CORS(app, resource = {
 })
 if __name__=="__main__":
     app.run(port=3587, debug=True)
-
