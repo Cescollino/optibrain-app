@@ -11,6 +11,8 @@ import re
 import sqlite3
 import os
 import pandas as pd
+import DB
+
 
 
 # variables = ['PPC', 'PICm', 'PVCm', 'PAm', 'Patient_Test_Resuslts', 'multi_var', 'licox_icca', 'licox_continu', 'lab_var', 'etco2_continu']
@@ -34,21 +36,16 @@ for var in variables:
 # 1. Execute the virtual environment : source .venv/bin/activate
 # 2. Install the requiered packages : pip install -r requirements.txt
 
-DB_USERNAME="marmar38"
-DB_PASSWORD="e2b63Fn072$e"
-DB_HOST="coder-marmar38-jade-postgres"
-DB_NAME="marmar38"
-DB_PORT=5432
 
 app = Flask(__name__)
 
 try:
     connection = psycopg2.connect(
-        host = DB_HOST,
-        dbname = DB_NAME,
-        user = DB_USERNAME,
-        password = DB_PASSWORD,
-        port = DB_PORT
+        host = DB.HOST,
+        dbname = DB.NAME,
+        user = DB.USERNAME,
+        password = DB.PASSWORD,
+        port = DB.PORT
     )
     cursor = connection.cursor()
 
