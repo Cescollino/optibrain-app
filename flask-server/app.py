@@ -10,6 +10,7 @@ from dateutil.relativedelta import relativedelta
 import re
 import sqlite3
 import os
+import DB
 
 # 1. execute the virtual environment : source .venv/bin/activate
 # 2. install the requiered packages : pip install -r requirements.txt
@@ -168,13 +169,6 @@ Temperature(mesure_id INTEGER PRIMARY KEY AUTOINCREMENT, noadmsip INTEGER, value
 cursor.execute("""CREATE INDEX IF NOT EXISTS idx_temp_noadmsip ON Temperature (noadmsip)""")
 cursor.execute("""CREATE INDEX IF NOT EXISTS idx_temp_horodate ON Temperature (horodate)""")
 
-
-DB_USERNAME="marmar38"
-DB_PASSWORD="e2b63Fn072$e"
-DB_HOST="coder-marmar38-jade-posgres"
-DB_NAME="coder-marmar38-jade-posgres"
-DB_PORT=5432
-
 class PatientEncoder(JSONEncoder):
         def default(self, o):
             return o.__dict__
@@ -188,11 +182,11 @@ thirtySeconds = timedelta(seconds=30)
 
 try:
     conn = psycopg2.connect(
-        host = DB_HOST,
-        dbname = DB_NAME,
-        username = DB_USERNAME,
-        password = DB_PASSWORD,
-        port = DB_PORT
+        host = DB.HOST,
+        dbname = DB.NAME,
+        username = DB.USERNAME,
+        password = DB.PASSWORD,
+        port = DB.PORT
     )
     cur = conn.cursor()
 
