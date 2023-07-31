@@ -25,7 +25,7 @@ export interface PatientData {
   lastLoadingTime?: number;
 }
 
-export interface kpiData {
+export interface KpiData {
   id: number;
   kpi: string;
   noadmsip: number;

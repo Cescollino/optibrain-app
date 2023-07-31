@@ -13,7 +13,6 @@ import os
 import pandas as pd
 import DB
 
-
 # 1. Execute the virtual environment : source .venv/bin/activate
 # 2. Install the requiered packages : pip install -r requirements.txt
 class PatientEncoder(JSONEncoder):
