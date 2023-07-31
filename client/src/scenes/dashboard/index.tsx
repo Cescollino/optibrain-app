@@ -3,12 +3,10 @@ import PatientRecordZone from './PatientRecordZone';
 import SideBar from './SideBar';
 import AdherenceZone from './AdherenceZone';
 import Navbar from '../navbar';
+import { PatientData } from '@/state/types';
 import Clock from '@/components/Clock';
 
-
-type Props = {};
-
-const Dashboard = (props: Props) => {
+const Dashboard = ({ patient }: { patient: PatientData }) => {
   return (
     <>
         <Grid 
@@ -24,7 +22,7 @@ const Dashboard = (props: Props) => {
           <Navbar />
         </Grid>
         <Grid item xs={12}>
-          <PatientRecordZone />
+          <PatientRecordZone patient={patient} />
         </Grid>
         <Grid container item xs={true}>
           <Grid item>

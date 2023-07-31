@@ -20,19 +20,19 @@ const initialValue = {
   setAuthenticated: () => {}
 }
 
-const AuthContext = createContext<IAuthContext>(initialValue)
+const AuthenticationContext = createContext<IAuthContext>(initialValue)
 
-const AuthProvider = ({ children }: Props) => {
+const AuthenticationProvider = ({ children }: Props) => {
   //Initializing an auth state with false value (unauthenticated)
   const [ authenticated, setAuthenticated ] = useState(initialValue.authenticated)
 
   const navigate = useNavigate()
 
   return (
-    <AuthContext.Provider value={{ authenticated, setAuthenticated }}>
+    <AuthenticationContext.Provider value={{ authenticated, setAuthenticated }}>
       {children}
-    </AuthContext.Provider>
+    </AuthenticationContext.Provider>
   )
 }
 
-export {  AuthContext, AuthProvider }
+export {  AuthenticationContext, AuthenticationProvider };

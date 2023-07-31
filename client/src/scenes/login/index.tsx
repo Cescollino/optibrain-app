@@ -1,6 +1,6 @@
 import { Button, Grid, Paper, Typography, Input, styled } from "@mui/material";
 import { useNavigate } from 'react-router-dom'
-import { AuthContext } from '@/contexts/AuthentificationContext'
+import { AuthContext } from '@/contexts/AuthenticationContext'
 import { useContext, useState, useEffect } from "react";
 
 

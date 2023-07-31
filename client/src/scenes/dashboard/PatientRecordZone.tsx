@@ -11,6 +11,7 @@ import { useState } from "react";
 import GlobalAdherenceChart from "@/components/patientRecord/GlobalAdherenceChart";
 import GlasgowScoreChart from "@/components/patientRecord/GlasgowScoreChart";
 import NeurologicalStateChart from "@/components/patientRecord/NeurologicalStateChart";
+import { PatientData } from "@/state/types";
 
 const Img = styled('img')({
   display: 'flex',
@@ -19,7 +20,7 @@ const Img = styled('img')({
   flexGrow: 1,
 });
 
-const PatientRecordZone = () => {
+const PatientRecordZone = ({ patient }: { patient: PatientData }) => {
   const globalAdherenceData: { day: string; score: number; }[] = [
     { day: "J0", score: 40 },
     { day: "J01", score: 40 },
@@ -91,17 +92,17 @@ const PatientRecordZone = () => {
       >
         {/* First item */}
         <PatientRecordBox
-          header={<PatientRecordHeader title="Alex Dave (M)" />}
+          header={<PatientRecordHeader title={`${patient.firstName} ${patient.lastName} (${patient.gender})`} />}
           content={
             <>
               <Typography variant="h5" fontSize="14px">
                 Trauma crânien sévère
               </Typography>
               <Typography variant="h5" fontSize="14px">
-                Âge 4a 4m 12j
+                Âge: 4a 4m 12j
               </Typography>
               <Typography variant="h5" fontSize="14px">
-                Poids: 12.300
+                `Poids: ${patient.weight}kg`
               </Typography>
               <Typography variant="h5" fontSize="14px">
                 #Jours USIP: J4
