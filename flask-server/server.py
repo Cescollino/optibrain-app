@@ -37,21 +37,63 @@ try:
     else:
         print(' not connected with database :( ')
     
-    @app.route("/beds/<noadmsip>")
+    @app.route("patients/<noadmsip>", methods=["GET"])
     def searchPatient(noadmsip):   
         patient = update_patient(noadmsip)
         PatientEncoder().encode(patient)
         patientJSONData = json.dumps(patient, indent=4, cls=PatientEncoder)
         return(patientJSONData)
     
-    @app.route("/dashboard/<kpi>/<noadmsip>/<timeFrame>")
-    def searchVariable(kpi, noadmsip, timeFrame):  
+    @app.route("/kpis/<noadmsip>")
+    def getPatientKpis(noadmsip):
+        cursor.execute("SELECT * FROM PPC WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        PPC = cursor.fetchall()
+        cursor.execute("SELECT * FROM PICm WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        PICm = cursor.fetchall()
+        cursor.execute("SELECT * FROM LICOX WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        LICOX = cursor.fetchall()
+        cursor.execute("SELECT * FROM Pupilles WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        Pupilles = cursor.fetchall()
+        cursor.execute("SELECT * FROM PVCm WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        PVCm = cursor.fetchall()
+        cursor.execute("SELECT * FROM PAm WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        PAm = cursor.fetchall()
+        cursor.execute("SELECT * FROM ETCO2 WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        ETCO2 = cursor.fetchall()
+        cursor.execute("SELECT * FROM PaCO2 WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        PaCO2 = cursor.fetchall()
+        cursor.execute("SELECT * FROM Glycemie WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        Glycemie = cursor.fetchall()
+        cursor.execute("SELECT * FROM INR WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        INR = cursor.fetchall()
+        cursor.execute("SELECT * FROM Plaquettes WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        Plaquettes = cursor.fetchall()
+        cursor.execute("SELECT * FROM Temperature WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        Temperature = cursor.fetchall()
+        cursor.execute("SELECT * FROM TeteLit WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        TeteLit = cursor.fetchall()
+        cursor.execute("SELECT * FROM Patient WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        Patient = cursor.fetchall()
+        allValues = [PPC, PICm, LICOX, Pupilles, PVCm, PAm, ETCO2, PaCO2, Glycemie, INR, Plaquettes, Temperature, TeteLit, Patient]
+        PatientEncoder().encode(allValues)
+        allValuesJSONData = json.dumps(allValues, indent=4, cls=PatientEncoder)
+        return(allValuesJSONData)
+
+    
+    @app.route("/kpis/<noadmsip>/<timeFrame>")
+    def searchKpi(kpi, noadmsip, timeFrame):  
         target_datetime = datetime.datetime.fromtimestamp(int(timeFrame)/1000)
         cursor.execute("SELECT * FROM " + kpi +" WHERE noadmsip="+ noadmsip +" AND horodate > '" + str(target_datetime)[:19] +"' ORDER BY horodate DESC")     
         allValues = cursor.fetchall()
         PatientEncoder().encode(allValues)
         allValuesJSONData = json.dumps(allValues, indent=4, cls=PatientEncoder)
         return(allValuesJSONData)
+    
+
+    @app.route("/size")
+    def get_db_size():  
+        size = cursor.execute("SELECT pg_size_pretty(pg_database_size('"+ DB.NAME +"'));")
+        return(size)
 
     @app.route("/cache/size")
     def getCacheSize():  
@@ -62,7 +104,7 @@ try:
         sizeJSONData = json.dumps(size, indent=4, cls=PatientEncoder)
         return(sizeJSONData)
     
-    @app.route("/db/<name>", methods=["DELETE"])
+    @app.route("/delete", methods=["DELETE"])
     def db_delete():
         cursor.execute("BEGIN;")
         cursor.execute("DROP TABLE IF EXISTS PPC;")
