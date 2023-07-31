@@ -50,22 +50,22 @@ export const optionalKpis: Array<KpiProps> = [
 export const kpisBoxes: Array<KpisBoxProps> = [
   createKpisBox(CATEGORIES[0], [ 
     createKpi("PPC", PATIENT_RIGHT_EYE_LID, "60-70 mmHg", { data: PATIENT_RIGHT_EYE_LID, time: '2023-07-01 12:00:00', value: 20 } as KpisChartData , true),
-    createKpi("PIC", PATIENT_RIGHT_EYE_LID, "< 20mmHg", { data: PATIENT_RIGHT_EYE_LID, time: '2023-07-01 12:00:00', value: 20 } as KpisChartData ,),
+    createKpi("PIC", PATIENT_RIGHT_EYE_LID, "< 20 mmHg", { data: PATIENT_RIGHT_EYE_LID, time: '2023-07-01 12:00:00', value: 20 } as KpisChartData ,),
     createKpi("LICOX", PATIENT_RIGHT_EYE_LID, "25-35 mmHg", noData),
     createKpi("Pupilles", PATIENT_PVC, "1 fois/hrs", noData),
   ], false),
  
   createKpisBox(CATEGORIES[1], [
-    createKpi("PVC", PATIENT_RIGHT_EYE_LID, "30-40%", noData),
-    createKpi("PAM", PATIENT_RIGHT_EYE_LID, "66-70mmHg", noData),
-    createKpi("ETCO2", PATIENT_RIGHT_EYE_LID, "35-45mmHg", noData),
-    createKpi("PaCO2", PATIENT_RIGHT_EYE_LID, "35-40mmHg", noData),
+    createKpi("PVC", PATIENT_RIGHT_EYE_LID, "30-40 %", noData),
+    createKpi("PAM", PATIENT_RIGHT_EYE_LID, "66-70 mmHg", noData),
+    createKpi("ETCO2", PATIENT_RIGHT_EYE_LID, "35-45 mmHg", noData),
+    createKpi("PaCO2", PATIENT_RIGHT_EYE_LID, "35-40 mmHg", noData),
     ...optionalKpis,
   ]),
   createKpisBox(CATEGORIES[2], [
     createKpi("Glycémie", PATIENT_RIGHT_EYE_LID, "5-11 mmol/L", noData),
     createKpi("INR", PATIENT_RIGHT_EYE_LID, "< 1,2", noData),
-    createKpi("Plaquettes", PATIENT_RIGHT_EYE_LID, "> 100 G/L", noData),
+    createKpi("Plaquettes", PATIENT_RIGHT_EYE_LID, "> 100 g/L", noData),
     ...optionalKpis,
   ]),
   createKpisBox(CATEGORIES[3], [
