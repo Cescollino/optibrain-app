@@ -33,6 +33,5 @@ flask-server/Patients.db
 flask-server/.env
 flask-server/csv_gille
 flask-server/csv_sally
-
-
+flask-server/DB.py
 
