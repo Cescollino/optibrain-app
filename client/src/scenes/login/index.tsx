@@ -1,6 +1,6 @@
 import { Button, Grid, Paper, Typography, Input, styled } from "@mui/material";
 import { useNavigate } from 'react-router-dom'
-import { AuthContext } from '@/contexts/AuthenticationContext'
+import { AuthenticationContext } from '@/contexts/AuthenticationContext'
 import { useContext, useState, useEffect } from "react";
 
 
@@ -30,7 +30,7 @@ const Login = () => {
   
   const [username, setUserName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const {authenticated, setAuthenticated} = useContext(AuthContext);
+  const {authenticated, setAuthenticated} = useContext(AuthenticationContext);
 
   // TODO : needs to be replace with the employees login information
   const admin = {

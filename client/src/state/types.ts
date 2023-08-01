@@ -18,6 +18,7 @@ export interface PatientData {
   lastName: string;
   dateOfBirth: string;
   gender: string;
+  lifetimeNumber: number;
   weight: number;
   idealWeight: number;
   height: number;

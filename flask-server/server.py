@@ -1,5 +1,5 @@
 import psycopg2
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask
 from flask_cors import CORS
 import string
 import datetime
@@ -12,14 +12,26 @@ import sqlite3
 import os
 import pandas as pd
 import DB
+from flask import jsonify, make_response
 
 # 1. Execute the virtual environment : source .venv/bin/activate
 # 2. Install the requiered packages : pip install -r requirements.txt
 class PatientEncoder(JSONEncoder):
         def default(self, o):
+        
+            if isinstance(o, datetime.datetime):
+                return o.isoformat()
+        
             return o.__dict__
 
 app = Flask(__name__)
+
+dateNow = datetime.datetime.now()
+
+@app.route('/time')
+def get_current_time():
+    print('TIME')
+    return make_response(jsonify({"time": "3.000000"}))
 
 try:
     connection = psycopg2.connect(
@@ -36,15 +48,63 @@ try:
     else:
         print(' not connected with database :( ')
     
-    @app.route("patients/<noadmsip>", methods=["GET"])
+    @app.route('/patients')
+    def hello_world():
+        return 'Hello World'
+        
+    @app.route("/patients/<noadmsip>")
     def searchPatient(noadmsip):   
-        patient = update_patient(noadmsip)
-        PatientEncoder().encode(patient)
-        patientJSONData = json.dumps(patient, indent=4, cls=PatientEncoder)
-        return(patientJSONData)
+        try:
+            cursor.execute(f"SELECT * FROM Patient WHERE noadmsip={noadmsip};")
+            result = cursor.fetchall()
+            # Process the result as needed
+            print(result)
+            patient = json.dumps(result, indent=4, cls=PatientEncoder)
+            return result
+        except Exception as e:
+            # Log the error message for debugging
+            print("Error executing SQL query:", str(e))
+            # Optionally, raise the exception to propagate it further
+            raise e
     
-    @app.route("/kpis/<noadmsip>")
+    @app.route("/patients/<noadmsip>/kpis", methods=["GET"])
     def getPatientKpis(noadmsip):
+        cursor.execute("SELECT * FROM PPC WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC;")
+        PPC = cursor.fetchall()
+        cursor.execute("SELECT * FROM PICm WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        PICm = cursor.fetchall()
+        cursor.execute("SELECT * FROM LICOX WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        LICOX = cursor.fetchall()
+        cursor.execute("SELECT * FROM Pupilles WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        Pupilles = cursor.fetchall()
+        cursor.execute("SELECT * FROM PVCm WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        PVCm = cursor.fetchall()
+        cursor.execute("SELECT * FROM PAm WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        PAm = cursor.fetchall()
+        cursor.execute("SELECT * FROM ETCO2 WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        ETCO2 = cursor.fetchall()
+        cursor.execute("SELECT * FROM PaCO2 WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        PaCO2 = cursor.fetchall()
+        cursor.execute("SELECT * FROM Glycemie WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        Glycemie = cursor.fetchall()
+        cursor.execute("SELECT * FROM INR WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        INR = cursor.fetchall()
+        cursor.execute("SELECT * FROM Plaquettes WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        Plaquettes = cursor.fetchall()
+        cursor.execute("SELECT * FROM Temperature WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        Temperature = cursor.fetchall()
+        cursor.execute("SELECT * FROM TeteLit WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        TeteLit = cursor.fetchall()
+        cursor.execute("SELECT * FROM Patient WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
+        Patient = cursor.fetchall()
+        allValues = [PPC, PICm, LICOX, Pupilles, PVCm, PAm, ETCO2, PaCO2, Glycemie, INR, Plaquettes, Temperature, TeteLit, Patient]
+        PatientEncoder().encode(allValues)
+        allValuesJSONData = json.dumps(allValues, indent=4, cls=PatientEncoder)
+        return(allValuesJSONData)
+    
+
+    @app.route("/patients/<noadmsip>/kpis", methods=["GET"])
+    def getKpis(noadmsip):
         cursor.execute("SELECT * FROM PPC WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
         PPC = cursor.fetchall()
         cursor.execute("SELECT * FROM PICm WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
@@ -79,7 +139,7 @@ try:
         return(allValuesJSONData)
 
     
-    @app.route("/kpis/<noadmsip>/<timeFrame>")
+    @app.route("/patients/<noadmsip>/kpis/<timeFrame>")
     def searchKpi(kpi, noadmsip, timeFrame):  
         target_datetime = datetime.datetime.fromtimestamp(int(timeFrame)/1000)
         cursor.execute("SELECT * FROM " + kpi +" WHERE noadmsip="+ noadmsip +" AND horodate > '" + str(target_datetime)[:19] +"' ORDER BY horodate DESC")     
@@ -121,8 +181,7 @@ try:
         cursor.execute("DROP TABLE IF EXISTS TeteLit;")
         cursor.execute("DROP TABLE IF EXISTS Patient;")
         cursor.execute("COMMIT;")
-        cursor.execute("COMMIT;")
-        return(' empty')
+        return(' all kpis deleted from database ! ')
 
     def update_patient(noadmsip):
         print(str(noadmsip))
@@ -134,16 +193,18 @@ try:
         lastLoadingTime = cursor.fetchone()
         if lastLoadingTime is not None:
             print('not none')
-            limitDate = datetime.datetime.strptime(lastLoadingTime[0], '%Y-%m-%d %H:%M:%S')
+            limitDate = lastLoadingTime[0].strftime('%Y-%m-%d %H:%M:%S')  # Convert to string
+            dateNow = dateNow[0].strftime('%Y-%m-%d %H:%M:%S')  # Convert to string
+            print('on se rend ici')
             print(limitDate)
+            print(dateNow)
             cursor.execute("BEGIN;")
-            cursor.execute("UPDATE Patient SET lastLoadingTime = datetime('"+ str(dateNow) +"') WHERE noadmsip ="+ noadmsip +";")
+            cursor.execute("UPDATE Patient SET lastLoadingTime = %s WHERE noadmsip = %s;", (dateNow, noadmsip))
             cursor.execute("COMMIT;")
 
     # this is stored into my posgreSQL personal database created specificly for the developpement with a selected patient who was hospitalized in 2016
 
     # creates selected patinent info table
-    dateNow = datetime.datetime.now()
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
     Patient(noadmsip INTEGER PRIMARY KEY, firstname TEXT, lastname TEXT, dateofbirth TIMESTAMP, gender TEXT, lifetimenumber INT, weight FLOAT, idealWeight FLOAT, height FLOAT, primarydiagnosis TEXT, lastLoadingTime TIMESTAMP)""")
@@ -268,15 +329,21 @@ try:
                     cursor.execute(f"INSERT INTO {table} (id, kpi, noadmsip, value, horodate) VALUES ({values});")
                     cursor.execute("COMMIT;" )#end transaction
             
-            print(' all data inserted in database :) ')
+            print(f"all {table} data inserted in database")
 
 except Exception as error:
     print(error)
 
-finally:
+""" finally:
     if cursor is not None:
         cursor.close()
     if connection is not None:
-        connection.close()
+        connection.close() """
 
-
+cors = CORS(app, resource = {
+    r"/*":{
+        "origins":"*"
+    }
+})
+if __name__=="__main__":
+    app.run(port=5000)

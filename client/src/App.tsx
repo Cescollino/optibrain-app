@@ -1,7 +1,7 @@
 import { createTheme } from "@mui/material/styles";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { themeSettings } from "@/theme";
-import { Box, CssBaseline, ThemeProvider } from "@mui/material";
+import { Box, CssBaseline, ThemeProvider, Typography } from "@mui/material";
 import { BrowserRouter } from "react-router-dom";
 import { AuthenticationProvider } from "@/contexts/AuthenticationContext"
 import Routes from "@/Routes"
@@ -16,6 +16,7 @@ function App() {
     lastName: 'NA',
     dateOfBirth: 'NA',
     gender: 'NA',
+    lifetimeNumber: 0,
     weight: 0.0,
     idealWeight: 0.0,
     height: 0.0,
@@ -24,17 +25,29 @@ function App() {
   }
   const noadmsip = 3563;
 
-  const [patient, setPatient] = useState<PatientData>(defaultPatient);
+  const [currentTime, setCurrentTime] = useState(0);
 
-  useEffect(()=> {
+  const [patient, setPatient] = useState<PatientData>(defaultPatient);
+/* 
+  useEffect(() => {
+    fetch('http://localhost:5000/time').then(res => res.json()).then(data => {
+      console.log(data)
+      console.log(data.time)
+      setCurrentTime(data.time);
+    }).catch((err) => {
+      console.log(err);
+    });
+  }, []); */
+
+ useEffect(()=> {
     PATIENT.get(noadmsip)
       .then((data) => { 
         setPatient(data);
       })
       .catch((err) => {
+        console.log('error when fetching patient data : ');
         console.log(err);
       });
-      return () => {};
   }, [patient.noadmsip]);
 
   const theme = useMemo(() => createTheme(themeSettings), []);
@@ -45,9 +58,9 @@ function App() {
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <Box width="100%" height="100%" padding="0.5rem">
-              <AuthenticationProvider>
+            <AuthenticationProvider>
                 <Routes patient={patient}/>
-              </AuthenticationProvider >
+            </AuthenticationProvider >
             </Box>
           </ThemeProvider>
         </BrowserRouter>
