@@ -16,22 +16,17 @@ from flask import jsonify, make_response
 
 # 1. Execute the virtual environment : source .venv/bin/activate
 # 2. Install the requiered packages : pip install -r requirements.txt
-class PatientEncoder(JSONEncoder):
-        def default(self, o):
-        
-            if isinstance(o, datetime.datetime):
-                return o.isoformat()
-        
-            return o.__dict__
+
+class PatientEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, (datetime.datetime, datetime.date)):
+            return obj.isoformat()
+        return super().default(obj)
 
 app = Flask(__name__)
 
 dateNow = datetime.datetime.now()
-
-@app.route('/time')
-def get_current_time():
-    print('TIME')
-    return make_response(jsonify({"time": "3.000000"}))
+dateNow = datetime.datetime(2016, 3, 17, 18, 19, 47)
 
 try:
     connection = psycopg2.connect(
@@ -48,105 +43,92 @@ try:
     else:
         print(' not connected with database :( ')
     
-    @app.route('/patients')
-    def hello_world():
-        return 'Hello World'
-        
-    @app.route("/patients/<noadmsip>")
-    def searchPatient(noadmsip):   
+    @app.route("/patients")
+    def fetchAllPatients():
         try:
-            cursor.execute(f"SELECT * FROM Patient WHERE noadmsip={noadmsip};")
-            result = cursor.fetchall()
-            # Process the result as needed
-            print(result)
-            patient = json.dumps(result, indent=4, cls=PatientEncoder)
-            return result
+            cursor.execute(f"SELECT * FROM Patient;")
+            # Fetch all the rows as a list of tuples
+            rows = cursor.fetchall()
+            # Get the column names to use as keys for the dictionaries
+            column_names = [desc[0] for desc in cursor.description]
+            # Convert the patients list of tuples into a list of dictionaries
+            data = [dict(zip(column_names, row)) for row in rows]
+             # Convert the dictionaries patients list into a JSON list
+            patients = json.dumps(data, indent=4, cls=PatientEncoder)
+            return patients
         except Exception as e:
             # Log the error message for debugging
             print("Error executing SQL query:", str(e))
             # Optionally, raise the exception to propagate it further
             raise e
-    
-    @app.route("/patients/<noadmsip>/kpis", methods=["GET"])
-    def getPatientKpis(noadmsip):
-        cursor.execute("SELECT * FROM PPC WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC;")
-        PPC = cursor.fetchall()
-        cursor.execute("SELECT * FROM PICm WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        PICm = cursor.fetchall()
-        cursor.execute("SELECT * FROM LICOX WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        LICOX = cursor.fetchall()
-        cursor.execute("SELECT * FROM Pupilles WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        Pupilles = cursor.fetchall()
-        cursor.execute("SELECT * FROM PVCm WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        PVCm = cursor.fetchall()
-        cursor.execute("SELECT * FROM PAm WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        PAm = cursor.fetchall()
-        cursor.execute("SELECT * FROM ETCO2 WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        ETCO2 = cursor.fetchall()
-        cursor.execute("SELECT * FROM PaCO2 WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        PaCO2 = cursor.fetchall()
-        cursor.execute("SELECT * FROM Glycemie WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        Glycemie = cursor.fetchall()
-        cursor.execute("SELECT * FROM INR WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        INR = cursor.fetchall()
-        cursor.execute("SELECT * FROM Plaquettes WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        Plaquettes = cursor.fetchall()
-        cursor.execute("SELECT * FROM Temperature WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        Temperature = cursor.fetchall()
-        cursor.execute("SELECT * FROM TeteLit WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        TeteLit = cursor.fetchall()
-        cursor.execute("SELECT * FROM Patient WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        Patient = cursor.fetchall()
-        allValues = [PPC, PICm, LICOX, Pupilles, PVCm, PAm, ETCO2, PaCO2, Glycemie, INR, Plaquettes, Temperature, TeteLit, Patient]
-        PatientEncoder().encode(allValues)
-        allValuesJSONData = json.dumps(allValues, indent=4, cls=PatientEncoder)
-        return(allValuesJSONData)
-    
 
-    @app.route("/patients/<noadmsip>/kpis", methods=["GET"])
-    def getKpis(noadmsip):
-        cursor.execute("SELECT * FROM PPC WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        PPC = cursor.fetchall()
-        cursor.execute("SELECT * FROM PICm WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        PICm = cursor.fetchall()
-        cursor.execute("SELECT * FROM LICOX WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        LICOX = cursor.fetchall()
-        cursor.execute("SELECT * FROM Pupilles WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        Pupilles = cursor.fetchall()
-        cursor.execute("SELECT * FROM PVCm WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        PVCm = cursor.fetchall()
-        cursor.execute("SELECT * FROM PAm WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        PAm = cursor.fetchall()
-        cursor.execute("SELECT * FROM ETCO2 WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        ETCO2 = cursor.fetchall()
-        cursor.execute("SELECT * FROM PaCO2 WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        PaCO2 = cursor.fetchall()
-        cursor.execute("SELECT * FROM Glycemie WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        Glycemie = cursor.fetchall()
-        cursor.execute("SELECT * FROM INR WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        INR = cursor.fetchall()
-        cursor.execute("SELECT * FROM Plaquettes WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        Plaquettes = cursor.fetchall()
-        cursor.execute("SELECT * FROM Temperature WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        Temperature = cursor.fetchall()
-        cursor.execute("SELECT * FROM TeteLit WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        TeteLit = cursor.fetchall()
-        cursor.execute("SELECT * FROM Patient WHERE noadmsip="+ noadmsip +" ORDER BY horodate DESC")
-        Patient = cursor.fetchall()
-        allValues = [PPC, PICm, LICOX, Pupilles, PVCm, PAm, ETCO2, PaCO2, Glycemie, INR, Plaquettes, Temperature, TeteLit, Patient]
-        PatientEncoder().encode(allValues)
-        allValuesJSONData = json.dumps(allValues, indent=4, cls=PatientEncoder)
-        return(allValuesJSONData)
+        
+    @app.route("/patients/<noadmsip>")
+    def searchPatient(noadmsip):   
+        try:
+            cursor.execute(f"SELECT * FROM Patient WHERE noadmsip={noadmsip};")
+            # Fetch all the rows as a list of tuples
+            # Get the column names to use as keys for the dictionary
+            column_names = [desc[0] for desc in cursor.description]
+            # Fetch the first row from the query result
+            row = cursor.fetchone()
+            # Convert the row into a dictionary
+            data = dict(zip(column_names, row))
+             # Convert the dictionaries patients list into a JSON list
+            patient = json.dumps(data, indent=4, cls=PatientEncoder)
+            return patient
+        except Exception as e:
+            # Log the error message for debugging
+            print("Error executing SQL query:", str(e))
+            # Optionally, raise the exception to propagate it further
+            raise e
 
+    @app.route("/patients/<noadmsip>/kpis")
+    def get_patient_kpis(noadmsip):
+        all_kpis = {
+            "PPC": fetch_kpis_from_database("PPC", noadmsip),
+            "PICm": fetch_kpis_from_database("PICm", noadmsip),
+            "LICOX": fetch_kpis_from_database("LICOX", noadmsip),
+            "Pupilles": fetch_kpis_from_database("Pupilles", noadmsip),
+            "PVCm": fetch_kpis_from_database("PVCm", noadmsip),
+            "PAm": fetch_kpis_from_database("PAm", noadmsip),
+            "ETCO2": fetch_kpis_from_database("ETCO2", noadmsip),
+            "PaCO2": fetch_kpis_from_database("PaCO2", noadmsip),
+            "Glycemie": fetch_kpis_from_database("Glycemie", noadmsip),
+            "INR": fetch_kpis_from_database("INR", noadmsip),
+            "Plaquettes": fetch_kpis_from_database("Plaquettes", noadmsip),
+            "Temperature": fetch_kpis_from_database("Temperature", noadmsip),
+            "TeteLit": fetch_kpis_from_database("TeteLit", noadmsip),
+        }
+
+        all_kpis_json_data = json.dumps(all_kpis, indent=4, cls=PatientEncoder)
+        return all_kpis_json_data
+ 
     
-    @app.route("/patients/<noadmsip>/kpis/<timeFrame>")
-    def searchKpi(kpi, noadmsip, timeFrame):  
-        target_datetime = datetime.datetime.fromtimestamp(int(timeFrame)/1000)
-        cursor.execute("SELECT * FROM " + kpi +" WHERE noadmsip="+ noadmsip +" AND horodate > '" + str(target_datetime)[:19] +"' ORDER BY horodate DESC")     
-        allValues = cursor.fetchall()
-        PatientEncoder().encode(allValues)
-        allValuesJSONData = json.dumps(allValues, indent=4, cls=PatientEncoder)
-        return(allValuesJSONData)
+    @app.route("/patients/<noadmsip>/kpis/<timeframe>")
+    def get_patient_time(noadmsip, timeframe):
+        timeframe_to_datetime = timedelta(hours=float(timeframe))
+        timeframe = dateNow -  timeframe_to_datetime
+        timeframe = timeframe.strftime('%Y-%m-%d %H:%M:%S')
+
+        all_kpis = {
+            "PPC": fetch_kpis_time("PPC", noadmsip, timeframe),
+            "PICm": fetch_kpis_time("PICm", noadmsip, timeframe),
+            "LICOX": fetch_kpis_time("LICOX", noadmsip, timeframe),
+            "Pupilles": fetch_kpis_time("Pupilles", noadmsip, timeframe),
+            "PVCm": fetch_kpis_time("PVCm", noadmsip, timeframe),
+            "PAm": fetch_kpis_time("PAm", noadmsip, timeframe),
+            "ETCO2": fetch_kpis_time("ETCO2", noadmsip, timeframe),
+            "PaCO2": fetch_kpis_time("PaCO2", noadmsip, timeframe),
+            "Glycemie": fetch_kpis_time("Glycemie", noadmsip, timeframe),
+            "INR": fetch_kpis_time("INR", noadmsip, timeframe),
+            "Plaquettes": fetch_kpis_time("Plaquettes", noadmsip, timeframe),
+            "Temperature": fetch_kpis_time("Temperature", noadmsip, timeframe),
+            "TeteLit": fetch_kpis_time("TeteLit", noadmsip, timeframe),
+        }
+
+        all_kpis_json_data = json.dumps(all_kpis, indent=4, cls=PatientEncoder)
+        return all_kpis_json_data
     
 
     @app.route("/size")
@@ -202,6 +184,48 @@ try:
             cursor.execute("UPDATE Patient SET lastLoadingTime = %s WHERE noadmsip = %s;", (dateNow, noadmsip))
             cursor.execute("COMMIT;")
 
+
+    def fetch_kpis_from_database(table_name, noadmsip):
+        try:
+            # Execute the query
+            cursor.execute(f"SELECT * FROM {table_name} WHERE noadmsip={noadmsip} ORDER BY horodate DESC;")
+
+            # Fetch all rows from the query result
+            rows = cursor.fetchall()
+
+            # Get the column names to use as keys for the dictionaries
+            column_names = [desc[0] for desc in cursor.description]
+
+            # Convert the rows into a list of dictionaries
+            data = [dict(zip(column_names, row)) for row in rows]
+            return data
+        except Exception as e:
+            # Log the error message for debugging
+            print("Error executing SQL query:", str(e))
+            # Optionally, raise the exception to propagate it further
+            raise e
+    
+    def fetch_kpis_time(table_name, noadmsip, timeframe):
+        try:
+            # Execute the query
+            cursor.execute(f"SELECT * FROM {table_name} WHERE noadmsip=%s AND horodate > %s ORDER BY horodate DESC;", (noadmsip, timeframe))
+
+            # Fetch all rows from the query result
+            rows = cursor.fetchall()
+
+            # Get the column names to use as keys for the dictionaries
+            column_names = [desc[0] for desc in cursor.description]
+
+            # Convert the rows into a list of dictionaries
+            data = [dict(zip(column_names, row)) for row in rows]
+            return data
+        except Exception as e:
+            # Log the error message for debugging
+            print("Error executing SQL query:", str(e))
+            # Optionally, raise the exception to propagate it further
+            raise e
+
+        
     # this is stored into my posgreSQL personal database created specificly for the developpement with a selected patient who was hospitalized in 2016
 
     # creates selected patinent info table
