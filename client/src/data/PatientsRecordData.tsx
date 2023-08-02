@@ -30,27 +30,7 @@ const PatientsRecordData = [
         affectedSystems: ["Brain", "Kidney"],
 
     },
-    // {
-    //     id: 3,
-    //     name: "Gaston Parré",
-    //     age : 3,
-    //     weight: 23,
-    //     numberOfStayDays: 18,
-    //     diagnosis: "Pneumonie",
-    //     scanType: "CT scan",
-    // },
-    // {
-    //     id: 4,
-    //     name: "Catherine Larouche",
-    //     // TODO Age interface ans/mois/jours formattage service
-    //     age : 1,
-    //     weight: 4,
-    //     numberOfStayDays: 18,
-    //     diagnosis: "Pneumonie",
-    //     // TODO set of Scan types
-    //     scanType: "CT scan",
-    //     // TODO set of Syste
-    // },
+
 ];
 
 export default PatientsRecordData;

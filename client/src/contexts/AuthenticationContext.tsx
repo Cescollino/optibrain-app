@@ -20,7 +20,7 @@ const initialValue = {
   setAuthenticated: () => {}
 }
 
-const AuthenticationContext = createContext<IAuthContext>(initialValue)
+const AuthenticationContext = createContext<IAuthContext>(initialValue);
 
 const AuthenticationProvider = ({ children }: Props) => {
   //Initializing an auth state with false value (unauthenticated)

@@ -47,6 +47,8 @@ export const optionalKpis: Array<KpiProps> = [
   createKpi("Marqueurs", PATIENT_RIGHT_EYE_LID, "NA", noData, false),
 ];
 
+
+
 export const kpisBoxes: Array<KpisBoxProps> = [
   createKpisBox(CATEGORIES[0], [ 
     createKpi("PPC", PATIENT_RIGHT_EYE_LID, "60-70 mmHg", { data: PATIENT_RIGHT_EYE_LID, time: '2023-07-01 12:00:00', value: 20 } as KpisChartData , true),

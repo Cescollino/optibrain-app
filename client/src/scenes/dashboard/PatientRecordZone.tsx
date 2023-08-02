@@ -13,6 +13,36 @@ import GlasgowScoreChart from "@/components/patientRecord/GlasgowScoreChart";
 import NeurologicalStateChart from "@/components/patientRecord/NeurologicalStateChart";
 import { PatientData } from "@/state/types";
 
+
+// Function to calculate age in years, months, and days
+const ageFormat = (dateOfBirth: string): string => {
+  const today = new Date();
+  const birthDate = new Date(dateOfBirth);
+
+  let ageYear = today.getFullYear() - birthDate.getFullYear();
+  let ageMonth = today.getMonth() - birthDate.getMonth();
+  let ageDay = today.getDate() - birthDate.getDate();
+
+  if (ageDay < 0) {
+    ageMonth--;
+    const daysInLastMonth = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      0
+    ).getDate();
+    ageDay += daysInLastMonth;
+  }
+
+  if (ageMonth < 0) {
+    ageYear--;
+    ageMonth += 12;
+  }
+
+  return `Age: ${ageYear}a ${ageMonth}m ${ageDay}j`;
+};
+
+
+
 const Img = styled('img')({
   display: 'flex',
   maxWidth: '100%',
@@ -20,7 +50,7 @@ const Img = styled('img')({
   flexGrow: 1,
 });
 
-const PatientRecordZone = ({ patient }: { patient: PatientData }) => {
+const PatientRecordZone = ({ patient } : { patient: PatientData }) => {
   const globalAdherenceData: { day: string; score: number; }[] = [
     { day: "J0", score: 40 },
     { day: "J01", score: 40 },
@@ -92,17 +122,17 @@ const PatientRecordZone = ({ patient }: { patient: PatientData }) => {
       >
         {/* First item */}
         <PatientRecordBox
-          header={<PatientRecordHeader title={`${patient.firstName} ${patient.lastName} (${patient.gender})`} />}
+          header={<PatientRecordHeader title={`${patient.data.firstName} ${patient.data.lastName} (${patient.data.gender})`} />}
           content={
             <>
               <Typography variant="h5" fontSize="14px">
                 Trauma crânien sévère
               </Typography>
               <Typography variant="h5" fontSize="14px">
-                Âge: 4a 4m 12j
+                ageFormat({patient.data.dateOfBirth})
               </Typography>
               <Typography variant="h5" fontSize="14px">
-                `Poids: ${patient.weight}kg`
+                Poids: {patient.data.weight}kg
               </Typography>
               <Typography variant="h5" fontSize="14px">
                 #Jours USIP: J4

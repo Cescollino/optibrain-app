@@ -5,10 +5,6 @@ import Dashboard from "@/scenes/dashboard";
 import Login from '@/scenes/login'
 import { PatientData } from '@/state/types';
 
-type Props = {
-  patient: PatientData;
-}
-
 const PrivateRoutes = () => {
   const { authenticated } = useContext(AuthenticationContext)
 
@@ -17,14 +13,14 @@ const PrivateRoutes = () => {
   return <Outlet />
 }
 
-const Routes = (props: Props) => {
+const Routes = ( { patient } : { patient: PatientData }) => {
   const { authenticated } = useContext(AuthenticationContext)
 
   return (
     <Router>
       <Route path='/login' element={<Login />}/>
       <Route element={<PrivateRoutes />}>
-        <Route path='/' element={<Dashboard patient={props.patient} />} />
+        <Route path='/' element={<Dashboard patient={patient} />} />
       </Route>
     </Router>
   )

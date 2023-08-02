@@ -13,18 +13,35 @@ export interface KpiProps {
 
 
 export interface PatientData {
-  noadmsip: number;
-  firstName: string;
-  lastName: string;
-  dateOfBirth: string;
-  gender: string;
-  lifetimeNumber: number;
-  weight: number;
-  idealWeight: number;
-  height: number;
-  primaryDiagnosis: string;
-  lastLoadingTime?: number;
+  data: {
+    noadmsip: number;
+    firstName: string;
+    lastName: string;
+    dateOfBirth: string;
+    gender: string;
+    lifetimeNumber: number;
+    weight: number;
+    idealWeight: number;
+    height: number;
+    primaryDiagnosis: string;
+    lastLoadingTime?: number;
+  }
 }
+
+export const DefaultPatient = {
+    noadmsip: 3563,
+    firstName: 'NA',
+    lastName: 'NA',
+    dateOfBirth: 'NA',
+    gender: 'NA',
+    lifetimeNumber: 0,
+    weight: 0.0,
+    idealWeight: 0.0,
+    height: 0.0,
+    primaryDiagnosis: 'NA',
+    lastLoadingTime: undefined,
+};
+
 
 export interface KpiData {
   id: number;
