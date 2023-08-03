@@ -1,6 +1,5 @@
-import { createContext, ReactNode, useEffect, useState } from 'react';
-import { DefaultPatient, PatientData } from '@/state/types';
-import { PATIENTS } from '@/services/kpiService';
+import { createContext, useState, ReactNode } from 'react';
+import { PatientData } from '@/state/types';
 
 type Props = {
   children?: ReactNode;
@@ -8,37 +7,21 @@ type Props = {
 
 type PatientContextType = {
   patient: PatientData | null;
-  setPatientData: (newPatient: PatientData) => void;
+  setPatient: (newPatient: PatientData | null) => void;
 };
 
 const initialValue: PatientContextType = {
   patient: null,
-  setPatientData: () => {}
+  setPatient: () => {}
 };
 
 const PatientContext = createContext<PatientContextType>(initialValue);
 
 const PatientProvider = ({ children }: Props) => {
-  const [patient, setPatientData] = useState<PatientData | null>(null);
-
-  useEffect(() => {
-    const fetchPatientData = async () => {
-      try {
-        if(patient) {
-          const patientData = await PATIENTS.getOne(DefaultPatient.noadmsip);
-          setPatientData(patientData);
-          console.log('Fetched patient data:', patientData);
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    fetchPatientData();
-  }, []);
+  const [patient, setPatient] = useState<PatientData | null>(null);
 
   return (
-    <PatientContext.Provider value={{ patient, setPatientData }}>
+    <PatientContext.Provider value={{ patient, setPatient }}>
       {children}
     </PatientContext.Provider>
   );

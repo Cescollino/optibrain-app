@@ -4,6 +4,8 @@ import { AuthenticationContext } from '@/contexts/AuthenticationContext'
 import Dashboard from "@/scenes/dashboard";
 import Login from '@/scenes/login'
 import { PatientData } from '@/state/types';
+import Beds from '@/scenes/beds'
+import { PatientContext } from './contexts/PatientContext';
 
 const PrivateRoutes = () => {
   const { authenticated } = useContext(AuthenticationContext)
@@ -13,14 +15,15 @@ const PrivateRoutes = () => {
   return <Outlet />
 }
 
-const Routes = ( { patient } : { patient: PatientData }) => {
-  const { authenticated } = useContext(AuthenticationContext)
+const Routes = () => {
 
   return (
     <Router>
       <Route path='/login' element={<Login />}/>
       <Route element={<PrivateRoutes />}>
-        <Route path='/' element={<Dashboard patient={patient} />} />
+        {/* <Route path='/logout' element={<Login />}/> */}
+        <Route path='/beds' element={< Beds/>} />
+        <Route path='/' element={<Dashboard />} />
       </Route>
     </Router>
   )

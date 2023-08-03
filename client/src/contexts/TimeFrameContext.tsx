@@ -1,5 +1,4 @@
 /* Displays the data depending on the time frame selected by the user, last 3 hours by default */
-
 import { createContext } from "react";
 
 type TimeFrame = {

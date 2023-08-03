@@ -13,7 +13,6 @@ export interface KpiProps {
 
 
 export interface PatientData {
-  data: {
     noadmsip: number;
     firstName: string;
     lastName: string;
@@ -25,7 +24,6 @@ export interface PatientData {
     height: number;
     primaryDiagnosis: string;
     lastLoadingTime?: number;
-  }
 }
 
 export const DefaultPatient = {

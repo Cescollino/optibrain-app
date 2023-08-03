@@ -1,15 +1,15 @@
 import { PatientData, KpiData } from '@/state/types';
 import axios, { AxiosResponse } from 'axios';
 
+const API_URL = "http://localhost:5000";
+const PATIENTS_PATH = `${API_URL}/patients`
+
 const instance =  axios.create({
     baseURL: "http://localhost:5000",
     headers: {
       "Content-type": "application/json"
     }
 });
-
-
-const API_URL = "http://localhost:5000";
 
 const responseBody = (response: AxiosResponse) => response.data
 
@@ -21,8 +21,6 @@ const requests = {
 	delete: (url: string) => instance.delete(url).then(responseBody),
 };
 
-
-const PATIENTS_PATH = `${API_URL}/patients`
 export const PATIENTS = {
 	getOne: (noadmsip: number): Promise<PatientData> => requests.get(`${PATIENTS_PATH}/${noadmsip}`),
   getAll: (): Promise<PatientData[]> => requests.getAll(PATIENTS_PATH),

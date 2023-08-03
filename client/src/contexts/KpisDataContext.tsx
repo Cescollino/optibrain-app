@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useEffect, useState } from 'react';
 import { DefaultPatient, KpiData, PatientData } from '@/state/types';
-import { PATIENTS } from '@/services/kpiService';
+import { PATIENTS } from '@/api/kpiService';
 
 type KpiContextType = {
   kpiData: KpiData[];

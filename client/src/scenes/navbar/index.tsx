@@ -7,7 +7,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SearchPatientBar from './SearchPatientBar';
 import DashboardBox from '@/components/DashboardBox';
-import SquarePatientStateCount from './SquarePatientStateCount';
+import SquarePatientStateCount from '@/component/SquarePatientStateCount';
 import { PatientStatus } from '@/types/patientState';
 
 function Navbar() {

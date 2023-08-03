@@ -6,7 +6,7 @@ import Navbar from '../navbar';
 import { PatientData } from '@/state/types';
 import Clock from '@/components/Clock';
 
-const Dashboard = ({ patient }: { patient: PatientData }) => {
+const Dashboard = () => {
   return (
     <>
         <Grid 
@@ -22,7 +22,7 @@ const Dashboard = ({ patient }: { patient: PatientData }) => {
           <Navbar />
         </Grid>
         <Grid item xs={12}>
-          <PatientRecordZone patient={patient} />
+          <PatientRecordZone />
         </Grid>
         <Grid container item xs={true}>
           <Grid item>
