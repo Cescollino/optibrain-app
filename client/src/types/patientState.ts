@@ -16,7 +16,7 @@ export enum PatientStatus {
 }
 
 export interface PatientState {
-    status: PatientStatus;
+    state: PatientStatus;
     color: StatusColor;
 }
 

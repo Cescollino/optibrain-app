@@ -4,11 +4,13 @@ import { BrowserRouter } from "react-router-dom";
 import { createTheme } from "@mui/material/styles";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { KpiProvider } from "@/contexts/KpisDataContext";
-import { PatientContext, PatientProvider } from "@/contexts/PatientContext"
+import { PatientProvider } from "@/contexts/PatientContext"
 import { themeSettings } from "@/theme";
 import Routes from "@/Routes"
 import { PATIENTS } from "@/api/kpiService";
-import { DefaultPatient, KpiData, PatientData } from "@/state/types";
+import { KpiData, PatientData, PatientRecordData } from "@/state/types";
+import { PatientsRecordContext } from "@/contexts/PatientsRecordContext";
+import { PatientStatus, StatusColor } from '@/types/patientState'
 
 function App() {
 
@@ -16,15 +18,29 @@ function App() {
   const [selectedPatient, setSelectedPatient] = useState<PatientData | null>(null);
   const [patientsData, setPatientsData] = useState<PatientData[] | null>(null);
   const [kpiData, setKpiData] = useState<KpiData[]>([]);
+  const { patientsRecord, setRecords } = useContext(PatientsRecordContext);
 
   // Fetch all the patients record from cache once
   useEffect(() => {
     const fetchAllPatientRecords = async () => {
       try {
-          const patientData = await PATIENTS.getAll();
-          setPatientsData(patientData);
-          console.log('Fetched patients data:', patientData);
-
+          const data = await PATIENTS.getAll();
+          setPatientsData(data);
+          patientsData?.map((data) => (
+            setRecords(
+              [...patientsRecord, { 
+                patientData: data,
+                scans: 'CT scan', 
+                stayDays: 7, 
+                affectedSystems: ['Brain'],  
+                status: { 
+                  state: PatientStatus.CRITICAL, 
+                  color: StatusColor.RED 
+                } 
+              } as PatientRecordData ]
+            )
+          ));
+          console.log('Fetched patients data:', data);
       } catch (err) {
         console.log('Error fetching patients records data:', err);
       }

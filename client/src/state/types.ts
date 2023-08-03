@@ -1,3 +1,5 @@
+import { PatientState, PatientStatus } from "@/types/patientState";
+
 export interface KpiProps {
     variable: string;
     targetThreshold: string;
@@ -11,6 +13,14 @@ export interface KpiProps {
     onClick?: () => void;
 }
 
+
+export interface PatientRecordData {
+    patientData: PatientData;
+    scans: string | string[] | null;
+    stayDays: number;
+    affectedSystems: string[];
+    status: PatientState;
+}
 
 export interface PatientData {
     noadmsip: number;
