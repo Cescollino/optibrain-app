@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useEffect, useState } from 'react';
-import { DefaultPatient, KpiData, PatientData } from '@/state/types';
+import { DefaultPatient, KpiData, IPatient } from '@/state/types';
 import { PATIENTS } from '@/api/kpiService';
 
 type KpiContextType = {
@@ -8,7 +8,7 @@ type KpiContextType = {
 };
 
 type Props = {
-  patient: PatientData;
+  patient: IPatient;
   children?: ReactNode;
 };
 

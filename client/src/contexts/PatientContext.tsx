@@ -1,13 +1,13 @@
 import { createContext, useState, ReactNode } from 'react';
-import { PatientData } from '@/state/types';
+import { IPatient } from '@/state/types';
 
 type Props = {
   children?: ReactNode;
 };
 
 type PatientContextType = {
-  patient: PatientData | null;
-  setPatient: (newPatient: PatientData | null) => void;
+  patient: IPatient | null;
+  setPatient: (newPatient: IPatient | null) => void;
 };
 
 const initialValue: PatientContextType = {
@@ -18,7 +18,7 @@ const initialValue: PatientContextType = {
 const PatientContext = createContext<PatientContextType>(initialValue);
 
 const PatientProvider = ({ children }: Props) => {
-  const [patient, setPatient] = useState<PatientData | null>(null);
+  const [patient, setPatient] = useState<IPatient | null>(null);
 
   return (
     <PatientContext.Provider value={{ patient, setPatient }}>

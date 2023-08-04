@@ -1,5 +1,6 @@
-import { createContext, useState, ReactNode } from 'react';
-import { PatientRecordData } from '@/state/types';
+import { createContext, useState, ReactNode, useEffect } from 'react';
+import { IPatient, PatientRecordData } from '@/state/types';
+import { PatientStatus, StatusColor } from '@/types/patientState';;
 
 type Props = {
   children?: ReactNode;
@@ -7,24 +8,24 @@ type Props = {
 
 type PatientsRecordContextType = {
   patientsRecord: PatientRecordData[];
-  setRecords: (newPatientRecord: PatientRecordData[]) => void;
+  setRecords: (patientsData: PatientRecordData[]) => void;
 };
 
 const initialValue: PatientsRecordContextType = {
-    patientsRecord: [],
-    setRecords: () => {}
+    patientsRecord: [] as PatientRecordData[],
+    setRecords: () => {},
 };
 
 const PatientsRecordContext = createContext<PatientsRecordContextType>(initialValue);
 
-const PatientProvider = ({ children }: Props) => {
+const PatientRecordProvider = ({ children }: Props) => {
   const [patientsRecord, setRecords] = useState<PatientRecordData[]>(initialValue.patientsRecord);
-
-  return (
-    <PatientsRecordContext.Provider value={{ patientsRecord, setRecords }}>
-      {children}
-    </PatientsRecordContext.Provider>
-  );
-};
-
-export { PatientsRecordContext, PatientProvider };
+  
+    return (
+      <PatientsRecordContext.Provider value={{ patientsRecord, setRecords }}>
+        {children}
+      </PatientsRecordContext.Provider>
+    );
+  };
+  
+  export { PatientsRecordContext, PatientRecordProvider };

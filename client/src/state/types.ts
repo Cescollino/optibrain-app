@@ -1,3 +1,4 @@
+import { Patient } from "@/api/kpiService";
 import { PatientState, PatientStatus } from "@/types/patientState";
 
 export interface KpiProps {
@@ -15,19 +16,19 @@ export interface KpiProps {
 
 
 export interface PatientRecordData {
-    patientData: PatientData;
+    patient: IPatient;
     scans: string | string[] | null;
     stayDays: number;
     affectedSystems: string[];
     status: PatientState;
 }
 
-export interface PatientData {
+export interface IPatient {
     noadmsip: number;
     firstName: string;
     lastName: string;
     dateOfBirth: string;
-    gender: string;
+    gender:'M' | 'F';
     lifetimeNumber: number;
     weight: number;
     idealWeight: number;

@@ -12,7 +12,9 @@ import GlobalAdherenceChart from "@/components/patientRecord/GlobalAdherenceChar
 import GlasgowScoreChart from "@/components/patientRecord/GlasgowScoreChart";
 import NeurologicalStateChart from "@/components/patientRecord/NeurologicalStateChart";
 import { PatientContext } from "@/contexts/PatientContext";
-import { DefaultPatient } from "@/state/types";
+import { DefaultPatient, IPatient } from "@/state/types";
+import { PatientsRecordContext } from "@/contexts/PatientsRecordContext";
+import { PatientRecordData } from "@/state/types";
 
 // Function to calculate age in years, months, and days
 const ageFormat = (dateOfBirth: string): string => {
@@ -89,7 +91,8 @@ const PatientRecordZone = () => {
     { day: "J10",  score: 14 },
   ];
 
-  const { patient } = useContext(PatientContext);
+  console.log(patientsRecord);
+  const patient: IPatient = patientsRecord.IPatient;
   const { palette } = useTheme();
   
   const [scanImageVisible, setScanImageVisible] = useState(false);
@@ -122,17 +125,17 @@ const PatientRecordZone = () => {
       >
         {/* First item */}
         <PatientRecordBox
-          header={<PatientRecordHeader title={`${patient?.firstName} ${patient?.lastName} (${patient?.gender})`} />}
+          header={<PatientRecordHeader title={`${patient.firstName} ${patient.lastName} (${patient.gender})`} />}
           content={
             <>
               <Typography variant="h5" fontSize="14px">
                 Trauma crânien sévère
               </Typography>
               <Typography variant="h5" fontSize="14px">
-                ageFormat({patient?.dateOfBirth})
+                ageFormat({patient.dateOfBirth})
               </Typography>
               <Typography variant="h5" fontSize="14px">
-                Poids: {patient?.weight}kg
+                Poids: {patient.weight}kg
               </Typography>
               <Typography variant="h5" fontSize="14px">
                 #Jours USIP: J4

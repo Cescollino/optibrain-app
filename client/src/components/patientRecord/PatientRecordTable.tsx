@@ -54,13 +54,13 @@ const PatientsRecordTable = () => {
         <TableHead />
         <TableBody>
           {patientsRecord.map((record) => (
-            <TableRow key={record.patientData.noadmsip} >
-              <TableCell sx={{ color: 'white', justifyContent: "center", textAlign: 'center', border: 'solid', borderRadius: '60px', borderColor: palette.orangeStatus.main }}>#{record.patientData.noadmsip}</TableCell>
-              <TableCell sx={{ color: 'white', border: 'none' }}>{record.patientData.firstName}</TableCell>
-              <TableCell sx={{ color: 'white', border: 'none' }}>{record.patientData.dateOfBirth}</TableCell>
-              <TableCell sx={{ color: 'white', border: 'none' }}>{record.patientData.weight}</TableCell>
+            <TableRow key={record.IPatient.noadmsip} >
+              <TableCell sx={{ color: 'white', justifyContent: "center", textAlign: 'center', border: 'solid', borderRadius: '60px', borderColor: palette.orangeStatus.main }}>#{record.IPatient.noadmsip}</TableCell>
+              <TableCell sx={{ color: 'white', border: 'none' }}>{record.IPatient.firstName}</TableCell>
+              <TableCell sx={{ color: 'white', border: 'none' }}>{record.IPatient.dateOfBirth}</TableCell>
+              <TableCell sx={{ color: 'white', border: 'none' }}>{record.IPatient.weight}</TableCell>
               <TableCell sx={{ color: 'white', border: 'none' }}>J{record.stayDays}</TableCell>
-              <TableCell sx={{ color: 'white', border: 'none' }}>{record.patientData.primaryDiagnosis}</TableCell>
+              <TableCell sx={{ color: 'white', border: 'none' }}>{record.IPatient.primaryDiagnosis}</TableCell>
               <TableCell sx={{ color: 'white', border: 'none' }}>{record.scans}
                 <IconButton>
                 <InfoIcon sx={{ color: 'white', border: 'none'}} />

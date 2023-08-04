@@ -3,7 +3,7 @@ import {Routes as Router, Route, Navigate, Outlet} from 'react-router-dom'
 import { AuthenticationContext } from '@/contexts/AuthenticationContext'
 import Dashboard from "@/scenes/dashboard";
 import Login from '@/scenes/login'
-import { PatientData } from '@/state/types';
+import { IPatient } from '@/state/types';
 import Beds from '@/scenes/beds'
 import { PatientContext } from './contexts/PatientContext';
 
