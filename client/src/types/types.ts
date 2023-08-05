@@ -1,5 +1,5 @@
 import { Patient } from "@/api/kpiService";
-import { PatientState, PatientStatus } from "@/types/patientState";
+import { PatientState, PatientStatus } from "@/state/patientState";
 
 export interface KpiProps {
     variable: string;

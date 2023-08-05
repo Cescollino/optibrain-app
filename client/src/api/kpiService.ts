@@ -1,5 +1,10 @@
+<<<<<<< Updated upstream
 import { IPatient, KpiData } from '@/state/types';
 import axios, { AxiosError, AxiosResponse } from 'axios';
+=======
+import { IPatient, KpiData } from '@/types/types';
+import axios, { AxiosResponse } from 'axios';
+>>>>>>> Stashed changes
 
 const API_URL = "http://localhost:5000";
 const PATIENTS_PATH = `${API_URL}/patients`

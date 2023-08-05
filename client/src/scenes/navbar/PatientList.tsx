@@ -8,7 +8,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import SearchPatientBar from './SearchPatientBar';
 import DashboardBox from '@/components/DashboardBox';
 import SquarePatientStateCount from './SquarePatientStateCount';
-import { PatientStatus } from '@/types/patientState';
+import { PatientStatus } from '@/state/patientState';
 import { useTheme } from '@mui/material/styles'
 
 function PatientList() {

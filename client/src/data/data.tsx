@@ -1,5 +1,5 @@
-import { KpiProps, KpisChartData } from "@/state/types";
-import { KpisBoxProps } from "@/state/types";
+import { KpiProps, KpisChartData } from "@/types/types";
+import { KpisBoxProps } from "@/types/types";
 
 const CATEGORIES: string[] = [
   "Cibles neuromonitorages",

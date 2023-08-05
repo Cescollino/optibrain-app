@@ -3,7 +3,7 @@ import PatientRecordZone from './PatientRecordZone';
 import SideBar from './SideBar';
 import AdherenceZone from './AdherenceZone';
 import Navbar from '../navbar';
-import { IPatient } from '@/state/types';
+import { IPatient } from '@/types/types';
 import Clock from '@/components/Clock';
 
 const Dashboard = () => {

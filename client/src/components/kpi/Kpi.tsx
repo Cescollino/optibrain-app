@@ -2,7 +2,7 @@ import { Box, Typography, Fab } from "@mui/material";
 import KpiCircularProgress from "./KpiCircularProgressBar";
 import TargetIcon from '@/components/icons/TargetIcon';
 import { useEffect, useState } from "react";
-import { KpiProps } from "@/state/types";
+import { KpiProps } from "@/types/types";
 
 const Kpi = ({ variable, targetData, targetThreshold, timeFrame , onClick}: KpiProps) => {
     const [score, setScore] = useState<number>(0);

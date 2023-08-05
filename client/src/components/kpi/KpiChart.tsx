@@ -9,8 +9,8 @@ import {
   Line,
 } from "recharts";
 import ChartHeader from '@/components/ChartHeader';
-import { KpisChartData } from "@/state/types";
-import { KpiProps } from "@/state/types";
+import { KpisChartData } from "@/types/types";
+import { KpiProps } from "@/types/types";
 
 
 const KpiChart = ({ variable, continueData, targetThreshold }: KpiProps) => {

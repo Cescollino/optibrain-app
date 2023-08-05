@@ -12,9 +12,9 @@ import GlobalAdherenceChart from "@/components/patientRecord/GlobalAdherenceChar
 import GlasgowScoreChart from "@/components/patientRecord/GlasgowScoreChart";
 import NeurologicalStateChart from "@/components/patientRecord/NeurologicalStateChart";
 import { PatientContext } from "@/contexts/PatientContext";
-import { DefaultPatient, IPatient } from "@/state/types";
+import { DefaultPatient, IPatient } from "@/types/types";
 import { PatientsRecordContext } from "@/contexts/PatientsRecordContext";
-import { PatientRecordData } from "@/state/types";
+import { PatientRecordData } from "@/types/types";
 
 // Function to calculate age in years, months, and days
 const ageFormat = (dateOfBirth: string): string => {

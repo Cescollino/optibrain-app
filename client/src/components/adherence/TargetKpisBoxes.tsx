@@ -5,7 +5,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import BoxHeader from '@/components/BoxHeader';
 import DashboardBox from '@/components/DashboardBox';
 import Kpi from '@/components/kpi/Kpi';
-import { KpisBoxProps, KpiProps } from '@/state/types';
+import { KpisBoxProps, KpiProps } from '@/types/types';
 import { kpisBoxes, optionalKpis } from '@/data/data';
 import TimeFrameContext from '@/contexts/TimeFrameContext';
 import KpiChart from '@/components/kpi/KpiChart';

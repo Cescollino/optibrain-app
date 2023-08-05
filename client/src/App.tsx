@@ -5,10 +5,16 @@ import { createTheme } from "@mui/material/styles";
 import { useEffect, useMemo, useState } from "react";
 import { themeSettings } from "@/theme";
 import Routes from "@/Routes"
+<<<<<<< Updated upstream
 import { KpiData, IPatient, PatientRecordData } from "@/state/types";
 import { PatientStatus, StatusColor } from '@/types/patientState'
 import { getApi } from "./api/kpiService";
 import axios, { AxiosError } from "axios";
+=======
+import { PATIENTS } from "@/api/kpiService";
+import { KpiData, IPatient, PatientRecordData } from "@/types/types";
+import { PatientStatus, StatusColor } from '@/state/patientState'
+>>>>>>> Stashed changes
 
 function App() {
 
