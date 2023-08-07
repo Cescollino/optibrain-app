@@ -1,4 +1,4 @@
-import { IconProps } from "@/types/patientState";
+import { IconProps } from "@/state/patientState";
 
 const HeartIcon = ( { color } : IconProps ) => {
     const selectedColor = color ? color : '#000';

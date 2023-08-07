@@ -1,7 +1,7 @@
-import { MouseEvent, KeyboardEvent, useState } from 'react';
+import { MouseEvent, KeyboardEvent, useState, ChangeEvent, useEffect } from 'react';
 import { AppBar, Box, Button, Drawer, Toolbar, Typography } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import PatientsRecordTable from '@/components/patientRecord/PatientRecordTable';
+import PatientRecordsList from '@/components/patientRecord/PatientRecordsList';
 import { Link } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -10,10 +10,20 @@ import DashboardBox from '@/components/DashboardBox';
 import SquarePatientStateCount from './SquarePatientStateCount';
 import { PatientStatus } from '@/state/patientState';
 import { useTheme } from '@mui/material/styles'
+import { useParams, useNavigate } from 'react-router-dom';
 
-function PatientList() {
-  const { palette } = useTheme();
+import PatientDataService from "@/services/PatientService";
+import IPatientData from "@/types/Patient";
+
+type Props = {
+  patients: Array<IPatientData>
+}
+
+const PatientsList = ({ patients }: Props) => {
+
   const [state, setState] = useState(false);
+
+  const { palette } = useTheme();
 
   const toggleDrawer = (open: boolean) =>
     (event: KeyboardEvent | MouseEvent) => {
@@ -24,20 +34,20 @@ function PatientList() {
       ) { return; }
       setState(open);
     };
-
-  const list = () => (
+ 
+  const listPatients = () => (
     <Box
       sx={{ width: 'auto',  backgroundColor: palette.primary.main, border: 'none' }}
       role="presentation"
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
     >
-      <PatientsRecordTable />
+      <PatientRecordsList patients={patients} />
     </Box>
   );
 
   return (
-    <div>
+    <>
       <AppBar position="fixed" sx={{ zIndex: 1, backgroundColor: 'transparent' }}>
         <Toolbar>
         <DashboardBox 
@@ -50,10 +60,10 @@ function PatientList() {
               flewWrap: 'wrap',
         }}
         >
-          {!state && (
+          {!state && patients.length > 0 && (
           <Box display="flex" alignItems="center">
             <Link to="/" style={{ color: 'white', textDecoration: 'inherit', display: 'flex', alignItems: 'center' }}>
-              <SearchPatientBar />
+              <SearchPatientBar patients={patients} />
             </Link>
           </Box>
           )}
@@ -89,9 +99,13 @@ function PatientList() {
         </DashboardBox>
           </Toolbar>
         </AppBar>
-        <Drawer sx={{ backgroundColor: palette.primary.main }} anchor="top" open={state} onClose={toggleDrawer(false)}>{list()}</Drawer>
-    </div>
+        {patients.length > 0 && (
+          <Drawer sx={{ backgroundColor: palette.primary.main }} anchor="top" open={state} onClose={toggleDrawer(false)}>
+            {listPatients()}
+          </Drawer>
+        )}
+    </>
   );
 }
 
-export default PatientList;
+export default PatientsList;

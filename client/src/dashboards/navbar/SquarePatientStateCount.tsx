@@ -1,4 +1,4 @@
-import { PatientStatus, StatusColor } from "@/types/patientState";
+import { PatientStatus, StatusColor } from "@/state/patientState";
 import { Box } from "@mui/material";
 
 interface SquarePatientStateCountProps {

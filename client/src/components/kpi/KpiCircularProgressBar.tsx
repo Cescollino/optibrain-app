@@ -1,6 +1,6 @@
 import CircularProgress, { CircularProgressProps,} from '@mui/material/CircularProgress';
 import { Typography, Box } from '@mui/material';
-import { StatusColor } from '@/types/patientState';
+import { StatusColor } from "@/state/patientState";
 import { useState, useEffect } from 'react';
 import KpiProgressBox from '@/components/kpi/KpiProgressBox';
 import KpiBox from '@/components/kpi/KpiBox';

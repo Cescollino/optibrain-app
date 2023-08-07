@@ -2,44 +2,49 @@ import { AuthenticationProvider } from "./contexts/AuthenticationContext";
 import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { BrowserRouter } from "react-router-dom";
 import { createTheme } from "@mui/material/styles";
-import { useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { themeSettings } from "@/theme";
 import Routes from "@/Routes"
-<<<<<<< Updated upstream
-import { KpiData, IPatient, PatientRecordData } from "@/state/types";
-import { PatientStatus, StatusColor } from '@/types/patientState'
-import { getApi } from "./api/kpiService";
-import axios, { AxiosError } from "axios";
-=======
-import { PATIENTS } from "@/api/kpiService";
-import { KpiData, IPatient, PatientRecordData } from "@/types/types";
-import { PatientStatus, StatusColor } from '@/state/patientState'
->>>>>>> Stashed changes
+import IPatientData from "@/types/Patient";
+import { CurrentPatientProvider } from "@/contexts/CurrentPatientContext";
+import PatientDataService from "@/services/PatientService";
 
-function App() {
+const App: React.FC = () => {
 
   /* Noadmsip : Numéro d'admission soins intensifs pédiatriques */
   const [ isFeching, setIsFetching ] = useState(true);
-  const [selectedPatient, setSelectedPatient] = useState<IPatient | null>(null);
-
-  const [patientsData, setPatientsData] = useState<IPatient[]>([]);
-  // const [kpiData, setKpiData] = useState<KpiData[]>([]);
-  const [patientRecords, setRecords] = useState<PatientRecordData[]>([]);
-
-  const getData = () => getApi().then(
-    (res) => {
-      if (res.status === 200 && res.data) {
-        setPatientsData(res.data)
-        console.log(patientsData) 
-      } else {
-        console.log(res)
-      }
-  }
-  )
+  
+  const [patients, setPatients] = useState<Array<IPatientData>>([]);
 
   useEffect(() => {
-    getData()
+    retrievePatients();
   }, []);
+
+  const retrievePatients = () => {
+    PatientDataService.getAll()
+      .then((response: any) => {
+        setPatients(response.data);
+        console.log('Fetched all patients in database :', response.data);
+      })
+      .catch((e: Error) => {
+        console.log('Error when fetching patients', e);
+      });
+  };
+
+  const refreshList = () => {
+    retrievePatients();
+  };
+
+  const removeAllPatients = () => {
+    PatientDataService.removeAll()
+      .then((response: any) => {
+        console.log(response.data);
+        refreshList();
+      })
+      .catch((e: Error) => {
+        console.log(e);
+      });
+  };
 
   // useEffect(() => {
   //   const records: PatientRecordData[] = patientsData.map((patient) => ({
@@ -81,8 +86,10 @@ function App() {
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <Box width="100%" height="100%" padding="0.5rem">
-            <AuthenticationProvider>
-                <Routes />
+            <AuthenticationProvider >
+              <CurrentPatientProvider>
+                <Routes patients={patients} />
+              </CurrentPatientProvider>
             </AuthenticationProvider >
             </Box>
           </ThemeProvider>

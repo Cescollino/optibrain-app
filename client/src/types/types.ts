@@ -1,5 +1,5 @@
-import { Patient } from "@/api/kpiService";
-import { PatientState, PatientStatus } from "@/state/patientState";
+import { PatientStatus } from "@/state/patientState";
+import PatientState from "@/state/patientState";
 
 export interface KpiProps {
     variable: string;
@@ -13,44 +13,6 @@ export interface KpiProps {
 
     onClick?: () => void;
 }
-
-
-export interface PatientRecordData {
-    patient: IPatient;
-    scans: string | string[] | null;
-    stayDays: number;
-    affectedSystems: string[];
-    status: PatientState;
-}
-
-export interface IPatient {
-    noadmsip: number;
-    firstName: string;
-    lastName: string;
-    dateOfBirth: string;
-    gender:'M' | 'F';
-    lifetimeNumber: number;
-    weight: number;
-    idealWeight: number;
-    height: number;
-    primaryDiagnosis: string;
-    lastLoadingTime?: number;
-}
-
-export const DefaultPatient = {
-    noadmsip: 3563,
-    firstName: 'NA',
-    lastName: 'NA',
-    dateOfBirth: 'NA',
-    gender: 'NA',
-    lifetimeNumber: 0,
-    weight: 0.0,
-    idealWeight: 0.0,
-    height: 0.0,
-    primaryDiagnosis: 'NA',
-    lastLoadingTime: undefined,
-};
-
 
 export interface KpiData {
   id: number;

@@ -1,16 +1,17 @@
-import { StatusColor, PatientState, PatientStatus } from "@/types/patientState"
+import { StatusColor, PatientStatus } from "@/state/patientState";
+import PatientState from "@/state/patientState";
 
 export const STABLE_PATIENT: PatientState = {
-    status: PatientStatus.STABLE,
+    state: PatientStatus.STABLE,
     color: StatusColor.GREEN,
 }
 
 export const TO_WATCH_PATIENT: PatientState = {
-    status: PatientStatus.WATCH,
+    state: PatientStatus.WATCH,
     color: StatusColor.ORANGE,
 }
 
 export const CRITICAL_PATIENT: PatientState = {
-    status: PatientStatus.CRITICAL,
+    state: PatientStatus.CRITICAL,
     color: StatusColor.RED,
 }

@@ -11,37 +11,15 @@ import { useContext, useState } from "react";
 import GlobalAdherenceChart from "@/components/patientRecord/GlobalAdherenceChart";
 import GlasgowScoreChart from "@/components/patientRecord/GlasgowScoreChart";
 import NeurologicalStateChart from "@/components/patientRecord/NeurologicalStateChart";
-import { PatientContext } from "@/contexts/PatientContext";
-import { DefaultPatient, IPatient } from "@/types/types";
-import { PatientsRecordContext } from "@/contexts/PatientsRecordContext";
-import { PatientRecordData } from "@/types/types";
 
-// Function to calculate age in years, months, and days
-const ageFormat = (dateOfBirth: string): string => {
-  const today = new Date();
-  const birthDate = new Date(dateOfBirth);
+import IPatientData from "@/types/Patient"
+import IPatientRecordData  from "@/types/PatientRecord";
+import PatientDataService from "@/services/PatientService";
+import { useNavigate } from "react-router-dom";
+import { CurrentPatientContext, IPatientContext } from "@/contexts/CurrentPatientContext";
 
-  let ageYear = today.getFullYear() - birthDate.getFullYear();
-  let ageMonth = today.getMonth() - birthDate.getMonth();
-  let ageDay = today.getDate() - birthDate.getDate();
 
-  if (ageDay < 0) {
-    ageMonth--;
-    const daysInLastMonth = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      0
-    ).getDate();
-    ageDay += daysInLastMonth;
-  }
-
-  if (ageMonth < 0) {
-    ageYear--;
-    ageMonth += 12;
-  }
-
-  return `Age: ${ageYear}a ${ageMonth}m ${ageDay}j`;
-};
+type Props = {}
 
 const Img = styled('img')({
   display: 'flex',
@@ -51,6 +29,34 @@ const Img = styled('img')({
 });
 
 const PatientRecordZone = () => {
+  const { currentPatient } = useContext(CurrentPatientContext);
+
+  // Function to calculate age in years, months, and days 
+    const ageFormat = (dateOfBirth: string) => {
+      const today = new Date();
+      const birthDate = new Date(dateOfBirth);
+
+      let ageYear = today.getFullYear() - birthDate.getFullYear();
+      let ageMonth = today.getMonth() - birthDate.getMonth();
+      let ageDay = today.getDate() - birthDate.getDate();
+
+      if (ageDay < 0) {
+        ageMonth--;
+        const daysInLastMonth = new Date(
+          today.getFullYear(),
+          today.getMonth(),
+          0
+        ).getDate();
+        ageDay += daysInLastMonth;
+      }
+
+      if (ageMonth < 0) {
+        ageYear--;
+        ageMonth += 12;
+      }
+
+    return `Age: ${ageYear}a ${ageMonth}m ${ageDay}j`;
+  };
 
   const globalAdherenceData: { day: string; score: number; }[] = [
     { day: "J0", score: 40 },
@@ -90,9 +96,7 @@ const PatientRecordZone = () => {
     { day: "J09", score: 14 },
     { day: "J10",  score: 14 },
   ];
-
-  console.log(patientsRecord);
-  const patient: IPatient = patientsRecord.IPatient;
+ 
   const { palette } = useTheme();
   
   const [scanImageVisible, setScanImageVisible] = useState(false);
@@ -125,17 +129,17 @@ const PatientRecordZone = () => {
       >
         {/* First item */}
         <PatientRecordBox
-          header={<PatientRecordHeader title={`${patient.firstName} ${patient.lastName} (${patient.gender})`} />}
+          header={<PatientRecordHeader title={`${currentPatient.firstName} ${currentPatient.lastName} (${currentPatient.gender})`} />}
           content={
             <>
               <Typography variant="h5" fontSize="14px">
                 Trauma crânien sévère
               </Typography>
               <Typography variant="h5" fontSize="14px">
-                ageFormat({patient.dateOfBirth})
+                ageFormat({currentPatient.dateOfBirth})
               </Typography>
               <Typography variant="h5" fontSize="14px">
-                Poids: {patient.weight}kg
+                Poids: {currentPatient.weight}kg
               </Typography>
               <Typography variant="h5" fontSize="14px">
                 #Jours USIP: J4

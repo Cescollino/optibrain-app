@@ -1,11 +1,14 @@
 import { useContext } from 'react'
-import {Routes as Router, Route, Navigate, Outlet} from 'react-router-dom'
+import {Routes as Router, Route, Navigate, Outlet, useNavigate} from 'react-router-dom'
 import { AuthenticationContext } from '@/contexts/AuthenticationContext'
-import Dashboard from "@/scenes/dashboard";
-import Login from '@/scenes/login'
-import { IPatient } from '@/types/types';
-import Beds from '@/scenes/beds'
-import { PatientContext } from './contexts/PatientContext';
+import BrainDashboard from "@/dashboards/brain";
+import Login from '@/dashboards/login'
+
+import IPatientData from '@/types/Patient';
+
+type Props = {
+  patients: Array<IPatientData>
+}
 
 const PrivateRoutes = () => {
   const { authenticated } = useContext(AuthenticationContext)
@@ -15,15 +18,16 @@ const PrivateRoutes = () => {
   return <Outlet />
 }
 
-const Routes = () => {
+
+const Routes = ({ patients }: Props) => {
 
   return (
     <Router>
       <Route path='/login' element={<Login />}/>
       <Route element={<PrivateRoutes />}>
         {/* <Route path='/logout' element={<Login />}/> */}
-        <Route path='/beds' element={< Beds/>} />
-        <Route path='/' element={<Dashboard />} />
+        <Route path='/' element={<BrainDashboard patients={patients}/>} />
+        <Route path='/:noadmsip' element={<BrainDashboard patients={patients} />} />
       </Route>
     </Router>
   )

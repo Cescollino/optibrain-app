@@ -20,6 +20,7 @@
     "@mui/styled-engine-sc": "^5.12.0",
     "@mui/x-data-grid": "^6.5.0",
     "axios": "^1.4.0",
+    "query": "github:tanstack/react-query",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.2",

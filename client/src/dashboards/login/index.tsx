@@ -28,9 +28,9 @@ const loginText = { title: 'Connexion', username: 'Nom d'+"'"+'utilisateur', pas
 
 const Login = () => {
   
-  const [username, setUserName] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const {authenticated, setAuthenticated} = useContext(AuthenticationContext);
+  const [ username, setUserName ] = useState<string>('');
+  const [ password, setPassword ] = useState<string>('');
+  const { authenticated, setAuthenticated } = useContext(AuthenticationContext);
 
   // TODO : needs to be replace with the employees login information
   const admin = {
@@ -48,7 +48,7 @@ const Login = () => {
 
     if (username === admin.username && password === admin.password)
       setAuthenticated(true);
-      navigate('/')
+      navigate('/');
   }
 
   return (

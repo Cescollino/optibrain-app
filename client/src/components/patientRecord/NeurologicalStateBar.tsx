@@ -1,7 +1,7 @@
 import CircleIcon from '@mui/icons-material/Circle';
 import { Box } from "@mui/material";
 import KpiBox from "../kpi/KpiBox";
-import { StatusColor } from '@/types/patientState';
+import { StatusColor } from '@/state/patientState';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 const NeurologicalStateBar = ({ score }: { score: number }) => {

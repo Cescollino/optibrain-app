@@ -15,10 +15,10 @@ export enum PatientStatus {
     CRITICAL = "Critique",
 }
 
-export interface PatientState {
+
+export interface IconProps { color?: string };
+
+export default interface PatientState {
     state: PatientStatus;
     color: StatusColor;
 }
-
-
-export interface IconProps { color?: string };

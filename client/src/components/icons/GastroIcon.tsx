@@ -1,4 +1,4 @@
-import { IconProps } from "@/types/patientState";
+import { IconProps } from "@/state/patientState";
 
 const GastroIcon = ( { color } : IconProps ) => {
     const width = 30;

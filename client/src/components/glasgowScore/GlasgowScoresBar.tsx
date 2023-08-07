@@ -1,9 +1,8 @@
 import { Box, Grid  } from "@mui/material";
 import KpiProgressBox from "../kpi/KpiProgressBox";
 import KpiBox from "../kpi/KpiBox";
-import { StatusColor } from "@/types/patientState";
+import { StatusColor } from "@/state/patientState";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-
 
 const GlasgowScoresBar = ({ score }: { score: number}) => {
     return (

@@ -1,16 +1,22 @@
-import { MouseEvent, KeyboardEvent, useState } from 'react';
+import { MouseEvent, KeyboardEvent, useState, useEffect } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import PatientsRecordTable from '@/components/patientRecord/PatientRecordTable';
+import PatientsRecordList from '@/components/patientRecord/PatientRecordsList';
 import { Link } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SearchPatientBar from './SearchPatientBar';
 import DashboardBox from '@/components/DashboardBox';
-import SquarePatientStateCount from '@/scenes/navbar/SquarePatientStateCount';
-import { PatientStatus } from '@/types/patientState';
+import SquarePatientStateCount from '@/dashboards/navbar/SquarePatientStateCount';
+import { PatientStatus } from '@/state/patientState';
+import IPatientData from '@/types/Patient';
 
-function Navbar() {
+type Props = {
+  patients: Array<IPatientData>
+}
+
+
+const Navbar = ({ patients }: Props) => {
   const [state, setState] = useState(false);
 
   const togglePatientList = (open: boolean) =>
@@ -35,8 +41,8 @@ function Navbar() {
           <Box display="flex" alignItems="center" sx={{ minWidth:'25ch' }}>
           {!state && (
             <Link to="/" style={{ color: 'white', textDecoration: 'inherit', display: 'flex', alignItems: 'center' }}>
-              <SearchPatientBar />
-            </Link>
+              <SearchPatientBar patients={patients} />
+            </Link> 
           )}
           </Box>
           <Box display="flex" alignItems="center" gap="0.5rem" >
@@ -67,9 +73,9 @@ function Navbar() {
             </Box>
           </Box>
           </DashboardBox>
-          {state && ( 
+          {state && patients && ( 
           <DashboardBox sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem' }}>
-            <PatientsRecordTable /> 
+            <PatientsRecordList patients={patients} /> 
           </DashboardBox>
           )}
         </DashboardBox>
