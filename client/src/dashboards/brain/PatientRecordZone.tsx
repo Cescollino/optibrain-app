@@ -12,14 +12,16 @@ import GlobalAdherenceChart from "@/components/patientRecord/GlobalAdherenceChar
 import GlasgowScoreChart from "@/components/patientRecord/GlasgowScoreChart";
 import NeurologicalStateChart from "@/components/patientRecord/NeurologicalStateChart";
 
-import IPatientData from "@/types/Patient"
+import IPatient from "@/types/Patient"
 import IPatientRecordData  from "@/types/PatientRecord";
 import PatientDataService from "@/services/PatientService";
 import { useNavigate } from "react-router-dom";
 import { CurrentPatientContext, IPatientContext } from "@/contexts/CurrentPatientContext";
 
 
-type Props = {}
+type Props = {
+  patients: IPatient[]
+}
 
 const Img = styled('img')({
   display: 'flex',
@@ -28,13 +30,13 @@ const Img = styled('img')({
   flexGrow: 1,
 });
 
-const PatientRecordZone = () => {
-  const { currentPatient } = useContext(CurrentPatientContext);
-
+const PatientRecordZone = ({ patients }: Props ) => {
+  console.log('Patient record zone ', patients);
+  const patient = patients[0]
   // Function to calculate age in years, months, and days 
-    const ageFormat = (dateOfBirth: string) => {
+    const ageFormat = (dataofbirth: string) => {
       const today = new Date();
-      const birthDate = new Date(dateOfBirth);
+      const birthDate = new Date(dataofbirth);
 
       let ageYear = today.getFullYear() - birthDate.getFullYear();
       let ageMonth = today.getMonth() - birthDate.getMonth();
@@ -129,17 +131,17 @@ const PatientRecordZone = () => {
       >
         {/* First item */}
         <PatientRecordBox
-          header={<PatientRecordHeader title={`${currentPatient.firstName} ${currentPatient.lastName} (${currentPatient.gender})`} />}
+          header={<PatientRecordHeader title={`${patient.firstname} ${patient.lastname} (${patient.gender})`} />}
           content={
             <>
               <Typography variant="h5" fontSize="14px">
                 Trauma crânien sévère
               </Typography>
               <Typography variant="h5" fontSize="14px">
-                ageFormat({currentPatient.dateOfBirth})
+                ageFormat({patient.dataofbirth})
               </Typography>
               <Typography variant="h5" fontSize="14px">
-                Poids: {currentPatient.weight}kg
+                Poids: {patient.weight}kg
               </Typography>
               <Typography variant="h5" fontSize="14px">
                 #Jours USIP: J4

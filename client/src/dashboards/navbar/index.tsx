@@ -9,10 +9,10 @@ import SearchPatientBar from './SearchPatientBar';
 import DashboardBox from '@/components/DashboardBox';
 import SquarePatientStateCount from '@/dashboards/navbar/SquarePatientStateCount';
 import { PatientStatus } from '@/state/patientState';
-import IPatientData from '@/types/Patient';
+import IPatient from '@/types/Patient';
 
 type Props = {
-  patients: Array<IPatientData>
+  patients: IPatient[]
 }
 
 
@@ -38,10 +38,10 @@ const Navbar = ({ patients }: Props) => {
         }}
         >
         <DashboardBox display='inline-flex' sx={{ width: '100%', justifyContent: 'space-between', padding: '1rem', flewWrap: 'wrap', boxShadow: 'none'}}>
-          <Box display="flex" alignItems="center" sx={{ minWidth:'25ch' }}>
+          <Box display="flex" alignItems="center" sx={{ minWidth:'max-content' }}>
           {!state && (
             <Link to="/" style={{ color: 'white', textDecoration: 'inherit', display: 'flex', alignItems: 'center' }}>
-              <SearchPatientBar patients={patients} />
+              <SearchPatientBar sx={{width: '100%'}} patients={patients} />
             </Link> 
           )}
           </Box>

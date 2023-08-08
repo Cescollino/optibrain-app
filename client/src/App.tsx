@@ -1,101 +1,83 @@
-import { AuthenticationProvider } from "./contexts/AuthenticationContext";
-import { Box, CssBaseline, ThemeProvider } from "@mui/material";
+import React, { useMemo, useState } from "react";
 import { BrowserRouter } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+
+import { Box, CssBaseline, ThemeProvider, Typography } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
-import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { themeSettings } from "@/theme";
-import Routes from "@/Routes"
-import IPatientData from "@/types/Patient";
+
+import { AuthenticationProvider } from "./contexts/AuthenticationContext";
 import { CurrentPatientProvider } from "@/contexts/CurrentPatientContext";
-import PatientDataService from "@/services/PatientService";
+import Routes from "@/Routes"
+
+import IPatient from "@/types/Patient";
+import PatientService from "@/services/PatientService";
+
+/* Noadmsip : Numéro d'admission soins intensifs pédiatriques */
 
 const App: React.FC = () => {
-
-  /* Noadmsip : Numéro d'admission soins intensifs pédiatriques */
-  const [ isFeching, setIsFetching ] = useState(true);
-  
-  const [patients, setPatients] = useState<Array<IPatientData>>([]);
-
-  useEffect(() => {
-    retrievePatients();
-  }, []);
-
-  const retrievePatients = () => {
-    PatientDataService.getAll()
-      .then((response: any) => {
-        setPatients(response.data);
-        console.log('Fetched all patients in database :', response.data);
-      })
-      .catch((e: Error) => {
-        console.log('Error when fetching patients', e);
-      });
-  };
-
-  const refreshList = () => {
-    retrievePatients();
-  };
-
-  const removeAllPatients = () => {
-    PatientDataService.removeAll()
-      .then((response: any) => {
-        console.log(response.data);
-        refreshList();
-      })
-      .catch((e: Error) => {
-        console.log(e);
-      });
-  };
-
-  // useEffect(() => {
-  //   const records: PatientRecordData[] = patientsData.map((patient) => ({
-  //     patient,
-  //     scans: 'CT scan',
-  //     stayDays: 7,
-  //     affectedSystems: ['Brain'],
-  //     status: {
-  //       state: PatientStatus.CRITICAL,
-  //       color: StatusColor.RED,
-  //     },
-  //   }) as PatientRecordData); 
-  //   setRecords([...patientRecords, ...records]);
-  //   console.log(patientRecords);
-  // }, [patientsData]);
-
-  // // Fetch the key point indicators from the cache database
-  // useEffect(() => {
-  //   const fetchKpiData = async () => {
-  //       try {
-  //           if (selectedPatient) {
-  //               const kpiData = await PATIENTS.getAllKpis(selectedPatient.noadmsip);
-  //               setKpiData(kpiData);
-  //               console.log('Fetched kpis data:', kpiData);
-  //           }   
-  //       } catch (err) {
-  //       console.error('Error fetching kpiData:', err);
-  //       }
-  //   };
-
-  //   fetchKpiData();
-  // }, [selectedPatient]);
-
+  const [patients, setPatients] = useState<IPatient[]>([])
   const theme = useMemo(() => createTheme(themeSettings), []);
-  
+
+  const formatResponse = (res: any) => {
+    return JSON.stringify(res, null, 2)
+  }
+
+  const getAllPatients = async () => {
+    const response = await PatientService.findAll()
+    if(response)
+      setPatients(response)
+    return response
+  }
+
+  const patientsQuery = useQuery({
+    queryKey: ["patients"],
+    queryFn: getAllPatients,
+    initialData: [{
+        noadmsip: 3563,
+        firstname: 'NA',
+        lastname: 'NA',
+        dataofbirth: 'NA',
+        gender: 'M',
+        lifetimenumber: 0,
+        weight: 0.0,
+        idealweight: 0.0,
+        height: 0.0,
+        primarydiagnosis: 'NA',
+        lastloadingtime: undefined,
+    }] as IPatient[],
+  })
+
+
+  if (patientsQuery.isLoading) {
+    console.log('isLoading')
+    return <h1>Loading patients data...</h1>
+  }
+    
+  if (patientsQuery.isError) {
+    console.log(patientsQuery.error)
+    return <pre>{formatResponse(patientsQuery.error)}</pre>
+  }
+
   return (
       <div className="app">
         <BrowserRouter>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Box width="100%" height="100%" padding="0.5rem">
-            <AuthenticationProvider >
-              <CurrentPatientProvider>
-                <Routes patients={patients} />
-              </CurrentPatientProvider>
-            </AuthenticationProvider >
-            </Box>
-          </ThemeProvider>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Box width="100%" height="100%" padding="0.5rem">
+          <AuthenticationProvider >
+            <CurrentPatientProvider>
+              <Routes patients={patients} />
+            </CurrentPatientProvider>
+          </AuthenticationProvider >
+          </Box>
+        </ThemeProvider>
         </BrowserRouter>
       </div>
   )
 }
 
 export default App;
+
+
+

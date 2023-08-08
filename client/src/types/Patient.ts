@@ -1,13 +1,13 @@
-export default interface IPatientData {
+export default interface IPatient {
     noadmsip: number;
-    firstName: string;
-    lastName: string;
-    dateOfBirth: string;
+    firstname: string;
+    lastname: string;
+    dataofbirth: string;
     gender:'M' | 'F';
-    lifetimeNumber: number;
+    lifetimenumber: number;
     weight: number;
-    idealWeight: number;
+    idealweight: number;
     height: number;
-    primaryDiagnosis: string;
-    lastLoadingTime?: number;
+    primarydiagnosis: string;
+    lastloadingtime?: number;
 }

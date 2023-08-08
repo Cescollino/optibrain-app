@@ -3,12 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 import { styled, alpha } from '@mui/material/styles';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
-import IPatientData from '@/types/Patient';
+import IPatient from '@/types/Patient';
 import { useContext, useState } from 'react';
 import { CurrentPatientContext } from '@/contexts/CurrentPatientContext';
 
 type Props = {
-  patients: Array<IPatientData>
+  patients: IPatient[]
 }
 
 const Search = styled('div')(({ theme }) => ({
@@ -43,17 +43,15 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 }));
 
 const SearchPatientBar= ({ patients }: Props) => {
-    const navigate = useNavigate();
-    
-    const { currentPatient, setCurrentPatient } = useContext(CurrentPatientContext)
-    const initialPatientFullName: string = `${currentPatient.firstName} ${currentPatient.lastName}`;
+    const navigate = useNavigate()
 
-    const [value, setValue] = useState<string | null>(initialPatientFullName);
-    const [inputValue, setInputValue] = useState('');
+    const [value, setValue] = useState<IPatient | null>(null)
+    const [selectedPatient, setSelectedPatient] = useState<number | null >(null)
+    const [inputValue, setInputValue] = useState('')
 
-    const { palette } = useTheme();
+    const { palette } = useTheme()
     return (
-      <Box sx={{ flexGrow: 1, display: 'flex' }}>
+      <Box sx={{ flexGrow: 1, display: 'flex', flexWrap: 'nowrap', width: '100%'  }}>
             <Search>
                 <Fab 
                   sx={{  
@@ -68,18 +66,23 @@ const SearchPatientBar= ({ patients }: Props) => {
                   <PersonSearchIcon sx={{ fontSize: "24px", color: 'white' }} />
                 </Fab>
                 <Autocomplete
+                  size='small'
                   value={value}
-                  onChange={(event: any, newValue: string | null) => {
+                  onChange={(event: any, newValue: IPatient | null) => {
                     setValue(newValue);
-                    setCurrentPatient(currentPatient);
-                    navigate('/:noadmsip')
+                    if(newValue) {
+                      console.log('noadmsip selectionné: ', newValue.noadmsip)
+                      setSelectedPatient(newValue.noadmsip)
+                      navigate(`/:${selectedPatient}`)
+                    }
                   }}
                   inputValue={inputValue}
                   onInputChange={(event, newInputValue) => {
                     setInputValue(newInputValue);
                   }}
                   id="controllable-states-demo"
-                  options={patients.map((patient) => `${patient.firstName} ${patient.lastName}`)}
+                  options={patients as readonly IPatient[]}
+                  getOptionLabel={(option) => `${option.firstname} ${option.lastname}`}
                   renderInput={(params) => (
                     <StyledTextField
                       {...params}

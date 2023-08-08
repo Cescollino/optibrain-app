@@ -13,10 +13,10 @@ import { useTheme } from '@mui/material/styles'
 import { useParams, useNavigate } from 'react-router-dom';
 
 import PatientDataService from "@/services/PatientService";
-import IPatientData from "@/types/Patient";
+import IPatient from "@/types/Patient";
 
 type Props = {
-  patients: Array<IPatientData>
+  patients: Array<IPatient>
 }
 
 const PatientsList = ({ patients }: Props) => {

@@ -4,10 +4,10 @@ import { AuthenticationContext } from '@/contexts/AuthenticationContext'
 import BrainDashboard from "@/dashboards/brain";
 import Login from '@/dashboards/login'
 
-import IPatientData from '@/types/Patient';
+import IPatient from '@/types/Patient';
 
 type Props = {
-  patients: Array<IPatientData>
+  patients: IPatient[]
 }
 
 const PrivateRoutes = () => {

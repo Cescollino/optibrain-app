@@ -1,4 +1,4 @@
-import IPatientData from '@/types/Patient';
+import IPatient from '@/types/Patient';
 import { createContext, ReactNode, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -7,27 +7,27 @@ type Props = {
 }
 
 export type IPatientContext = {
-    currentPatient: IPatientData;
-    setCurrentPatient: (selectedPatient: IPatientData) => void
+    currentPatient: IPatient;
+    setCurrentPatient: (selectedPatient: IPatient) => void
 }
 
-const initialPatient: IPatientData = {
+const initialPatient: IPatient = {
     noadmsip: 3563,
-    firstName: 'NA',
-    lastName: 'NA',
-    dateOfBirth: 'NA',
+    firstname: 'NA',
+    lastname: 'NA',
+    dataofbirth: 'NA',
     gender: 'M',
-    lifetimeNumber: 0,
+    lifetimenumber: 0,
     weight: 0.0,
-    idealWeight: 0.0,
+    idealweight: 0.0,
     height: 0.0,
-    primaryDiagnosis: 'NA',
-    lastLoadingTime: undefined,
-  };
+    primarydiagnosis: 'NA',
+    lastloadingtime: undefined,
+};
 
 const initialValue = {
   currentPatient: initialPatient,
-  setCurrentPatient: (selectedPatient: IPatientData) => {}
+  setCurrentPatient: (selectedPatient: IPatient) => {}
 }
 
 const CurrentPatientContext = createContext<IPatientContext>(initialValue);

@@ -1,8 +1,8 @@
 import PatientState from "@/state/patientState";
-import IPatientData from "@/types/Patient";
+import IPatient from "@/types/Patient";
 
 export default interface PatientRecordData {
-    data: IPatientData;
+    data: IPatient;
     scans: string | string[] | null;
     stayDays: number;
     affectedSystems: string[];
