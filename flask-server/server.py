@@ -42,8 +42,14 @@ try:
         print(' successfully connected to the pgAdmin database ! ')
     else:
         print(' not connected with database :( ')
+
+    @app.route("/api", methods=["GET"])
+    def index():
+        return { 
+            "api": "optibrain appliation flask-server"
+        }
     
-    @app.route("/patients")
+    @app.route("/api/patients")
     def fetchAllPatients():
         try:
             cursor.execute(f"SELECT * FROM Patient;")
@@ -61,9 +67,8 @@ try:
             print("Error executing SQL query:", str(e))
             # Optionally, raise the exception to propagate it further
             raise e
-
         
-    @app.route("/patients/<noadmsip>")
+    @app.route("api/patients/<noadmsip>")
     def searchPatient(noadmsip):   
         try:
             cursor.execute(f"SELECT * FROM Patient WHERE noadmsip={noadmsip};")
@@ -83,7 +88,7 @@ try:
             # Optionally, raise the exception to propagate it further
             raise e
 
-    @app.route("/patients/<noadmsip>/kpis")
+    @app.route("api/patients/<noadmsip>/kpis")
     def get_patient_kpis(noadmsip):
         all_kpis = {
             "PPC": fetch_kpis_from_database("PPC", noadmsip),
@@ -231,7 +236,7 @@ try:
     # creates selected patinent info table
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    Patient(noadmsip INTEGER PRIMARY KEY, firstname TEXT, lastname TEXT, dateofbirth TIMESTAMP, gender TEXT, lifetimenumber INT, weight FLOAT, idealWeight FLOAT, height FLOAT, primarydiagnosis TEXT, lastLoadingTime TIMESTAMP)""")
+    Patient(noadmsip INTEGER PRIMARY KEY, firstname TEXT, lastname TEXT, dataofbirth TIMESTAMP, gender TEXT, lifetimenumber INT, weight FLOAT, idealWeight FLOAT, height FLOAT, primarydiagnosis TEXT, lastLoadingTime TIMESTAMP)""")
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_patient_noadmsip ON Patient (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_patient_lastLoadingTime ON Patient (lastLoadingTime)""")
@@ -331,7 +336,7 @@ try:
     
     if patient is None:
         print(' Inserting data into database ...')
-        cursor.execute('''INSERT INTO Patient (noadmsip, firstname, lastname, dateofbirth, gender, lifetimenumber, weight, idealWeight, height, primarydiagnosis, lastLoadingTime) VALUES(3563, 'M', 'B', '2002-12-05', 'F', 2107336, 40, 0.0, 0.0, 'NA', '2023-07-30');''')
+        cursor.execute('''INSERT INTO Patient (noadmsip, firstname, lastname, dataofbirth, gender, lifetimenumber, weight, idealWeight, height, primarydiagnosis, lastLoadingTime) VALUES(3563, 'M', 'B', '2002-12-05', 'F', 2107336, 40, 0.0, 0.0, 'NA', '2023-07-30');''')
         cursor.execute("COMMIT;" )#end transaction
     
 

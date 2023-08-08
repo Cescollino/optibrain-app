@@ -307,7 +307,7 @@ def addToPatient(noadmsip):
             print(limitDate)
 
             #Infos
-            cur.execute('SELECT firstname, lastname, dateofbirth, gender, lifetimenumber FROM "readonly"."d_encounter" WHERE "encounterid"='+"'"+ str(noadmsip) +"'"+ ';')
+            cur.execute('SELECT firstname, lastname, dataofbirth, gender, lifetimenumber FROM "readonly"."d_encounter" WHERE "encounterid"='+"'"+ str(noadmsip) +"'"+ ';')
             dataInfos = cur.fetchall()
 
             #POIDS
