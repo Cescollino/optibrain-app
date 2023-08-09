@@ -38,10 +38,10 @@ const Navbar = ({ patients }: Props) => {
         }}
         >
         <DashboardBox display='inline-flex' sx={{ width: '100%', justifyContent: 'space-between', padding: '1rem', flewWrap: 'wrap', boxShadow: 'none'}}>
-          <Box display="flex" alignItems="center" sx={{ minWidth:'max-content' }}>
+          <Box display="flex" alignItems="center" width="min-content">
           {!state && (
             <Link to="/" style={{ color: 'white', textDecoration: 'inherit', display: 'flex', alignItems: 'center' }}>
-              <SearchPatientBar sx={{width: '100%'}} patients={patients} />
+              <SearchPatientBar patients={patients} />
             </Link> 
           )}
           </Box>

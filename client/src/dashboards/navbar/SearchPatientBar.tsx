@@ -33,8 +33,9 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     paddingLeft: `calc(0.5em + ${theme.spacing(2)})`,
     transition: theme.transitions.create('width'),
     width: '100%',
+    display: 'flex',
     [theme.breakpoints.up('sm')]: {
-      width: '15ch',
+      width: '30ch',
       '&:focus': {
         width: '20ch',
       },
@@ -46,56 +47,55 @@ const SearchPatientBar= ({ patients }: Props) => {
     const navigate = useNavigate()
 
     const [value, setValue] = useState<IPatient | null>(null)
-    const [selectedPatient, setSelectedPatient] = useState<number | null >(null)
+    const [noadmsip, setNoadmsip] = useState<number | null >(null)
     const [inputValue, setInputValue] = useState('')
 
     const { palette } = useTheme()
     return (
-      <Box sx={{ flexGrow: 1, display: 'flex', flexWrap: 'nowrap', width: '100%'  }}>
-            <Search>
-                <Fab 
-                  sx={{  
-                    backgroundColor: palette.primary.dark, 
-                    borderRadius: "100px", 
-                    '&:hover': { backgroundColor: palette.primary.light },
-                    width: '36px',
-                    height: '36px',
-                  }} 
-                  aria-label="search patient"
-                >
-                  <PersonSearchIcon sx={{ fontSize: "24px", color: 'white' }} />
-                </Fab>
-                <Autocomplete
-                  size='small'
-                  value={value}
-                  onChange={(event: any, newValue: IPatient | null) => {
-                    setValue(newValue);
-                    if(newValue) {
-                      console.log('noadmsip selectionné: ', newValue.noadmsip)
-                      setSelectedPatient(newValue.noadmsip)
-                      navigate(`/:${selectedPatient}`)
-                    }
+        <Search sx={{ display: 'inline-flex', placeItems: 'center'}}>
+          <Fab 
+            sx={{  
+              backgroundColor: palette.primary.dark, 
+              borderRadius: "100px", 
+              '&:hover': { backgroundColor: palette.primary.light },
+              width: '36px',
+              height: '36px',
+            }} 
+            aria-label="search patient"
+          >
+            <PersonSearchIcon sx={{ fontSize: "24px", color: 'white'}} />
+          </Fab>
+
+            <Autocomplete
+              value={value}
+              onChange={(event: any, newValue: IPatient | null) => {
+                setValue(newValue);
+                if(newValue) {
+                  console.log('noadmsip selectionné: ', newValue.noadmsip)
+                  setNoadmsip(newValue.noadmsip)
+                  navigate(`/:${noadmsip}`)
+                }
+              }}
+              inputValue={inputValue}
+              onInputChange={(event, newInputValue) => {
+                setInputValue(newInputValue);
+              }}
+ 
+              options={patients as readonly IPatient[]}
+              getOptionLabel={(option) => `${option.firstname} ${option.lastname}`}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  InputProps={{
+                    ...params.InputProps,
+                    placeholder: 'nom patient',
                   }}
-                  inputValue={inputValue}
-                  onInputChange={(event, newInputValue) => {
-                    setInputValue(newInputValue);
-                  }}
-                  id="controllable-states-demo"
-                  options={patients as readonly IPatient[]}
-                  getOptionLabel={(option) => `${option.firstname} ${option.lastname}`}
-                  renderInput={(params) => (
-                    <StyledTextField
-                      {...params}
-                      label="nom du patient"
-                      InputProps={{
-                        ...params.InputProps,
-                        type: 'search',
-                      }}
-                    />
-                  )}
                 />
-            </Search>
-      </Box>
+              )}
+            />
+
+          </Search>
+           
     );
 }
 

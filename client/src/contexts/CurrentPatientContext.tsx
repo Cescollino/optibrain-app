@@ -15,7 +15,7 @@ const initialPatient: IPatient = {
     noadmsip: 3563,
     firstname: 'NA',
     lastname: 'NA',
-    dataofbirth: 'NA',
+    dateofbirth: 'NA',
     gender: 'M',
     lifetimenumber: 0,
     weight: 0.0,

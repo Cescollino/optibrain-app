@@ -80,7 +80,7 @@ const TargetKpisBoxes = () => {
   return (
     <>
       {kpiList.map((box, index) => (
-        <Box key={box.category} sx={{ display: 'inline-flex', flexGrow: 1, flexDirection: 'column'}}>
+        <Box key={index} sx={{ display: 'inline-flex', flexGrow: 1, flexDirection: 'column'}}>
         <DashboardBox
           sx={{
             display: 'flex',
@@ -101,8 +101,8 @@ const TargetKpisBoxes = () => {
           )}
           {/* OPTIONAL KPIS */}
           {box.optional &&
-          (<Accordion key={index} sx={{ backgroundColor: "transparent", width: "100%"}}>
-            <AccordionSummary key={index}
+          (<Accordion sx={{ backgroundColor: "transparent", width: "100%"}}>
+            <AccordionSummary
               aria-controls="panel-content" 
               id="panel-header" 
               sx={{
@@ -112,7 +112,7 @@ const TargetKpisBoxes = () => {
                   },
               }}
               >
-              <StyledFab onClick={handleAccordionToggle} >
+              <StyledFab key={index} onClick={handleAccordionToggle} >
                 {expandedIcon}
               </StyledFab>
             </AccordionSummary>
