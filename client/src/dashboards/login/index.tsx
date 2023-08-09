@@ -1,7 +1,7 @@
 import { Button, Grid, Paper, Typography, Input, styled } from "@mui/material";
 import { useNavigate } from 'react-router-dom'
 import { AuthenticationContext } from '@/contexts/AuthenticationContext'
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 
 
 const LoginContainer = styled(Grid) (
@@ -32,7 +32,7 @@ const Login = () => {
   const [ password, setPassword ] = useState<string>('');
   const { authenticated, setAuthenticated } = useContext(AuthenticationContext);
 
-  // TODO : needs to be replace with the employees login information
+  // TODO : needs to be replace with employees login confidential credentials
   const admin = {
     title:'Dr', 
     name: 'DOE', 
@@ -44,11 +44,11 @@ const Login = () => {
   const navigate = useNavigate();
   
   const handleLogin = (e: React.SyntheticEvent) => {
-    e.preventDefault(); // Prevent default form submission behavior
+    e.preventDefault();
 
     if (username === admin.username && password === admin.password)
       setAuthenticated(true);
-      navigate('/');
+      navigate('/dashboard/brain');
   }
 
   return (

@@ -26,8 +26,8 @@ const Routes = ({ patients }: Props) => {
       <Route path='/login' element={<Login />}/>
       <Route element={<PrivateRoutes />}>
         {/* <Route path='/logout' element={<Login />}/> */}
-        <Route path='/' element={<BrainDashboard patients={patients}/>} />
-        <Route path='/:noadmsip' element={<BrainDashboard patients={patients} />} />
+        <Route path='/dashboard/brain' element={<BrainDashboard patients={patients}/>} />
+        <Route path='/dashboard/brain/patient/:noadmsip' element={<BrainDashboard patients={patients} />} />
       </Route>
     </Router>
   )

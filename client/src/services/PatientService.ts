@@ -22,7 +22,7 @@ HTTP DELETE api/patients/{id}   //Delete patient for given Id
 import axios, { AxiosResponse } from "axios";
 import IPatient from "@/types/Patient";
 
-const apiClient = axios.create({
+export const apiClient = axios.create({
   baseURL: "http://localhost:5000/api",
   headers: {
     "Content-type": "application/json"
@@ -58,60 +58,3 @@ const PatientService = {
 };
 
 export default PatientService;
-
-
-// // Utility function for date to age conversion
-// function dataofbirthToAgeFormat(dataofbirth: string | undefined ): string | undefined  {
-// if (!dataofbirth) return undefined;
-// const today = new Date();
-// const birthDate = new Date(dataofbirth);
-
-// let ageYear = today.getFullYear() - birthDate.getFullYear();
-// let ageMonth = today.getMonth() - birthDate.getMonth();
-// let ageDay = today.getDate() - birthDate.getDate();
-
-// if (ageDay < 0) {
-//   ageMonth--;
-//   const daysInLastMonth = new Date(
-//     today.getFullYear(),
-//     today.getMonth(),
-//     0
-//   ).getDate();
-//   ageDay += daysInLastMonth;
-// }
-
-// if (ageMonth < 0) {
-//   ageYear--;
-//   ageMonth += 12;
-// }
-
-// return `Age: ${ageYear}a ${ageMonth}m ${ageDay}j`;
-
-// };
-
-// const getConfig : Params = {
-//   baseUrl: API_URL,
-//       headers: {
-//           "Authorization": ""
-//       },
-//   method: 'get'
-// };
-
-// export const getApi = async (): Promise<IPatientApiResponse> =>{
-//   return await axios({
-//       ...getConfig,
-//       url: `${getConfig.baseUrl}/${PATIENTS_PATH}`,
-//   }).then ( (response) => {
-//       console.log('Fetching data response : ', response)
-//       return {
-//           status: response.status,
-//           data: response.data
-//       } as IPatientApiResponse
-//   }).catch((error: AxiosError) =>{
-//       console.log('Error when fetching patients data : ',error)
-//       return {
-//           status: error.status,
-//           error: error.response
-//       } as IPatientApiResponse
-//   })
-// };

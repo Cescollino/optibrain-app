@@ -11,6 +11,7 @@ import { useContext, useState } from "react";
 import GlobalAdherenceChart from "@/components/patientRecord/GlobalAdherenceChart";
 import GlasgowScoreChart from "@/components/patientRecord/GlasgowScoreChart";
 import NeurologicalStateChart from "@/components/patientRecord/NeurologicalStateChart";
+import { dateOfBirthToAge } from "@/utils/ageFormatting";
 
 import IPatient from "@/types/Patient"
 import IPatientRecordData  from "@/types/PatientRecord";
@@ -33,32 +34,7 @@ const Img = styled('img')({
 const PatientRecordZone = ({ patients }: Props ) => {
   console.log('Patient record zone ', patients);
   const patient = patients[0]
-  // Function to calculate age in years, months, and days 
-    const ageFormat = (dataofbirth: string) => {
-      const today = new Date();
-      const birthDate = new Date(dataofbirth);
-
-      let ageYear = today.getFullYear() - birthDate.getFullYear();
-      let ageMonth = today.getMonth() - birthDate.getMonth();
-      let ageDay = today.getDate() - birthDate.getDate();
-
-      if (ageDay < 0) {
-        ageMonth--;
-        const daysInLastMonth = new Date(
-          today.getFullYear(),
-          today.getMonth(),
-          0
-        ).getDate();
-        ageDay += daysInLastMonth;
-      }
-
-      if (ageMonth < 0) {
-        ageYear--;
-        ageMonth += 12;
-      }
-
-    return `Age: ${ageYear}a ${ageMonth}m ${ageDay}j`;
-  };
+  const patientAge: string = dateOfBirthToAge(patient.dateofbirth)
 
   const globalAdherenceData: { day: string; score: number; }[] = [
     { day: "J0", score: 40 },
@@ -138,10 +114,10 @@ const PatientRecordZone = ({ patients }: Props ) => {
                 Trauma crânien sévère
               </Typography>
               <Typography variant="h5" fontSize="14px">
-                ageFormat({patient.dataofbirth})
+                {patientAge}
               </Typography>
               <Typography variant="h5" fontSize="14px">
-                Poids: {patient.weight}kg
+                Poids: {patient.weight} kg
               </Typography>
               <Typography variant="h5" fontSize="14px">
                 #Jours USIP: J4

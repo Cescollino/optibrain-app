@@ -23,41 +23,41 @@ const App: React.FC = () => {
     return JSON.stringify(res, null, 2)
   }
 
-  // const getAllPatients = async () => {
-  //   const response = await PatientService.findAll()
-  //   if(response)
-  //     setPatients(response)
-  //   return response
-  // }
+  const getAllPatients = async () => {
+    const response = await PatientService.findAll()
+    if(response)
+      setPatients(response)
+    return response
+  }
 
-  // const patientsQuery = useQuery({
-  //   queryKey: ["patients"],
-  //   queryFn: getAllPatients,
-  //   initialData: [{
-  //       noadmsip: 3563,
-  //       firstname: 'NA',
-  //       lastname: 'NA',
-  //       dataofbirth: 'NA',
-  //       gender: 'M',
-  //       lifetimenumber: 0,
-  //       weight: 0.0,
-  //       idealweight: 0.0,
-  //       height: 0.0,
-  //       primarydiagnosis: 'NA',
-  //       lastloadingtime: undefined,
-  //   }] as IPatient[],
-  // })
+  const patientsQuery = useQuery({
+    queryKey: ["patients"],
+    queryFn: getAllPatients,
+    initialData: [{
+        noadmsip: 3563,
+        firstname: 'NA',
+        lastname: 'NA',
+        dateofbirth: 'NA',
+        gender: 'M',
+        lifetimenumber: 0,
+        weight: 0.0,
+        idealweight: 0.0,
+        height: 0.0,
+        primarydiagnosis: 'NA',
+        lastloadingtime: undefined,
+    }] as IPatient[],
+  })
 
 
-  // if (patientsQuery.isLoading) {
-  //   console.log('isLoading')
-  //   return <h1>Loading patients data...</h1>
-  // }
+  if (patientsQuery.isLoading) {
+    console.log('isLoading')
+    return <h1>Loading patients data...</h1>
+  }
     
-  // if (patientsQuery.isError) {
-  //   console.log(patientsQuery.error)
-  //   return <pre>{formatResponse(patientsQuery.error)}</pre>
-  // }
+  if (patientsQuery.isError) {
+    console.log(patientsQuery.error)
+    return <pre>{formatResponse(patientsQuery.error)}</pre>
+  }
 
   return (
       <div className="app">

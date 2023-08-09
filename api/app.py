@@ -1,7 +1,7 @@
 import psycopg2
 from flask import Flask
+from flask import Blueprint
 from flask_cors import CORS
-import string
 import datetime
 from datetime import timedelta
 import json
@@ -12,7 +12,6 @@ import sqlite3
 import os
 import pandas as pd
 import DB
-from flask import jsonify, make_response
 
 # 1. Execute the virtual environment : source .venv/bin/activate
 # 2. Install the requiered packages : pip install -r requirements.txt
@@ -22,8 +21,16 @@ class PatientEncoder(json.JSONEncoder):
         if isinstance(obj, (datetime.datetime, datetime.date)):
             return obj.isoformat()
         return super().default(obj)
+    
+
+# blueprint = Blueprint('app', __name__)
+# api = Api(blueprint)
+# api = Api(blueprint, version='1.0', title='Optibrain API',
+#     description='A clinical decision support system (CDSS) API',
+# )
 
 app = Flask(__name__)
+# app.register_blueprint(api, url_prefix='/api/patients')
 
 dateNow = datetime.datetime.now()
 dateNow = datetime.datetime(2016, 3, 17, 18, 19, 47)
@@ -43,7 +50,7 @@ try:
     else:
         print(' not connected with database :( ')
 
-    @app.route("/api", methods=["GET"])
+    @app.route("/", methods=["GET"])
     def index():
         return { 
             "api": "optibrain appliation flask-server"
@@ -110,7 +117,7 @@ try:
         return all_kpis_json_data
  
     
-    @app.route("/patients/<noadmsip>/kpis/timeFrames/<timeframe>")
+    @app.route("api/patients/<noadmsip>/kpis/timeFrames/<timeframe>")
     def get_patient_time(noadmsip, timeframe):
         timeframe_to_datetime = timedelta(hours=float(timeframe))
         timeframe = dateNow -  timeframe_to_datetime
@@ -150,7 +157,7 @@ try:
         sizeJSONData = json.dumps(size, indent=4, cls=PatientEncoder)
         return(sizeJSONData)
     
-    @app.route("/api", methods=["DELETE"])
+    @app.route("api/patients", methods=["DELETE"])
     def db_delete():
         cursor.execute("BEGIN;")
         cursor.execute("DROP TABLE IF EXISTS PPC;")
@@ -234,6 +241,7 @@ try:
 
     # creates selected patinent info table
 
+
     cursor.execute("""CREATE TABLE IF NOT EXISTS
     Patient(noadmsip INTEGER PRIMARY KEY, firstname TEXT, lastname TEXT, dataofbirth TIMESTAMP, gender TEXT, lifetimenumber INT, weight FLOAT, idealWeight FLOAT, height FLOAT, primarydiagnosis TEXT, lastLoadingTime TIMESTAMP)""")
 
@@ -242,45 +250,45 @@ try:
 
     # create the deviation score tables
 
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PPCDeviation(id INTEGER PRIMARY KEY, ppc_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(ppc_id) REFERENCES PPC(id)""")
+    # cursor.execute("""CREATE TABLE IF NOT EXISTS
+    # PPCDeviation(id INTEGER PRIMARY KEY, ppc_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(ppc_id) REFERENCES PPC(id)""")
 
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PICmDeviation(id INTEGER PRIMARY KEY, picm_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(picm_id) REFERENCES PICm(id)""")
+    # cursor.execute("""CREATE TABLE IF NOT EXISTS
+    # PICmDeviation(id INTEGER PRIMARY KEY, picm_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(picm_id) REFERENCES PICm(id)""")
 
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    LICOXDeviationDeviation(id INTEGER PRIMARY KEY, licox_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(licox_id) REFERENCES LICOX(id)""")
+    # cursor.execute("""CREATE TABLE IF NOT EXISTS
+    # LICOXDeviationDeviation(id INTEGER PRIMARY KEY, licox_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(licox_id) REFERENCES LICOX(id)""")
 
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PupillesDeviation(id INTEGER PRIMARY KEY, pupilles_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(pupilles_id) REFERENCES Pupilles(id)""")
+    # cursor.execute("""CREATE TABLE IF NOT EXISTS
+    # PupillesDeviation(id INTEGER PRIMARY KEY, pupilles_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(pupilles_id) REFERENCES Pupilles(id)""")
 
 
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PVCmDeviation(id INTEGER PRIMARY KEY, pvcm_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(pvcm_id) REFERENCES PVCm(id)""")
+    # cursor.execute("""CREATE TABLE IF NOT EXISTS
+    # PVCmDeviation(id INTEGER PRIMARY KEY, pvcm_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(pvcm_id) REFERENCES PVCm(id)""")
     
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PAmDeviation(id INTEGER PRIMARY KEY, pam_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(pam_id) REFERENCES PAm(id)""")
+    # cursor.execute("""CREATE TABLE IF NOT EXISTS
+    # PAmDeviation(id INTEGER PRIMARY KEY, pam_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(pam_id) REFERENCES PAm(id)""")
 
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    ETCO2Deviation(id INTEGER PRIMARY KEY, etco2_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(etco2_id) REFERENCES ETCO2(id)""")
+    # cursor.execute("""CREATE TABLE IF NOT EXISTS
+    # ETCO2Deviation(id INTEGER PRIMARY KEY, etco2_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(etco2_id) REFERENCES ETCO2(id)""")
 
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PaCO2Deviation(id INTEGER PRIMARY KEY, paco2_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(paco2_id) REFERENCES PaCO2(id)""")
+    # cursor.execute("""CREATE TABLE IF NOT EXISTS
+    # PaCO2Deviation(id INTEGER PRIMARY KEY, paco2_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(paco2_id) REFERENCES PaCO2(id)""")
 
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    GlycemieDeviation(id INTEGER PRIMARY KEY, glycemie_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(glycemie_id) REFERENCES Glycemie(id)""")
+    # cursor.execute("""CREATE TABLE IF NOT EXISTS
+    # GlycemieDeviation(id INTEGER PRIMARY KEY, glycemie_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(glycemie_id) REFERENCES Glycemie(id)""")
 
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    INRDeviation(id INTEGER PRIMARY KEY, inr_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(inr_id) REFERENCES INR(id)""")
+    # cursor.execute("""CREATE TABLE IF NOT EXISTS
+    # INRDeviation(id INTEGER PRIMARY KEY, inr_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(inr_id) REFERENCES INR(id)""")
 
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PlaquettesDeviation(id INTEGER PRIMARY KEY, plaquettes_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(plaquettes_id) REFERENCES Plaquettes(id)""")
+    # cursor.execute("""CREATE TABLE IF NOT EXISTS
+    # PlaquettesDeviation(id INTEGER PRIMARY KEY, plaquettes_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(plaquettes_id) REFERENCES Plaquettes(id)""")
 
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    TeteLitDeviation(id INTEGER PRIMARY KEY, teteLit_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(glycemie_id) REFERENCES TeteLit(id)""")
+    # cursor.execute("""CREATE TABLE IF NOT EXISTS
+    # TeteLitDeviation(id INTEGER PRIMARY KEY, teteLit_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(glycemie_id) REFERENCES TeteLit(id)""")
 
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    TemperatureDeviation(id INTEGER PRIMARY KEY, temp_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(temp_id) REFERENCES Temperature(id)""")
+    # cursor.execute("""CREATE TABLE IF NOT EXISTS
+    # TemperatureDeviation(id INTEGER PRIMARY KEY, temp_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(temp_id) REFERENCES Temperature(id)""")
    
     # creates the tables for kpis continious data
 
@@ -377,7 +385,7 @@ try:
     
     if patient is None:
         print(' Inserting data into database ...')
-        cursor.execute('''INSERT INTO Patient (noadmsip, firstname, lastname, dataofbirth, gender, lifetimenumber, weight, idealWeight, height, primarydiagnosis, lastLoadingTime) VALUES(3563, 'M', 'B', '2002-12-05', 'F', 2107336, 40, 0.0, 0.0, 'NA', '2023-07-30');''')
+        cursor.execute('''INSERT INTO Patient (noadmsip, firstname, lastname, dateofbirth, gender, lifetimenumber, weight, idealWeight, height, primarydiagnosis, lastLoadingTime) VALUES(3563, 'M', 'B', '2002-12-05', 'F', 2107336, 40, 0.0, 0.0, 'NA', '2023-07-30');''')
         cursor.execute("COMMIT;" )#end transaction
     
 
@@ -402,20 +410,20 @@ try:
             
             print(f"all {table} data inserted in database")
 
-        # deviation insertion
-        folder_name = 'deviation_data'
-        tables = ['LICOX', 'Pupilles', 'ETCO2', 'Glycemie' ]
+        # # deviation insertion
+        # folder_name = 'deviation_data'
+        # tables = ['LICOX', 'Pupilles', 'ETCO2', 'Glycemie' ]
         
-        for table in tables:
-            df = pd.read_csv(f"./{folder_name}/{table}.csv")
+        # for table in tables:
+        #     df = pd.read_csv(f"./{folder_name}/{table}.csv")
 
-            for index, row in df.iterrows():
-                values = ', '.join(f"'{value}'" for value in row)
+        #     for index, row in df.iterrows():
+        #         values = ', '.join(f"'{value}'" for value in row)
                 
-                cursor.execute(f"INSERT INTO {table}Deviation (id, temp_id, hour TEXT NOT NULL, score VALUES ({values});")
-                cursor.execute("COMMIT;" )#end transaction
+        #         cursor.execute(f"INSERT INTO {table}Deviation (id, temp_id, hour TEXT NOT NULL, score VALUES ({values});")
+        #         cursor.execute("COMMIT;" )#end transaction
             
-            print(f"all {table} data inserted in database")
+        #     print(f"all {table} data inserted in database")
 
 except Exception as error:
     print(error)
