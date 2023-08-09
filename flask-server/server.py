@@ -110,7 +110,7 @@ try:
         return all_kpis_json_data
  
     
-    @app.route("/patients/<noadmsip>/kpis/<timeframe>")
+    @app.route("/patients/<noadmsip>/kpis/timeFrames/<timeframe>")
     def get_patient_time(noadmsip, timeframe):
         timeframe_to_datetime = timedelta(hours=float(timeframe))
         timeframe = dateNow -  timeframe_to_datetime
@@ -150,7 +150,7 @@ try:
         sizeJSONData = json.dumps(size, indent=4, cls=PatientEncoder)
         return(sizeJSONData)
     
-    @app.route("/delete", methods=["DELETE"])
+    @app.route("/api", methods=["DELETE"])
     def db_delete():
         cursor.execute("BEGIN;")
         cursor.execute("DROP TABLE IF EXISTS PPC;")
@@ -182,7 +182,6 @@ try:
             print('not none')
             limitDate = lastLoadingTime[0].strftime('%Y-%m-%d %H:%M:%S')  # Convert to string
             dateNow = dateNow[0].strftime('%Y-%m-%d %H:%M:%S')  # Convert to string
-            print('on se rend ici')
             print(limitDate)
             print(dateNow)
             cursor.execute("BEGIN;")
@@ -240,15 +239,58 @@ try:
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_patient_noadmsip ON Patient (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_patient_lastLoadingTime ON Patient (lastLoadingTime)""")
+
+    # create the deviation score tables
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    PPCDeviation(id INTEGER PRIMARY KEY, ppc_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(ppc_id) REFERENCES PPC(id)""")
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    PICmDeviation(id INTEGER PRIMARY KEY, picm_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(picm_id) REFERENCES PICm(id)""")
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    LICOXDeviationDeviation(id INTEGER PRIMARY KEY, licox_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(licox_id) REFERENCES LICOX(id)""")
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    PupillesDeviation(id INTEGER PRIMARY KEY, pupilles_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(pupilles_id) REFERENCES Pupilles(id)""")
+
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    PVCmDeviation(id INTEGER PRIMARY KEY, pvcm_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(pvcm_id) REFERENCES PVCm(id)""")
     
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    PAmDeviation(id INTEGER PRIMARY KEY, pam_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(pam_id) REFERENCES PAm(id)""")
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    ETCO2Deviation(id INTEGER PRIMARY KEY, etco2_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(etco2_id) REFERENCES ETCO2(id)""")
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    PaCO2Deviation(id INTEGER PRIMARY KEY, paco2_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(paco2_id) REFERENCES PaCO2(id)""")
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    GlycemieDeviation(id INTEGER PRIMARY KEY, glycemie_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(glycemie_id) REFERENCES Glycemie(id)""")
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    INRDeviation(id INTEGER PRIMARY KEY, inr_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(inr_id) REFERENCES INR(id)""")
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    PlaquettesDeviation(id INTEGER PRIMARY KEY, plaquettes_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(plaquettes_id) REFERENCES Plaquettes(id)""")
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    TeteLitDeviation(id INTEGER PRIMARY KEY, teteLit_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(glycemie_id) REFERENCES TeteLit(id)""")
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    TemperatureDeviation(id INTEGER PRIMARY KEY, temp_id INTEGER NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(temp_id) REFERENCES Temperature(id)""")
+   
+    # creates the tables for kpis continious data
 
     # 1. NEURO-MONITORING TARGETS
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
     PPC(id INTEGER PRIMARY KEY, kpi TEXT, noadmsip INTEGER, value INTEGER, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip))""")
 
-    cursor.execute("""CREATE INDEX IF NOT EXISTS idx_vent_noadmsip ON PPC (noadmsip)""")
-    cursor.execute("""CREATE INDEX IF NOT EXISTS idx_vent_horodate ON PPC (horodate)""")
+    cursor.execute("""CREATE INDEX IF NOT EXISTS idx_ppc_noadmsip ON PPC (noadmsip)""")
+    cursor.execute("""CREATE INDEX IF NOT EXISTS idx_ppc_horodate ON PPC (horodate)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
     PICm(id INTEGER PRIMARY KEY, kpi TEXT, noadmsip INTEGER, value INTEGER, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip))""")
@@ -267,8 +309,7 @@ try:
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_pupilles_noadmsip ON Pupilles (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_pupilles_horodate ON Pupilles (horodate)""")
-
-
+    
     # 2. CARDIO-RESPIRATORY TARGETS
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
