@@ -1,0 +1,5 @@
+PG_USERNAME="marmar38"
+PG_PASSWORD="e2b63Fn072$e"
+PG_HOST="coder-marmar38-jade-posgres"
+PG_NAME="coder-marmar38-jade-posgres"
+PG_PORT=5432
