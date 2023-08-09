@@ -384,6 +384,7 @@ try:
         folder_name = 'continu_data'
         tables = ['PPC', 'PICm', 'LICOX', 'Pupilles', 'PVCm', 'PAm', 'ETCO2', 'PaCO2', 'Glycemie', 'INR', 'Plaquettes', 'TeteLit', 'Temperature' ]
 
+        # continu data insertion
         for table in tables:
             df = pd.read_csv(f"./{folder_name}/{table}.csv")
 
@@ -398,6 +399,21 @@ try:
                 else:
                     cursor.execute(f"INSERT INTO {table} (id, kpi, noadmsip, value, horodate) VALUES ({values});")
                     cursor.execute("COMMIT;" )#end transaction
+            
+            print(f"all {table} data inserted in database")
+
+        # deviation insertion
+        folder_name = 'deviation_data'
+        tables = ['LICOX', 'Pupilles', 'ETCO2', 'Glycemie' ]
+        
+        for table in tables:
+            df = pd.read_csv(f"./{folder_name}/{table}.csv")
+
+            for index, row in df.iterrows():
+                values = ', '.join(f"'{value}'" for value in row)
+                
+                cursor.execute(f"INSERT INTO {table}Deviation (id, temp_id, hour TEXT NOT NULL, score VALUES ({values});")
+                cursor.execute("COMMIT;" )#end transaction
             
             print(f"all {table} data inserted in database")
 
