@@ -31,4 +31,8 @@ dist-ssr
 flask-api/mot_de_passe_SQL.txt
 flask-api/Patients.db
 flask-api/patients/data/*
+flask-server/continu_data
+flask-server/deviation_data
+flask-server/.venv/*
+
 
