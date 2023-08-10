@@ -3,22 +3,19 @@ import PatientRecordZone from '@/dashboards/brain/PatientRecordZone';
 import SideBar from './SideBar';
 import AdherenceZone from './AdherenceZone';
 import Navbar from '../navbar';
-import IPatient from '@/types/Patient';
 import Clock from '@/components/Clock';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-type Props = {
-  patients: IPatient[]
-}
 
-const BrainDashboard = ({ patients }: Props) => {
+const BrainDashboard = () => {
+
   const { noadmsip } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (noadmsip)
-      navigate('/:noadmsip')
+      navigate(`/brain/noadmsip/${noadmsip}`);
   }, [noadmsip]);
 
   return (
@@ -32,12 +29,11 @@ const BrainDashboard = ({ patients }: Props) => {
           <Grid item xs={12}>
             {/* <Clock /> */}
           </Grid>
-         
           <Grid item xs={12}>
-            <Navbar patients={patients} />
+            <Navbar />
           </Grid>
           <Grid item xs={12}>
-            <PatientRecordZone patients={patients}/>
+            <PatientRecordZone />
           </Grid>
           <Grid container item xs={true}>
             <Grid item>

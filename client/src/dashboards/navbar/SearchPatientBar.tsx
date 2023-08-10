@@ -6,10 +6,7 @@ import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import IPatient from '@/types/Patient';
 import { useContext, useState } from 'react';
 import { CurrentPatientContext } from '@/contexts/CurrentPatientContext';
-
-type Props = {
-  patients: IPatient[]
-}
+import { PatientsContext } from '@/contexts/PatientsContext';
 
 const Search = styled('div')(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
@@ -43,14 +40,18 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const SearchPatientBar= ({ patients }: Props) => {
+const SearchPatientBar= () => {
+    const { patients } = useContext(PatientsContext)
+    const { palette } = useTheme()
     const navigate = useNavigate()
 
     const [value, setValue] = useState<IPatient | null>(null)
-    const [noadmsip, setNoadmsip] = useState<number | null >(null)
     const [inputValue, setInputValue] = useState('')
 
-    const { palette } = useTheme()
+    const handleSelect = (noadmsip: number) => {
+      navigate(`/dashboard/brain/${noadmsip}`)
+    }
+
     return (
         <Search sx={{ display: 'inline-flex', placeItems: 'center'}}>
           <Fab 
@@ -72,8 +73,7 @@ const SearchPatientBar= ({ patients }: Props) => {
                 setValue(newValue);
                 if(newValue) {
                   console.log('noadmsip selectionné: ', newValue.noadmsip)
-                  setNoadmsip(newValue.noadmsip)
-                  navigate(`/:${noadmsip}`)
+                  handleSelect(newValue.noadmsip)
                 }
               }}
               inputValue={inputValue}

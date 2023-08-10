@@ -2,10 +2,10 @@ import { Table, TableBody, TableCell, TableContainer, TableRow, Typography, Icon
 import CircleIcon from '@mui/icons-material/Circle';
 import InfoIcon from '@mui/icons-material/Info';
 import { useTheme } from '@mui/material/styles'
-import IPatient from '@/types/Patient';
 
-const PatientRecordsList = ( { patients } : { patients: IPatient[] } ) => {
-  const { palette } = useTheme();
+const PatientRecordsList = () => {
+  const { patients } = useContext(PatientsContext)
+  const { palette } = useTheme()
 
   return (
     <TableContainer>
@@ -38,7 +38,7 @@ const PatientRecordsList = ( { patients } : { patients: IPatient[] } ) => {
         </TableBody>
       </Table>
     </TableContainer>
-  );
-};
+  )
+}
 
-export default PatientRecordsList;
+export default PatientRecordsList

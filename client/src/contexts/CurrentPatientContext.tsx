@@ -7,7 +7,7 @@ type Props = {
 }
 
 export type IPatientContext = {
-    currentPatient: IPatient;
+    currentPatient: IPatient
     setCurrentPatient: (selectedPatient: IPatient) => void
 }
 
@@ -27,14 +27,13 @@ const initialPatient: IPatient = {
 
 const initialValue = {
   currentPatient: initialPatient,
-  setCurrentPatient: (selectedPatient: IPatient) => {}
+  setCurrentPatient: () => {}
 }
 
 const CurrentPatientContext = createContext<IPatientContext>(initialValue);
 
 const CurrentPatientProvider = ({ children }: Props) => {
-   
-    const [currentPatient, setCurrentPatient] = useState(initialValue.currentPatient);
+    const [currentPatient, setCurrentPatient] = useState<IPatient>(initialValue.currentPatient);
 
     return (
     <CurrentPatientContext.Provider value={{ currentPatient, setCurrentPatient }}>

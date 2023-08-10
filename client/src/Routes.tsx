@@ -5,10 +5,7 @@ import BrainDashboard from "@/dashboards/brain";
 import Login from '@/dashboards/login'
 
 import IPatient from '@/types/Patient';
-
-type Props = {
-  patients: IPatient[]
-}
+import { PatientsContext } from './contexts/PatientsContext';
 
 const PrivateRoutes = () => {
   const { authenticated } = useContext(AuthenticationContext)
@@ -19,15 +16,15 @@ const PrivateRoutes = () => {
 }
 
 
-const Routes = ({ patients }: Props) => {
+const Routes = () => {
+  const { patients } = useContext(PatientsContext)
 
   return (
     <Router>
       <Route path='/login' element={<Login />}/>
       <Route element={<PrivateRoutes />}>
         {/* <Route path='/logout' element={<Login />}/> */}
-        <Route path='/dashboard/brain' element={<BrainDashboard patients={patients}/>} />
-        <Route path='/dashboard/brain/patient/:noadmsip' element={<BrainDashboard patients={patients} />} />
+        <Route path='/dashboard/brain/noadmsip/:noadmsip' element={<BrainDashboard />} />
       </Route>
     </Router>
   )

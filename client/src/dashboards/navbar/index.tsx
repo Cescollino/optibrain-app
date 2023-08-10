@@ -1,4 +1,4 @@
-import { MouseEvent, KeyboardEvent, useState, useEffect } from 'react';
+import { MouseEvent, KeyboardEvent, useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import PatientsRecordList from '@/components/patientRecord/PatientRecordsList';
@@ -9,14 +9,8 @@ import SearchPatientBar from './SearchPatientBar';
 import DashboardBox from '@/components/DashboardBox';
 import SquarePatientStateCount from '@/dashboards/navbar/SquarePatientStateCount';
 import { PatientStatus } from '@/state/patientState';
-import IPatient from '@/types/Patient';
 
-type Props = {
-  patients: IPatient[]
-}
-
-
-const Navbar = ({ patients }: Props) => {
+const Navbar = () => {
   const [state, setState] = useState(false);
 
   const togglePatientList = (open: boolean) =>
@@ -41,7 +35,7 @@ const Navbar = ({ patients }: Props) => {
           <Box display="flex" alignItems="center" width="min-content">
           {!state && (
             <Link to="/" style={{ color: 'white', textDecoration: 'inherit', display: 'flex', alignItems: 'center' }}>
-              <SearchPatientBar patients={patients} />
+              <SearchPatientBar />
             </Link> 
           )}
           </Box>
@@ -73,11 +67,9 @@ const Navbar = ({ patients }: Props) => {
             </Box>
           </Box>
           </DashboardBox>
-          {state && patients && ( 
           <DashboardBox sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem' }}>
-            <PatientsRecordList patients={patients} /> 
+            <PatientsRecordList /> 
           </DashboardBox>
-          )}
         </DashboardBox>
   );
 }

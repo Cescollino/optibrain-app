@@ -36,17 +36,17 @@ const findAll = async () => {
 
 const findByNoadmsip = async (noadmsip: number) => {
   const response = await apiClient.get<IPatient>(`/patients/${noadmsip}`)
-  return response
+  return response.data
 }
 
 const deleteByNoamsip = async (noadmsip: number) => {
   const response = await apiClient.delete<any>(`/patients/${noadmsip}`)
-  return response
+  return response.data
 };
 
 const deleteAll = async () => {
   const response = await apiClient.delete<any>(`/patients`);
-  return response
+  return response.data
 };
 
 

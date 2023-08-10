@@ -17,12 +17,7 @@ import IPatient from "@/types/Patient"
 import IPatientRecordData  from "@/types/PatientRecord";
 import PatientDataService from "@/services/PatientService";
 import { useNavigate } from "react-router-dom";
-import { CurrentPatientContext, IPatientContext } from "@/contexts/CurrentPatientContext";
-
-
-type Props = {
-  patients: IPatient[]
-}
+import { CurrentPatientContext } from "@/contexts/CurrentPatientContext";
 
 const Img = styled('img')({
   display: 'flex',
@@ -31,10 +26,10 @@ const Img = styled('img')({
   flexGrow: 1,
 });
 
-const PatientRecordZone = ({ patients }: Props ) => {
-  console.log('Patient record zone ', patients);
-  const patient = patients[0]
-  const patientAge: string = dateOfBirthToAge(patient.dateofbirth)
+const PatientRecordZone = () => {
+
+  const { currentPatient } = useContext(CurrentPatientContext)
+  const patientAge: string = dateOfBirthToAge(currentPatient.dateofbirth)
 
   const globalAdherenceData: { day: string; score: number; }[] = [
     { day: "J0", score: 40 },
@@ -107,7 +102,7 @@ const PatientRecordZone = ({ patients }: Props ) => {
       >
         {/* First item */}
         <PatientRecordBox
-          header={<PatientRecordHeader title={`${patient.firstname} ${patient.lastname} (${patient.gender})`} />}
+          header={<PatientRecordHeader title={`${currentPatient.firstname} ${currentPatient.lastname} (${currentPatient.gender})`} />}
           content={
             <>
               <Typography variant="h5" fontSize="14px">
@@ -117,7 +112,7 @@ const PatientRecordZone = ({ patients }: Props ) => {
                 {patientAge}
               </Typography>
               <Typography variant="h5" fontSize="14px">
-                Poids: {patient.weight} kg
+                Poids: {currentPatient.weight} kg
               </Typography>
               <Typography variant="h5" fontSize="14px">
                 #Jours USIP: J4
