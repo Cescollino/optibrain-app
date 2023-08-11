@@ -4,8 +4,7 @@ import { AuthenticationContext } from '@/contexts/AuthenticationContext'
 import BrainDashboard from "@/dashboards/brain";
 import Login from '@/dashboards/login'
 
-import IPatient from '@/types/Patient';
-import { PatientsContext } from './contexts/PatientsContext';
+import { usePatients } from './contexts/PatientsContext';
 
 const PrivateRoutes = () => {
   const { authenticated } = useContext(AuthenticationContext)
@@ -17,7 +16,7 @@ const PrivateRoutes = () => {
 
 
 const Routes = () => {
-  const { patients } = useContext(PatientsContext)
+  const { patients } = usePatients()
 
   return (
     <Router>

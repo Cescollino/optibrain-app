@@ -17,7 +17,7 @@ import IPatient from "@/types/Patient"
 import IPatientRecordData  from "@/types/PatientRecord";
 import PatientDataService from "@/services/PatientService";
 import { useNavigate } from "react-router-dom";
-import { CurrentPatientContext } from "@/contexts/CurrentPatientContext";
+import { usePatient } from "@/contexts/CurrentPatientContext";
 
 const Img = styled('img')({
   display: 'flex',
@@ -28,7 +28,7 @@ const Img = styled('img')({
 
 const PatientRecordZone = () => {
 
-  const { currentPatient } = useContext(CurrentPatientContext)
+  const { currentPatient } = usePatient()
   const patientAge: string = dateOfBirthToAge(currentPatient.dateofbirth)
 
   const globalAdherenceData: { day: string; score: number; }[] = [

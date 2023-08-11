@@ -23,7 +23,7 @@ import axios, { AxiosResponse } from "axios";
 import IPatient from "@/types/Patient";
 
 export const apiClient = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "http://localhost:5000",
   headers: {
     "Content-type": "application/json"
   }
@@ -35,12 +35,12 @@ const findAll = async () => {
 }
 
 const findByNoadmsip = async (noadmsip: number) => {
-  const response = await apiClient.get<IPatient>(`/patients/${noadmsip}`)
+  const response = await apiClient.get<IPatient>(`/patient/noadmsip/${noadmsip}`)
   return response.data
 }
 
 const deleteByNoamsip = async (noadmsip: number) => {
-  const response = await apiClient.delete<any>(`/patients/${noadmsip}`)
+  const response = await apiClient.delete<any>(`/patient/noadmsip/${noadmsip}`)
   return response.data
 };
 

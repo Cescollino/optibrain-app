@@ -8,18 +8,17 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import SearchPatientBar from './SearchPatientBar';
 import DashboardBox from '@/components/DashboardBox';
 import SquarePatientStateCount from './SquarePatientStateCount';
-import { PatientStatus } from '@/state/patientState';
-import { useTheme } from '@mui/material/styles'
-import { useParams, useNavigate } from 'react-router-dom';
 
-import PatientDataService from "@/services/PatientService";
+import { useTheme } from '@mui/material/styles'
+
+
 import IPatient from "@/types/Patient";
 
 type Props = {
   patients: Array<IPatient>
 }
 
-const PatientsList = ({ patients }: Props) => {
+const PatientsList = () => {
 
   const [state, setState] = useState(false);
 
@@ -42,7 +41,7 @@ const PatientsList = ({ patients }: Props) => {
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
     >
-      <PatientRecordsList patients={patients} />
+      <PatientRecordsList />
     </Box>
   );
 
@@ -60,10 +59,10 @@ const PatientsList = ({ patients }: Props) => {
               flewWrap: 'wrap',
         }}
         >
-          {!state && patients.length > 0 && (
+          {!state && (
           <Box display="flex" alignItems="center">
             <Link to="/" style={{ color: 'white', textDecoration: 'inherit', display: 'flex', alignItems: 'center' }}>
-              <SearchPatientBar patients={patients} />
+              <SearchPatientBar />
             </Link>
           </Box>
           )}
@@ -99,11 +98,9 @@ const PatientsList = ({ patients }: Props) => {
         </DashboardBox>
           </Toolbar>
         </AppBar>
-        {patients.length > 0 && (
-          <Drawer sx={{ backgroundColor: palette.primary.main }} anchor="top" open={state} onClose={toggleDrawer(false)}>
-            {listPatients()}
-          </Drawer>
-        )}
+        <Drawer sx={{ backgroundColor: palette.primary.main }} anchor="top" open={state} onClose={toggleDrawer(false)}>
+          {listPatients()}
+        </Drawer>
     </>
   );
 }

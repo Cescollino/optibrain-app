@@ -1,5 +1,6 @@
-import { KpiData } from "@/types/types";
-import { apiClient } from "./PatientService";
+import { KpiData } from "@/types/types"
+import { apiClient } from "./PatientService"
+import { useQuery } from "@tanstack/react-query"
 
 const KpiVariableOptions: string[] = [
     "PPC",
@@ -16,7 +17,18 @@ const KpiVariableOptions: string[] = [
     "Temperature",
     "TeteLit",
 ]
-      
+
+
+export interface ContinuKpiData {
+    kpi: string;
+    noadmsip: number;
+    value: number | string;
+    uniteofmesure?: string;
+    state?: string;
+    horodate: string; 
+}
+
+
 const findAll = async (noadmsip: number) => {
     const response = await apiClient.get<KpiData[]>(`/patients/${noadmsip}/kpis`)
     return response.data

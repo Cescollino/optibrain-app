@@ -13,11 +13,6 @@ const BrainDashboard = () => {
   const { noadmsip } = useParams();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (noadmsip)
-      navigate(`/brain/noadmsip/${noadmsip}`);
-  }, [noadmsip]);
-
   return (
     <>
         <Grid 

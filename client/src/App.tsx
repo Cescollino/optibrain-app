@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
@@ -6,56 +6,37 @@ import { Box, CssBaseline, ThemeProvider, Typography } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "@/theme";
 
-import { AuthenticationProvider } from "./contexts/AuthenticationContext";
-import { CurrentPatientContext, CurrentPatientProvider } from "@/contexts/CurrentPatientContext";
+import { AuthenticationProvider } from "@/contexts/AuthenticationContext";
+import { DeviationScoreProvider } from "./contexts/DeviationScoreContext";
 import Routes from "@/Routes"
 
-import IPatient from "@/types/Patient";
 import PatientService from "@/services/PatientService";
-import { PatientsContext, PatientsProvider } from "./contexts/PatientsContext";
-
-/* Noadmsip : Numéro d'admission soins intensifs pédiatriques */
+import { usePatients } from "@/contexts/PatientsContext";
+import { usePatient } from "@/contexts/CurrentPatientContext";
 
 const App: React.FC = () => {
-  const { patients, addPatient } = useContext(PatientsContext)
-  const { currentPatient, setCurrentPatient } = useContext(CurrentPatientContext)
+  const { patients, addPatients } = usePatients()
+ 
+  const noadmsip = 3563  /* Noadmsip : Numéro d'admission soins intensifs pédiatriques */
+  const { setCurrentPatient } = usePatient()
 
-  const theme = useMemo(() => createTheme(themeSettings), []);
+  const theme = useMemo(() => createTheme(themeSettings), [])
 
   const formatResponse = (res: any) => {
     return JSON.stringify(res, null, 2)
   }
 
-  const getAllPatients = async () => {
-    const response = await PatientService.findAll()
-    const scenarioPatient = await PatientService.findByNoadmsip(3563)
+  async function getAllPatients() {
+    const patientsFetched = await PatientService.findAll()
+    addPatients(patientsFetched)
 
-    if(response && scenarioPatient)
-      response.map((patient: IPatient) => addPatient(patient))
-      console.log('Patients in APP :', patients)
-      setCurrentPatient(scenarioPatient)
-      console.log('Patients in APP :', currentPatient)
-    return response
+    return patientsFetched
   }
 
   const patientsQuery = useQuery({
     queryKey: ["patients"],
     queryFn: getAllPatients,
-    initialData: [{
-        noadmsip: 3563,
-        firstname: 'NA',
-        lastname: 'NA',
-        dateofbirth: 'NA',
-        gender: 'M',
-        lifetimenumber: 0,
-        weight: 0.0,
-        idealweight: 0.0,
-        height: 0.0,
-        primarydiagnosis: 'NA',
-        lastloadingtime: undefined,
-    }] as IPatient[],
   })
-
 
   if (patientsQuery.isLoading) {
     console.log('isLoading')
@@ -67,6 +48,12 @@ const App: React.FC = () => {
     return <pre>{formatResponse(patientsQuery.error)}</pre>
   }
 
+  const scenarioPatient = patients.find( patient => patient.noadmsip === noadmsip )
+
+  if (scenarioPatient) {
+    setCurrentPatient(scenarioPatient)
+  }
+ 
   return (
       <div className="app">
         <BrowserRouter>
@@ -74,11 +61,9 @@ const App: React.FC = () => {
           <CssBaseline />
           <Box width="100%" height="100%" padding="0.5rem">
           <AuthenticationProvider >
-            <PatientsProvider>
-            <CurrentPatientProvider>
+            <DeviationScoreProvider>
               <Routes />
-            </CurrentPatientProvider>
-            </PatientsProvider>
+            </DeviationScoreProvider>
           </AuthenticationProvider >
           </Box>
         </ThemeProvider>

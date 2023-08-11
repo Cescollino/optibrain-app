@@ -1,7 +1,8 @@
-import { Button, Grid, Paper, Typography, Input, styled } from "@mui/material";
+import { Button, Grid, Paper, Typography, Input, styled } from "@mui/material"
 import { useNavigate } from 'react-router-dom'
 import { AuthenticationContext } from '@/contexts/AuthenticationContext'
-import { useContext, useState } from "react";
+import { useContext, useState } from "react"
+import { usePatient } from "@/contexts/CurrentPatientContext"
 
 
 const LoginContainer = styled(Grid) (
@@ -15,22 +16,24 @@ const LoginContainer = styled(Grid) (
     backgroundSize: 'cover',
     backgroundPosition: 'center',
   }
-);
+)
 
 const LoginPaper = styled(Paper) (
   {
     marginTop: '20%',
     backgroundColor:' rgba(255, 255, 255, 0.4)',
   }
-);
+)
 
 const loginText = { title: 'Connexion', username: 'Nom d'+"'"+'utilisateur', password: 'Mot de passe' }
 
 const Login = () => {
   
-  const [ username, setUserName ] = useState<string>('');
-  const [ password, setPassword ] = useState<string>('');
-  const { authenticated, setAuthenticated } = useContext(AuthenticationContext);
+  const [ username, setUserName ] = useState<string>('')
+  const [ password, setPassword ] = useState<string>('')
+  const { authenticated, setAuthenticated } = useContext(AuthenticationContext)
+
+  const { currentPatient } = usePatient()
 
   // TODO : needs to be replace with employees login confidential credentials
   const admin = {
@@ -48,7 +51,7 @@ const Login = () => {
 
     if (username === admin.username && password === admin.password)
       setAuthenticated(true);
-      navigate('/dashboard/brain');
+      navigate(`/dashboard/brain/noadmsip/${currentPatient.noadmsip}`);
   }
 
   return (

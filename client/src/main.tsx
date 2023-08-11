@@ -3,13 +3,19 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import '@/index.css'
+import { PatientsProvider } from "@/contexts/PatientsContext"
+import { CurrentPatientProvider } from "@/contexts/CurrentPatientContext"
 
 const queryClient = new QueryClient()
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
         <QueryClientProvider client={queryClient}>
-            <App />
+            <PatientsProvider>
+                <CurrentPatientProvider>
+                    <App />
+                </CurrentPatientProvider>
+            </PatientsProvider>
         </QueryClientProvider>
     </React.StrictMode>
 )

@@ -9,5 +9,5 @@ export default interface IPatient {
     idealweight: number;
     height: number;
     primarydiagnosis: string;
-    lastloadingtime?: number;
+    lastloadingtime?: string;
 }

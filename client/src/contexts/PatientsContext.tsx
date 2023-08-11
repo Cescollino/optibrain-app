@@ -1,46 +1,34 @@
-import IPatient from '@/types/Patient';
-import { createContext, ReactNode, useState } from 'react'
+import IPatient from '@/types/Patient'
+import { createContext, ReactNode, useContext, useState } from 'react'
 
 type Props = {
-  children?: ReactNode;
+  children?: ReactNode
 }
 
-export type IPatientsContext = {
+type IPatientsContext = {
     patients: IPatient[]
-    addPatient: (newPatient: IPatient) => void
+    addPatients: (newPatients: IPatient[]) => void
 }
-
-// const initialPatient: IPatient = {
-//     noadmsip: 3563,
-//     firstname: 'NA',
-//     lastname: 'NA',
-//     dateofbirth: 'NA',
-//     gender: 'M',
-//     lifetimenumber: 0,
-//     weight: 0.0,
-//     idealweight: 0.0,
-//     height: 0.0,
-//     primarydiagnosis: 'NA',
-//     lastloadingtime: undefined,
-// };
 
 const initialValue = {
   patients: [],
-  addPatient: () => {}
+  addPatients: () => {}
 }
 
 const PatientsContext = createContext<IPatientsContext>(initialValue);
 
-const PatientsProvider = ({ children }: Props) => {
+export function PatientsProvider({ children }: Props) {
     const [patients, setPatients] = useState<IPatient[]>(initialValue.patients);
 
-    const addPatient = (newPatient: IPatient) => setPatients((patients) => [...patients, newPatient])
-
+    const addPatients = (newPatients: IPatient[]) => {
+      setPatients((patients) => [...patients, ...newPatients])
+    }
+    
     return (
-    <PatientsContext.Provider value={{ patients, addPatient }}>
+    <PatientsContext.Provider value={{ patients, addPatients }}>
         {children}
     </PatientsContext.Provider>
     )
-};
+}
 
-export { PatientsContext, PatientsProvider };
+export const usePatients = () => useContext(PatientsContext)

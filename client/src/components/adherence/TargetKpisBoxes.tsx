@@ -9,6 +9,7 @@ import { KpisBoxProps, KpiProps } from '@/types/types';
 import { kpisBoxes, optionalKpis } from '@/data/data';
 import TimeFrameContext from '@/contexts/TimeFrameContext';
 import KpiChart from '@/components/kpi/KpiChart';
+import { useDeviationScore } from '@/contexts/DeviationScoreContext';
 
 const StyledFab = styled(Fab)(({ theme }) => ({
   width: '36px',
@@ -20,7 +21,7 @@ const StyledFab = styled(Fab)(({ theme }) => ({
 }));
 
 const TargetKpisBoxes = () => {
-
+  const { deviationData } = useDeviationScore()
   const { selectedFrameLabel } = useContext(TimeFrameContext);
 
   const [kpiCharts, setKpiVisibleCharts] = useState<KpiProps[]>([]);
@@ -69,13 +70,13 @@ const TargetKpisBoxes = () => {
     });
   };
 
-  useEffect(() => {
-    setKpiList(kpisBoxes);
-  }, [selectedFrameLabel]);
+  // useEffect(() => {
+  //   setKpiList(kpisBoxes);
+  // }, [selectedFrameLabel]);
 
-  useEffect(() => {
-    setKpiVisibleCharts(kpiCharts);
-  }, [kpiCharts, kpiCharts.length]);
+  // useEffect(() => {
+  //   setKpiVisibleCharts(kpiCharts);
+  // }, [kpiCharts, kpiCharts.length]);
 
   return (
     <>

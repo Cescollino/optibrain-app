@@ -4,7 +4,6 @@ import KpiBox from "@/components/kpi/KpiBox";
 import { useContext, useState } from "react";
 import TimeFrameContext from "@/contexts/TimeFrameContext";
 
-
 const TimeFrameBar = () => {
   const frameOptions: Array<string> = ['3', '6', '24'];
   const { selectedFrameLabel, updateFrameTime } = useContext(TimeFrameContext);

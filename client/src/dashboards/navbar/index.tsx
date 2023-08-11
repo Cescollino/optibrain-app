@@ -27,17 +27,16 @@ const Navbar = () => {
      <DashboardBox 
         sx={{
               display: 'flex',
+              growFlex: 1,
               flexDirection: 'column',
               width: '100%',
         }}
         >
-        <DashboardBox display='inline-flex' sx={{ width: '100%', justifyContent: 'space-between', padding: '1rem', flewWrap: 'wrap', boxShadow: 'none'}}>
-          <Box display="flex" alignItems="center" width="min-content">
-          {!state && (
-            <Link to="/" style={{ color: 'white', textDecoration: 'inherit', display: 'flex', alignItems: 'center' }}>
+        <DashboardBox display='inline-flex' alignItems="center" sx={{ width: '100%', justifyContent: 'space-between', padding: '1rem', flewWrap: 'wrap', boxShadow: 'none'}}>
+          <Box display="flex" alignItems="center" gap="0.5rem">
+            {!state && (
               <SearchPatientBar />
-            </Link> 
-          )}
+            )}
           </Box>
           <Box display="flex" alignItems="center" gap="0.5rem" >
             <Typography variant="h4" fontSize="16px" sx={{ marginRight: '0.5rem', color: 'white' }}>
@@ -67,9 +66,11 @@ const Navbar = () => {
             </Box>
           </Box>
           </DashboardBox>
+          {state && (
           <DashboardBox sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem' }}>
             <PatientsRecordList /> 
           </DashboardBox>
+          )}
         </DashboardBox>
   );
 }
