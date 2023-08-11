@@ -15,6 +15,7 @@ import psycopg2
 import os
 import DB
 import csv
+from utils.transformCsvFiles import *
 
 class PatientEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -41,6 +42,70 @@ try:
         print(' successfully connected to the pgAdmin database ! ')
     else:
         print(' not connected with database :( ')
+    
+    cursor.execute("BEGIN;")
+    cursor.execute("DROP TABLE IF EXISTS PPC CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS PICm CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS LICOX CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS Pupilles CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS PVCm CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS PAm CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS ETCO2 CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS PaCO2 CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS Glycemie CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS INR CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS Plaquettes CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS Temperature CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS TeteLit CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS PPCDeviation CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS PICmDeviation CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS LICOXDeviation CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS PupillesDeviation CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS PVCmDeviation CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS PAmDeviation CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS ETCO2Deviation CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS PaCO2Deviation CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS GlycemieDeviation CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS INRDeviation CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS PlaquettesDeviation CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS TemperatureDeviation CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS TeteLitDeviation CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS Patient;")
+    cursor.execute("COMMIT;")
+    print(' all kpis deleted from database ! ')
+
+    @app.route("/patients", methods=["DELETE"])
+    def db_delete():
+        cursor.execute("BEGIN;")
+        cursor.execute("DELETE TABLE IF EXISTS PPC CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS PICm CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS LICOX CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS Pupilles CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS PVCm CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS PAm CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS ETCO2 CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS PaCO2 CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS Glycemie CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS INR CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS Plaquettes CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS Temperature CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS TeteLit CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS PPCDeviation CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS PICmDeviation CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS LICOXDeviation CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS PupillesDeviation CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS PVCmDeviation CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS PAmDeviation CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS ETCO2Deviation CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS PaCO2Deviation CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS GlycemieDeviation CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS INRDeviation CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS PlaquettesDeviation CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS TemperatureDeviation CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS TeteLitDeviation CASCADE;")
+        cursor.execute("DROP TABLE IF EXISTS Patient;")
+        cursor.execute("COMMIT;")
+        return(' all kpis deleted from database ! ')
 
     @app.route("/", methods=["GET"])
     def index():
@@ -153,26 +218,6 @@ try:
         sizeJSONData = json.dumps(size, indent=4, cls=PatientEncoder)
         return(sizeJSONData)
 
-    @app.route("/patients", methods=["DELETE"])
-    def db_delete():
-        cursor.execute("BEGIN;")
-        cursor.execute("DROP TABLE IF EXISTS PPC;")
-        cursor.execute("DROP TABLE IF EXISTS PICm;")
-        cursor.execute("DROP TABLE IF EXISTS LICOX;")
-        cursor.execute("DROP TABLE IF EXISTS Pupilles;")
-        cursor.execute("DROP TABLE IF EXISTS PVCm;")
-        cursor.execute("DROP TABLE IF EXISTS PAm;")
-        cursor.execute("DROP TABLE IF EXISTS ETCO2;")
-        cursor.execute("DROP TABLE IF EXISTS PaCO2;")
-        cursor.execute("DROP TABLE IF EXISTS Glycemie;")
-        cursor.execute("DROP TABLE IF EXISTS INR;")
-        cursor.execute("DROP TABLE IF EXISTS Plaquettes;")
-        cursor.execute("DROP TABLE IF EXISTS Temperature;")
-        cursor.execute("DROP TABLE IF EXISTS TeteLit;")
-        cursor.execute("DROP TABLE IF EXISTS Patient;")
-        cursor.execute("COMMIT;")
-        return(' all kpis deleted from database ! ')
-
     def update_patient(noadmsip):
         print(str(noadmsip))
         cursor.execute('SELECT noadmsip FROM Patient;')  
@@ -234,76 +279,35 @@ try:
           # 1. creates patinent info table
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    Patient(noadmsip INTEGER PRIMARY KEY, firstname TEXT, lastname TEXT, dateofbirth TIMESTAMP, gender TEXT, lifetimenumber INT, weight FLOAT, idealWeight FLOAT, height FLOAT, primarydiagnosis TEXT, intime TIMESTAMP, outtime TIMSTAMP, lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP)""")
+    Patient(noadmsip INTEGER PRIMARY KEY, firstname TEXT, lastname TEXT, dateofbirth TIMESTAMP, gender TEXT, lifetimenumber INT, weight FLOAT, idealWeight FLOAT, height FLOAT, primarydiagnosis TEXT, intime TIMESTAMP, outtime TIMESTAMP, lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP)""")
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_patient_noadmsip ON Patient (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_patient_lastLoadingTime ON Patient (lastLoadingTime)""")
 
-    # 2. create the deviation score tables for the 15 key point indicators (kpis) shown of interface
-
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PPCDeviation(kpi TEXT NOT NULL, hour TEXT NOT NULL, score INTEGER, FOREIGN KEY(kpi) REFERENCES PPC(kpi)""")
-
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PICmDeviation(id INTEGER PRIMARY KEY, kpi TEXT NOT NULL, hour TEXT NOT NULL, score INTEGER, lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP FOREIGN KEY(kpi) REFERENCES PICm(kpi)""")
-
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    LICOXDeviationDeviation(id INTEGER PRIMARY KEY, kpi TEXT NOT NULL, hour TEXT NOT NULL, score INTEGER, lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP FOREIGN KEY(kpi) REFERENCES LICOX(kpi)""")
-
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PupillesDeviation(id INTEGER PRIMARY KEY, kpi TEXT NOT NULL, hour TEXT NOT NULL, score INTEGER, lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP FOREIGN KEY(kpi) REFERENCES Pupilles(kpi)""")
-
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PVCmDeviation(id INTEGER PRIMARY KEY, kpi TEXT NOT NULL, hour TEXT NOT NULL, score INTEGER, lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(kpi) REFERENCES PVCm(kpi)""")
-    
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PAmDeviation(id INTEGER PRIMARY KEY, kpi TEXT NOT NULL, hour TEXT NOT NULL, score INTEGER, lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(kpi) REFERENCES PAm(kpi)""")
-
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    ETCO2Deviation(id INTEGER PRIMARY KEY, kpi TEXT NOT NULL, hour TEXT NOT NULL, score INTEGER, lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(kpi) REFERENCES ETCO2(kpi)""")
-
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PaCO2Deviation(id INTEGER PRIMARY KEY, kpi TEXT NOT NULL, hour TEXT NOT NULL, score INTEGER, lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(kpi) REFERENCES PaCO2(kpi)""")
-
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    GlycemieDeviation(id INTEGER PRIMARY KEY, kpi TEXT NOT NULL, hour TEXT NOT NULL, score INTEGER, lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(kpi) REFERENCES Glycemie(kpi)""")
-
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    INRDeviation(id INTEGER PRIMARY KEY, kpi TEXT NOT NULL, hour TEXT NOT NULL, score INTEGER, lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(kpi) REFERENCES INR(kpi)""")
-
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PlaquettesDeviation(id INTEGER PRIMARY KEY, kpi TEXT NOT NULL, hour TEXT NOT NULL, score INTEGER, lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(kpi) REFERENCES Plaquettes(kpi)""")
-
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    TeteLitDeviation(id INTEGER PRIMARY KEY, kpi TEXT NOT NULL, hour TEXT NOT NULL, score INTEGER, lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(kpi) REFERENCES TeteLit(kpi)""")
-
-    cursor.execute("""CREATE TABLE IF NOT EXISTS
-    TemperatureDeviation(id INTEGER PRIMARY KEY, kpi TEXT NOT NULL, hour TEXT NOT NULL, score INTEGER, lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(kpi) REFERENCES Temperature(kpi)""")
-   
     # creates the tables for kpis continious data
 
     # 1. NEURO-MONITORING TARGETS
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PPC(id INTEGER PRIMARY KEY, kpi TEXT, noadmsip INTEGER, value INTEGER, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip))""")
+    PPC(id SERIAL PRIMARY KEY, kpi TEXT NOT NULL, noadmsip INTEGER, value INTEGER, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_ppc_noadmsip ON PPC (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_ppc_horodate ON PPC (horodate)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PICm(id INTEGER PRIMARY KEY, kpi TEXT, noadmsip INTEGER, value INTEGER, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip))""")
+    PICm(id SERIAL PRIMARY KEY, kpi TEXT NOT NULL, noadmsip INTEGER, value INTEGER, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_picm_noadmsip ON PICm (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_picm_horodate ON PICm (horodate)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    LICOX(id INTEGER PRIMARY KEY, kpi TEXT, noadmsip INTEGER, value FLOAT, unitofmeasure TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip))""")
+    LICOX(id SERIAL PRIMARY KEY, kpi TEXT, noadmsip INTEGER, value FLOAT, unitofmeasure TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_licox_noadmsip ON LICOX (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_licox_horodate ON LICOX (horodate)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    Pupilles(id INTEGER PRIMARY KEY, kpi TEXT, noadmsip INTEGER, value TEXT, state TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip))""")
+    Pupilles(id SERIAL PRIMARY KEY, kpi TEXT, noadmsip INTEGER, value TEXT, state TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_pupilles_noadmsip ON Pupilles (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_pupilles_horodate ON Pupilles (horodate)""")
@@ -311,25 +315,25 @@ try:
     # 2. CARDIO-RESPIRATORY TARGETS
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PVCm(id INTEGER PRIMARY KEY, kpi TEXT, noadmsip INTEGER, value FLOAT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip))""")
+    PVCm(id SERIAL PRIMARY KEY, kpi TEXT NOT NULL, noadmsip INTEGER, value FLOAT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_pvcm_noadmsip ON PVCm (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_pvcm_horodate ON PVCm (horodate)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PAm(id INTEGER PRIMARY KEY, kpi TEXT, noadmsip INTEGER, value FLOAT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip))""")
+    PAm(id SERIAL PRIMARY KEY, kpi TEXT NOT NULL, noadmsip INTEGER, value FLOAT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_pam_noadmsip ON PAm (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_pam_horodate ON PAm (horodate)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    ETCO2(id INTEGER PRIMARY KEY, kpi TEXT, noadmsip INTEGER, value FLOAT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip))""")
+    ETCO2(id SERIAL PRIMARY KEY, kpi TEXT NOT NULL, noadmsip INTEGER, value FLOAT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_etco2_noadmsip ON ETCO2 (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_etco2_horodate ON ETCO2 (horodate)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PaCO2(id INTEGER PRIMARY KEY, kpi TEXT, noadmsip INTEGER, value FLOAT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip))""")
+    PaCO2(id SERIAL PRIMARY KEY, kpi TEXT NOT NULL, noadmsip INTEGER, value FLOAT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_paco2_noadmsip ON PaCO2 (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_paco2_horodate ON PaCO2 (horodate)""")
@@ -338,19 +342,19 @@ try:
     # 3. LABORATORY MONITORING TARGETS
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    Glycemie(id INTEGER PRIMARY KEY, kpi TEXT, noadmsip INTEGER, value FLOAT, unitofmeasure TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip))""")
+    Glycemie(kpi TEXT , noadmsip INTEGER, value FLOAT, unitofmeasure TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip))""")
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_glycemie_noadmsip ON Glycemie (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_glycemie_horodate ON Glycemie (horodate)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    INR(id INTEGER PRIMARY KEY, kpi TEXT, noadmsip INTEGER, value FLOAT, unitofmeasure TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip))""")
+    INR(kpi TEXT , noadmsip INTEGER, value FLOAT, unitofmeasure TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_inr_noadmsip ON INR (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_inr_horodate ON INR (horodate)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    Plaquettes(id INTEGER PRIMARY KEY, kpi TEXT, noadmsip INTEGER, value FLOAT, unitofmeasure TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip))""")
+    Plaquettes(kpi TEXT , noadmsip INTEGER, value FLOAT, unitofmeasure TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_plaquettes_noadmsip ON Plaquettes (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_plaquettes_horodate ON Plaquettes (horodate)""")
@@ -358,16 +362,64 @@ try:
     # 4. GENERAL SUPPORT MONITORING TARGETS
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    TeteLit(id INTEGER PRIMARY KEY, kpi TEXT, noadmsip INTEGER, value TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip))""")
+    TeteLit(kpi TEXT , noadmsip INTEGER, value TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_tetelit_noadmsip ON TeteLit (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_tetelit_horodate ON TeteLit (horodate)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    Temperature(id INTEGER PRIMARY KEY, kpi TEXT, noadmsip INTEGER, value TEXT, unitofmeasure TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip))""")
+    Temperature(kpi TEXT , noadmsip INTEGER, value TEXT, unitofmeasure TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip))""")
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_temp_noadmsip ON Temperature (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_temp_horodate ON Temperature (horodate)""")
+
+    # 2. create the deviation score tables for the 15 key point indicators (kpis) shown of interface
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    PPCDeviation(kpi TEXT NOT NULL, noadmsip INTEGER, scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+
+    cursor.execute("""CREATE INDEX IF NOT EXISTS idx_ppcdev_noadmsip ON PPC (noadmsip)""")
+    cursor.execute("""CREATE INDEX IF NOT EXISTS idx_ppc_kpi ON PPC (kpi)""")
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    PICmDeviation(kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    LICOXDeviationDeviation(kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+
+    cursor.execute("""CREATE INDEX IF NOT EXISTS idx_licoxdev_noadmsip ON PPC (noadmsip)""")
+    cursor.execute("""CREATE INDEX IF NOT EXISTS idx_licox_kpi ON PPC (kpi)""")
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    PupillesDeviation(kpi TEXT NOT NULL, noadmsip INTEGER, scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    PVCmDeviation(kpi TEXT NOT NULL, noadmsip INTEGER, scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+    
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    PAmDeviation(kpi TEXT NOT NULL, noadmsip INTEGER, scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    ETCO2Deviation(kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    PaCO2Deviation(kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    GlycemieDeviation(kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    INRDeviation(kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    PlaquettesDeviation(kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    TeteLitDeviation(kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS
+    TemperatureDeviation(kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+   
 
     #Check if the patient already exists in the db
     cursor.execute('SELECT noadmsip FROM Patient')  
@@ -375,7 +427,7 @@ try:
     
     if patients is None:
         print(' Inserting data into database ...')
-        cursor.execute('''INSERT INTO Patient (noadmsip, firstname, lastname, dateofbirth, gender, lifetimenumber, weight, idealWeight, height, primarydiagnosis, intime, outtime, lastLoadingTime) VALUES(3563, 'M', 'B', '2002-12-05', 'F', 2107336, 40, 0.0, 0.0, 'NA', CURRENT_TIMESTAMP);''')
+        cursor.execute('''INSERT INTO Patient (noadmsip, firstname, lastname, dateofbirth, gender, lifetimenumber, weight, idealWeight, height, primarydiagnosis, intime, outtime, lastLoadingTime) VALUES(3563, 'M', 'B', '2002-12-05', 'F', 2107336, 40, 0.0, 0.0, 'NA', '2016-03-12 00:58:00', '2016-03-18 12:00:00', CURRENT_TIMESTAMP);''')
         cursor.execute("COMMIT;" )#end transaction
     
 
@@ -385,17 +437,18 @@ try:
         # continu data insertion
         for table in tables:
             df = pd.read_csv(f"./{folder_name}/{table}.csv")
+            df = df.drop(df.columns[0], axis=1)
 
             for index, row in df.iterrows():
                 values = ', '.join(f"'{value}'" for value in row)
                 if table == 'LICOX' or table == 'Glycemie' or table == 'Temperature' or table == 'INR' or table == 'Plaquettes':
-                    cursor.execute(f"INSERT INTO {table} (id, kpi, noadmsip, value, unitofmeasure, horodate) VALUES ({values});")
+                    cursor.execute(f"INSERT INTO {table} (kpi, noadmsip, value, unitofmeasure, horodate) VALUES ({values});")
                     cursor.execute("COMMIT;" )#end transaction
                 elif table == 'Pupilles':
-                    cursor.execute(f"INSERT INTO {table} (id, kpi, noadmsip, value, state, horodate) VALUES ({values});")
+                    cursor.execute(f"INSERT INTO {table} (kpi, noadmsip, value, state, horodate) VALUES ({values});")
                     cursor.execute("COMMIT;" )#end transaction
                 else:
-                    cursor.execute(f"INSERT INTO {table} (id, kpi, noadmsip, value, horodate) VALUES ({values});")
+                    cursor.execute(f"INSERT INTO {table} (kpi, noadmsip, value, horodate) VALUES ({values});")
                     cursor.execute("COMMIT;" )#end transaction
             
             print(f"all {table} data inserted in database")
@@ -403,28 +456,25 @@ try:
         # deviation insertion
         folder_name = 'deviation_data'
         tables = ['LICOX', 'Pupilles', 'ETCO2', 'Glycemie' ]
-        
+         # Deviation insertion
+        folder = 'deviation_data'
+        tables = ['PAm', 'ETCO2', 'Glycemie']
+
         for table in tables:
-            # Open the CSV file
-            with open(f"{table}.csv", 'r') as csv_file:
-                csv_reader = csv.reader(csv_file)
-
-                # # Get the header row
-                # header = next(csv_reader)
-
-                # Create an empty list to store the data
-                data_array = []
-
-                # Iterate through each row in the CSV file
-                for row in csv_reader:
-                    data_array.append(row)
-
-                    # Now data_array contains the data from the CSV file
-                    print(data_array)
-
-                    cursor.execute(f"INSERT INTO {table}Deviation (kpi, noadmsip, scores, VALUES ({table}, {row[0]}, {row[1::]});")
+            # Open file 
+            with open(f"./{folder}/{table}.csv") as file_obj:
+                
+                # Create reader object by passing the file 
+                # object to reader method
+                reader_obj = csv.reader(file_obj, delimiter=';')
+                
+                # Iterate over each row in the csv 
+                # file using reader object to format into the posgreSQL database
+                for row in reader_obj:
+                    int_row = [int(element) for element in row[1:]]
+                    cursor.execute(f"INSERT INTO {table}Deviation (kpi, noadmsip, scores) VALUES ('{table}', {row[0]}, ARRAY{int_row});")
                     cursor.execute("COMMIT;" )#end transaction
-            
+        
             print(f"all {table} data inserted in database")
         
 except Exception as error:
