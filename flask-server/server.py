@@ -42,38 +42,7 @@ try:
         print(' successfully connected to the pgAdmin database ! ')
     else:
         print(' not connected with database :( ')
-    
-    cursor.execute("BEGIN;")
-    cursor.execute("DROP TABLE IF EXISTS PPC CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS PICm CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS LICOX CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS Pupilles CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS PVCm CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS PAm CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS ETCO2 CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS PaCO2 CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS Glycemie CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS INR CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS Plaquettes CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS Temperature CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS TeteLit CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS PPCDeviation CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS PICmDeviation CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS LICOXDeviation CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS PupillesDeviation CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS PVCmDeviation CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS PAmDeviation CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS ETCO2Deviation CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS PaCO2Deviation CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS GlycemieDeviation CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS INRDeviation CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS PlaquettesDeviation CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS TemperatureDeviation CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS TeteLitDeviation CASCADE;")
-    cursor.execute("DROP TABLE IF EXISTS Patient;")
-    cursor.execute("COMMIT;")
-    print(' all kpis deleted from database ! ')
-
+ 
     @app.route("/patients", methods=["DELETE"])
     def db_delete():
         cursor.execute("BEGIN;")
@@ -154,19 +123,19 @@ try:
     @app.route("/patient/noadmsip/<int:noadmsip>/kpis", methods=["GET"])
     def get_patient_kpis(noadmsip):
         all_kpis = {
-            "PPC": fetch_kpis_from_database("PPC", noadmsip),
-            "PICm": fetch_kpis_from_database("PICm", noadmsip),
-            "LICOX": fetch_kpis_from_database("LICOX", noadmsip),
-            "Pupilles": fetch_kpis_from_database("Pupilles", noadmsip),
-            "PVCm": fetch_kpis_from_database("PVCm", noadmsip),
-            "PAm": fetch_kpis_from_database("PAm", noadmsip),
-            "ETCO2": fetch_kpis_from_database("ETCO2", noadmsip),
-            "PaCO2": fetch_kpis_from_database("PaCO2", noadmsip),
-            "Glycemie": fetch_kpis_from_database("Glycemie", noadmsip),
-            "INR": fetch_kpis_from_database("INR", noadmsip),
-            "Plaquettes": fetch_kpis_from_database("Plaquettes", noadmsip),
-            "Temperature": fetch_kpis_from_database("Temperature", noadmsip),
-            "TeteLit": fetch_kpis_from_database("TeteLit", noadmsip),
+            "PPC": fetch_kpis("PPC", noadmsip),
+            "PICm": fetch_kpis("PICm", noadmsip),
+            "LICOX": fetch_kpis("LICOX", noadmsip),
+            "Pupilles": fetch_kpis("Pupilles", noadmsip),
+            "PVCm": fetch_kpis("PVCm", noadmsip),
+            "PAm": fetch_kpis("PAm", noadmsip),
+            "ETCO2": fetch_kpis("ETCO2", noadmsip),
+            "PaCO2": fetch_kpis("PaCO2", noadmsip),
+            "Glycemie": fetch_kpis("Glycemie", noadmsip),
+            "INR": fetch_kpis("INR", noadmsip),
+            "Plaquettes": fetch_kpis("Plaquettes", noadmsip),
+            "Temperature": fetch_kpis("Temperature", noadmsip),
+            "TeteLit": fetch_kpis("TeteLit", noadmsip),
         }
 
         all_kpis_json_data = json.dumps(all_kpis, indent=4, cls=PatientEncoder)
@@ -174,7 +143,7 @@ try:
     
     @app.route("/patient/noadmsip/<int:noadmsip>/kpis/<kpi>", methods=["GET"])
     def fetch_patient_kpi(noadmsip, kpi):
-        kpi = { kpi: fetch_kpis_from_database(kpi, noadmsip) }
+        kpi = { kpi: fetch_kpis(kpi, noadmsip) }
 
         kpi_json_data = json.dumps(kpi, indent=4, cls=PatientEncoder)
         return  kpi_json_data
@@ -199,6 +168,17 @@ try:
             "Plaquettes": fetch_kpis_time("Plaquettes", noadmsip, timeframe),
             "Temperature": fetch_kpis_time("Temperature", noadmsip, timeframe),
             "TeteLit": fetch_kpis_time("TeteLit", noadmsip, timeframe),
+        }
+
+        all_kpis_json_data = json.dumps(all_kpis, indent=4, cls=PatientEncoder)
+        return all_kpis_json_data
+    
+    @app.route("/patient/noadmsip/<int:noadmsip>/deviationScores", methods=["GET"])
+    def get_patient_deviation_scores(noadmsip):
+        all_kpis = {
+            "PAm": fetch_deviation_scores("PAm", noadmsip),
+            "ETCO2": fetch_deviation_scores("ETCO2", noadmsip),
+            "Glycemie": fetch_deviation_scores("Glycemie", noadmsip)
         }
 
         all_kpis_json_data = json.dumps(all_kpis, indent=4, cls=PatientEncoder)
@@ -237,7 +217,7 @@ try:
             cursor.execute("COMMIT;")
 
 
-    def fetch_kpis_from_database(table_name, noadmsip):
+    def fetch_kpis(table_name, noadmsip):
         try:
             # Execute the query
             cursor.execute(f"SELECT * FROM {table_name} WHERE noadmsip={noadmsip} ORDER BY horodate DESC;")
@@ -276,10 +256,35 @@ try:
             print("Error executing SQL query:", str(e))
             # Optionally, raise the exception to propagate it further
             raise e
-          # 1. creates patinent info table
+        
+
+    def fetch_deviation_scores(kpi, noadmsip):
+        try:
+            # Execute the query
+            cursor.execute(f"SELECT * FROM {kpi}Deviation  WHERE noadmsip={noadmsip};")
+
+            # Fetch all rows from the query result
+            rows = cursor.fetchall()
+
+            # Get the column names to use as keys for the dictionaries
+            column_names = [desc[0] for desc in cursor.description]
+
+            # Convert the rows into a list of dictionaries
+            data = [dict(zip(column_names, row)) for row in rows]
+
+            return data
+        except Exception as e:
+            # Log the error message for debugging
+            print("Error executing SQL query:", str(e))
+            # Optionally, raise the exception to propagate it further
+            raise e
+    
+    
+    
+    # 1. creates patinent info table
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    Patient(noadmsip INTEGER PRIMARY KEY, firstname TEXT, lastname TEXT, dateofbirth TIMESTAMP, gender TEXT, lifetimenumber INT, weight FLOAT, idealWeight FLOAT, height FLOAT, primarydiagnosis TEXT, intime TIMESTAMP, outtime TIMESTAMP, lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP)""")
+    Patient(noadmsip INTEGER PRIMARY KEY, firstname TEXT, lastname TEXT, dateofbirth DATE, gender TEXT, lifetimenumber INT, weight FLOAT, idealWeight FLOAT, height FLOAT, primarydiagnosis TEXT, intime TIMESTAMP, outtime TIMESTAMP, lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP)""")
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_patient_noadmsip ON Patient (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_patient_lastLoadingTime ON Patient (lastLoadingTime)""")
@@ -362,13 +367,13 @@ try:
     # 4. GENERAL SUPPORT MONITORING TARGETS
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    TeteLit(kpi TEXT , noadmsip INTEGER, value TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+    TeteLit(kpi TEXT, noadmsip INTEGER, value TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_tetelit_noadmsip ON TeteLit (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_tetelit_horodate ON TeteLit (horodate)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    Temperature(kpi TEXT , noadmsip INTEGER, value TEXT, unitofmeasure TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip))""")
+    Temperature(kpi TEXT, noadmsip INTEGER, value TEXT, unitofmeasure TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip))""")
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_temp_noadmsip ON Temperature (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_temp_horodate ON Temperature (horodate)""")
@@ -422,7 +427,7 @@ try:
    
 
     #Check if the patient already exists in the db
-    cursor.execute('SELECT noadmsip FROM Patient')  
+    cursor.execute('SELECT noadmsip FROM Patient WHERE noadmsip=3563')  
     patients = cursor.fetchone()
     
     if patients is None:
