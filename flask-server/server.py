@@ -116,24 +116,23 @@ try:
 
     @app.route("/patient/noadmsip/<int:noadmsip>/kpis", methods=["GET"])
     def get_patient_kpis(noadmsip):
-        all_kpis = {
-            "PPC": fetch_kpis("PPC", noadmsip),
-            "PICm": fetch_kpis("PICm", noadmsip),
-            "LICOX": fetch_kpis("LICOX", noadmsip),
-            "Pupilles": fetch_kpis("Pupilles", noadmsip),
-            "PVCm": fetch_kpis("PVCm", noadmsip),
-            "PAm": fetch_kpis("PAm", noadmsip),
-            "ETCO2": fetch_kpis("ETCO2", noadmsip),
-            "PaCO2": fetch_kpis("PaCO2", noadmsip),
-            "Glycemie": fetch_kpis("Glycemie", noadmsip),
-            "INR": fetch_kpis("INR", noadmsip),
-            "Plaquettes": fetch_kpis("Plaquettes", noadmsip),
-            "Temperature": fetch_kpis("Temperature", noadmsip),
-            "TeteLit": fetch_kpis("TeteLit", noadmsip),
-        }
+        all_kpis = [
+            fetch_patient_kpi(noadmsip, "PPC" ),
+            fetch_patient_kpi(noadmsip, "PICm" ),
+            # fetch_patient_kpi("LICOX", noadmsip),
+            # fetch_patient_kpi("Pupilles", noadmsip),
+            # fetch_patient_kpi("PVCm", noadmsip),
+            # fetch_patient_kpi("PAm", noadmsip),
+            # fetch_patient_kpi("ETCO2", noadmsip),
+            # fetch_patient_kpi("PaCO2", noadmsip),
+            # fetch_patient_kpi("Glycemie", noadmsip),
+            # fetch_patient_kpi("INR", noadmsip),
+            # fetch_patient_kpi("Plaquettes", noadmsip),
+            # fetch_patient_kpi("Temperature", noadmsip),
+            # fetch_patient_kpi("TeteLit", noadmsip),
+        ]
 
-        all_kpis_json_data = json.dumps(all_kpis, indent=4, cls=PatientEncoder)
-        return all_kpis_json_data
+        return all_kpis
     
     @app.route("/patient/noadmsip/<int:noadmsip>/kpis/<kpi>", methods=["GET"])
     def fetch_patient_kpi(noadmsip, kpi):
@@ -148,28 +147,27 @@ try:
         time_frame = dateNow -  time_frame_to_datetime
         time_frame = time_frame.strftime('%Y-%m-%d %H:%M:%S')
 
-        all_kpis = {
-            "PPC": fetch_kpis_time("PPC", noadmsip, time_frame),
-            "PICm": fetch_kpis_time("PICm", noadmsip, time_frame),
-            "LICOX": fetch_kpis_time("LICOX", noadmsip, time_frame),
-            "Pupilles": fetch_kpis_time("Pupilles", noadmsip, time_frame),
-            "PVCm": fetch_kpis_time("PVCm", noadmsip, time_frame),
-            "PAm": fetch_kpis_time("PAm", noadmsip, time_frame),
-            "ETCO2": fetch_kpis_time("ETCO2", noadmsip, time_frame),
-            "PaCO2": fetch_kpis_time("PaCO2", noadmsip, time_frame),
-            "Glycemie": fetch_kpis_time("Glycemie", noadmsip, time_frame),
-            "INR": fetch_kpis_time("INR", noadmsip, time_frame),
-            "Plaquettes": fetch_kpis_time("Plaquettes", noadmsip, time_frame),
-            "Temperature": fetch_kpis_time("Temperature", noadmsip, time_frame),
-            "TeteLit": fetch_kpis_time("TeteLit", noadmsip, time_frame),
-        }
+        all_kpis = [
+            fetch_kpis_time("PPC", noadmsip, time_frame),
+            fetch_kpis_time("PICm", noadmsip, time_frame),
+            fetch_kpis_time("LICOX", noadmsip, time_frame),
+            fetch_kpis_time("Pupilles", noadmsip, time_frame),
+            fetch_kpis_time("PVCm", noadmsip, time_frame),
+            fetch_kpis_time("PAm", noadmsip, time_frame),
+            fetch_kpis_time("ETCO2", noadmsip, time_frame),
+            fetch_kpis_time("PaCO2", noadmsip, time_frame),
+            fetch_kpis_time("Glycemie", noadmsip, time_frame),
+            fetch_kpis_time("INR", noadmsip, time_frame),
+            fetch_kpis_time("Plaquettes", noadmsip, time_frame),
+            fetch_kpis_time("Temperature", noadmsip, time_frame),
+            fetch_kpis_time("TeteLit", noadmsip, time_frame),
+        ]
 
-        all_kpis_json_data = json.dumps(all_kpis, indent=4, cls=PatientEncoder)
-        return all_kpis_json_data
+        return all_kpis
     
     @app.route("/patient/noadmsip/<int:noadmsip>/deviationScores", methods=["GET"])
     def get_patient_deviation_scores(noadmsip):
-        kpi = {"PAm": fetch_deviation_scores("PAm", noadmsip) }
+        kpi = { fetch_deviation_scores("PAm", noadmsip) }
         kpis = json.dumps(kpi, indent=4, cls=PatientEncoder)
         return kpis
 
@@ -206,20 +204,26 @@ try:
             cursor.execute("COMMIT;")
 
 
-    def fetch_all():
+    def fetch_all(cursor):
         # Fetch all rows from the query result
         rows = cursor.fetchall()
         # Get the column names to use as keys for the dictionaries
         column_names = [desc[0] for desc in cursor.description]
         # Convert the rows into a list of dictionaries
         data = [dict(zip(column_names, row)) for row in rows]
-        return data
+        return json.dumps(data, indent=4, cls=PatientEncoder)
 
     def fetch_kpis(table_name, noadmsip):
         try:
             # Execute the query
             cursor.execute(f"SELECT * FROM {table_name} WHERE noadmsip={noadmsip} ORDER BY horodate DESC;")
-            fetch_all()
+              # Fetch all rows from the query result
+            rows = cursor.fetchall()
+            # Get the column names to use as keys for the dictionaries
+            column_names = [desc[0] for desc in cursor.description]
+            # Convert the rows into a list of dictionaries
+            data = [dict(zip(column_names, row)) for row in rows]
+            return data
         except Exception as e:
             # Log the error message for debugging
             print("Error executing SQL query:", str(e))
@@ -227,7 +231,7 @@ try:
             raise e
 
 
-    def fetch_kpis_time(table_name, noadmsip, timeframe):
+    def fetch_kpis_time(cursor, table_name, noadmsip, timeframe):
         try:
             cursor.execute(f"SELECT * FROM {table_name} WHERE noadmsip=%s AND horodate > %s ORDER BY horodate DESC;", (noadmsip, timeframe))
             fetch_all()
@@ -238,30 +242,30 @@ try:
 
     def fetch_deviation_scores(kpi, noadmsip):
         try:
-            cursor.execute(f"SELECT * FROM {kpi}Deviation  WHERE noadmsip={noadmsip};")
-            fetch_all()
+            cursor.execute(f"SELECT * FROM {kpi}Deviation WHERE noadmsip={noadmsip};")
+            fetch_all(cursor)
         except Exception as e:
             print("Error executing SQL query:", str(e))
             raise e
     
-    cursor.execute("BEGIN;")
+    # cursor.execute("BEGIN;")
 
-    # List of table names to be deleted
-    table_names = [
-        "PPC", "PICm", "LICOX", "Pupilles", "PVCm", "PAm",
-        "ETCO2", "PaCO2", "Glycemie", "INR", "Plaquettes",
-        "Temperature", "TeteLit", "PPCDeviation", "PICmDeviation",
-        "LICOXDeviation", "PupillesDeviation", "PVCmDeviation",
-        "PAmDeviation", "ETCO2Deviation", "PaCO2Deviation",
-        "GlycemieDeviation", "INRDeviation", "PlaquettesDeviation",
-        "TemperatureDeviation", "TeteLitDeviation", "Patient"
-    ]
+    # # List of table names to be deleted
+    # table_names = [
+    #     "PPC", "PICm", "LICOX", "Pupilles", "PVCm", "PAm",
+    #     "ETCO2", "PaCO2", "Glycemie", "INR", "Plaquettes",
+    #     "Temperature", "TeteLit", "PPCDeviation", "PICmDeviation",
+    #     "LICOXDeviation", "PupillesDeviation", "PVCmDeviation",
+    #     "PAmDeviation", "ETCO2Deviation", "PaCO2Deviation",
+    #     "GlycemieDeviation", "INRDeviation", "PlaquettesDeviation",
+    #     "TemperatureDeviation", "TeteLitDeviation", "Patient"
+    # ]
 
-    for table_name in table_names:
-        cursor.execute(f"DROP TABLE IF EXISTS {table_name} CASCADE;")
+    # for table_name in table_names:
+    #     cursor.execute(f"DROP TABLE IF EXISTS {table_name} CASCADE;")
 
-    cursor.execute("COMMIT;")
-    print("All tables deleted from the database!")
+    # cursor.execute("COMMIT;")
+    # print("All tables deleted from the database!")
 
     # 1. creates patient info table
 
@@ -270,6 +274,7 @@ try:
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_patient_noadmsip ON Patient (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_patient_lastLoadingTime ON Patient (lastLoadingTime)""")
+    cursor.execute("COMMIT;")
 
     # creates the tables for kpis continuous data
 
@@ -295,6 +300,7 @@ try:
             create_query = f"""
                 CREATE TABLE IF NOT EXISTS {table_name} (
                     id SERIAL PRIMARY KEY,
+                    noadmsip INTEGER,
                     {', '.join(columns)},
                     horodate TIMESTAMP,
                     lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -416,8 +422,7 @@ try:
                 # file using reader object to format into the posgreSQL database
                 for row in reader_obj:
                     for index, element in enumerate(row[1:]):
-                        print(f"index: {index}, element: {element}")
-                        cursor.execute(f"INSERT INTO {table}Deviation (kpi, noadmsip, score, hour, lastLoadingTime) VALUES ('{table}', {element}, {index}, CURRENT_TIMESTAMP);")
+                        cursor.execute(f"INSERT INTO {table}Deviation (kpi, noadmsip, score, hour, lastLoadingTime) VALUES ('{table}', {row[0]}, {element}, {index}, CURRENT_TIMESTAMP);")
                         cursor.execute("COMMIT;" )#end transaction
         
             print(f"all {table} data inserted in database")

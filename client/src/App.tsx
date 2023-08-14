@@ -1,49 +1,55 @@
-import { useEffect, useMemo } from "react";
-import { BrowserRouter } from "react-router-dom";
+import { QueryClient, hashQueryKey, useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import KpiService, { ContinuousData, Data } from "@/services/KpiService";
+import PatientService from "@/services/PatientService";
 
-import { Box, CssBaseline, ThemeProvider, Typography } from "@mui/material";
-import { createTheme } from "@mui/material/styles";
-import { themeSettings } from "@/theme";
-import Routes from "@/Routes"
-
-import { AuthenticationProvider } from "@/contexts/AuthenticationContext";
-import { DeviationScoreProvider } from "@/contexts/DeviationScoreContext";
-
-import { usePatients } from "@/contexts/PatientsContext";
-import { usePatient } from "@/contexts/CurrentPatientContext";
-import { KpisDataProvider } from "./contexts/KpisContext";
-
-const App = () => {
-  const { status, error } = usePatients()
-  const { currentPatient, setCurrentPatient } = usePatient()
-
-  const theme = useMemo(() => createTheme(themeSettings), [])
-
-  return status === 'loading' ? (
-    <p>Loading...</p>
-  ) : status === 'error' ? (
-    <p>Error: {error.message}</p>
-  ) : (
-      <div className="app">
-        <BrowserRouter>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Box width="100%" height="100%" padding="0.5rem">
-          <AuthenticationProvider >
-            <KpisDataProvider>
-              <DeviationScoreProvider>
-                <Routes />
-              </DeviationScoreProvider>
-            </KpisDataProvider>
-          </AuthenticationProvider >
-          </Box>
-        </ThemeProvider>
-        </BrowserRouter>
-      </div>
-  )
+type Params = {
+  queryKey: [string, { noadmsip: number }]
 }
 
-export default App;
+async function getKpisData(params: Params): Promise<Data[]> {
+  const [ , { noadmsip }] = params.queryKey;
+
+  const response = await KpiService.findByVariable(noadmsip, "ppc")
+  return response
+}
+
+async function getAllPatients() {
+  const patientsFetched = await PatientService.findAll()
+  return patientsFetched
+}
+
+export function App() {
+  const noadmsip = 3563
+  console.log("Render");
+
+  
+  const {isLoading, isError, data, error} = useQuery({ queryKey : ["kpis", { noadmsip: noadmsip }], queryFn: getKpisData })
+
+  if (isLoading) {
+    console.log("Loading...");
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    console.log("Error: ", error);
+    return <div>Error...</div>;
+  }
+  
+
+  return (
+    <div >
+       {data.map((data, index) => (
+          <div key={index}>
+            {data.kpi}
+          </div>
+        ))}
+      </div>
+  );
+}
+
+export default App
 
 
 
