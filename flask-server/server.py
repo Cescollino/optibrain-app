@@ -42,6 +42,7 @@ try:
         print(' successfully connected to the pgAdmin database ! ')
     else:
         print(' not connected with database :( ')
+
  
     @app.route("/patients", methods=["DELETE"])
     def db_delete():
@@ -472,7 +473,7 @@ try:
                 # file using reader object to format into the posgreSQL database
                 for row in reader_obj:
                     int_row = [int(element) for element in row[1:]]
-                    cursor.execute(f"INSERT INTO {table}Deviation (kpi, noadmsip, scores) VALUES ('{table}', {row[0]}, INTEGER[]{int_row});")
+                    cursor.execute(f"INSERT INTO {table}Deviation (kpi, noadmsip, scores) VALUES ('{table}', {row[0]}, ARRAY{int_row});")
                     cursor.execute("COMMIT;" )#end transaction
         
             print(f"all {table} data inserted in database")
