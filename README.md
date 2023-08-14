@@ -6,7 +6,9 @@ The objective is to illustrate the trend of all the main indices (KPIS) used in 
 
 ## Programming langages
 
-To establish the link between the backend and the frontend, we used the Axios 1.2.1 library. This library provides various methods for executing HTTPS requests like GET, POST, PUT, and DELETE specifically designed for JavaScript frameworks. It's build with a React Typescript Client with React Query and Axios library to make CRUD requests to Rest API. 
+To establish the link between the backend and the frontend, we used the Axios 1.2.1 and React Query libraries. These libraries provide various methods for executing HTTPS requests. It's a Typescript React Application using Vite.
+
+Vite link -https://vitejs.dev/guide/why.html
 
 ### Backend
 
