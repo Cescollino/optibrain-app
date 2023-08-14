@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Accordion, AccordionSummary, AccordionDetails, Fab, Chip, Box, styled} from '@mui/material';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -10,6 +10,8 @@ import { kpisBoxes, optionalKpis } from '@/data/data';
 import TimeFrameContext from '@/contexts/TimeFrameContext';
 import KpiChart from '@/components/kpi/KpiChart';
 import { useDeviationScore } from '@/contexts/DeviationScoreContext';
+import { DefaultComponentProps, OverridableComponent, OverridableTypeMap } from '@mui/material/OverridableComponent';
+import { useKpisData } from '@/contexts/KpisContext';
 
 const StyledFab = styled(Fab)(({ theme }) => ({
   width: '36px',
@@ -18,29 +20,32 @@ const StyledFab = styled(Fab)(({ theme }) => ({
   '&:hover': {
     backgroundColor: theme.palette.action.hover,
   },
-}));
+}))
+
 
 const TargetKpisBoxes = () => {
-  const { deviationData } = useDeviationScore()
-  const { selectedFrameLabel } = useContext(TimeFrameContext);
+  const { data: deviationData } = useDeviationScore()
+  const { data: kpisData } = useKpisData()
+  const { selectedFrameLabel } = useContext(TimeFrameContext)
 
-  const [kpiCharts, setKpiVisibleCharts] = useState<KpiProps[]>([]);
-  const [kpiList, setKpiList] = useState<KpisBoxProps[]>(kpisBoxes);
-  const [expanded, setExpanded] = useState(false);
+  const [kpiCharts, setKpiVisibleCharts] = useState<KpiProps[]>([])
+  const [kpiList, setKpiList] = useState<KpisBoxProps[]>(kpisBoxes)
+  const [expanded, setExpanded] = useState(false)
+
   const icons = [
-    <AddCircleOutlineIcon sx={{ display: 'flex', flexGrow: 1, height: '34px', width: '34px', color: 'white'}} />, 
-    <RemoveCircleOutlineIcon sx={{ display: 'flex', flexGrow: 1, height: '34px', width: '34px', color: 'white'}} />
-  ];
+    <AddCircleOutlineIcon sx={{ display: 'flex', flexGrow: 1, height: '34px', width: '34px', color: 'white'}} />,
+    <RemoveCircleOutlineIcon sx={{ display: 'flex', flexGrow: 1, height: '34px', width: '34px', color: 'white'}} />, 
+  ]
+
   const [expandedIcon, setExpandedIcon] = useState(icons[0]);
 
-  const handleAccordionToggle = () => {
-    setExpanded(!expanded);
-    setExpandedIcon((expanded ? icons[0] : icons[1]));
-  };
+  useEffect(() => {
+    setExpandedIcon((expanded ? icons[0] : icons[1]))
+  }, [expanded])
 
   const handleKpiClick = (selectedKpi: KpiProps, box: KpisBoxProps) => () => {
     setKpiVisibleCharts( prevCharts => {
-      const chartIndex = prevCharts.findIndex((chart) => chart.variable === selectedKpi.variable);
+      const chartIndex = prevCharts.findIndex((chart) => chart.variable === selectedKpi.variable)
 
       // chart is already visible, remove it from the list
       return chartIndex !== -1 ? prevCharts.filter((_, index) => index !== chartIndex) 
@@ -50,25 +55,25 @@ const TargetKpisBoxes = () => {
           continueData: selectedKpi.continueData, 
           targetThreshold: selectedKpi.targetThreshold, 
           boxCategory: box.category } as KpiProps
-        ];
-    });
+        ]
+    })
   };
   
-  const handleKpiChipClick = (selectedKpi: KpiProps, box: KpisBoxProps) => () => {
-    setKpiList( prevKpiList => {
-      const updatedKpiList = prevKpiList.map(prevBox =>
-        prevBox.category === box.category
-          ? {
-              ...prevBox,
-              kpis: prevBox.kpis.map(prevKpi =>
-                prevKpi.variable === selectedKpi.variable ? { ...prevKpi, display: !prevKpi.display } : prevKpi
-              ),
-            }
-          : prevBox
-      );
-      return updatedKpiList;
-    });
-  };
+  // const handleKpiChipClick = (selectedKpi: KpiProps, box: KpisBoxProps) => () => {
+  //   setKpiList( prevKpiList => {
+  //     const updatedKpiList = prevKpiList.map(prevBox =>
+  //       prevBox.category === box.category
+  //         ? {
+  //             ...prevBox,
+  //             kpis: prevBox.kpis.map(prevKpi =>
+  //               prevKpi.variable === selectedKpi.variable ? { ...prevKpi, display: !prevKpi.display } : prevKpi
+  //             ),
+  //           }
+  //         : prevBox
+  //     );
+  //     return updatedKpiList
+  //   });
+  // };
 
   // useEffect(() => {
   //   setKpiList(kpisBoxes);
@@ -80,7 +85,7 @@ const TargetKpisBoxes = () => {
 
   return (
     <>
-      {kpiList.map((box, index) => (
+      {/* {kpiList.map((box, index) => (
         <Box key={index} sx={{ display: 'inline-flex', flexGrow: 1, flexDirection: 'column'}}>
         <DashboardBox
           sx={{
@@ -96,12 +101,12 @@ const TargetKpisBoxes = () => {
           }}
         >
           <BoxHeader title={box.category}/>
-          {/* DISPLAYED KPIS */}
-          {box.kpis.map((kpi, index) => kpi.display &&  
-            <Kpi key={index} variable={kpi.variable} onClick={handleKpiClick(kpi, box)} targetData={kpi.targetData} targetThreshold={kpi.targetThreshold} timeFrame={parseInt(selectedFrameLabel)} /> 
+          // {/* DISPLAYED KPIS */}
+          {/* {deviationData?.map((data, index) =>
+            <Kpi key={index} variable={data.kpi} onClick={handleKpiClick(data, index)} targetData={data.scores} targetThreshold={kpi.targetThreshold} timeFrame={parseInt(selectedFrameLabel)} /> 
           )}
           {/* OPTIONAL KPIS */}
-          {box.optional &&
+          {/* {box.optional &&
           (<Accordion sx={{ backgroundColor: "transparent", width: "100%"}}>
             <AccordionSummary
               aria-controls="panel-content" 
@@ -113,7 +118,7 @@ const TargetKpisBoxes = () => {
                   },
               }}
               >
-              <StyledFab key={index} onClick={handleAccordionToggle} >
+              <StyledFab key={index} onClick={() => setExpanded(!expanded)}> 
                 {expandedIcon}
               </StyledFab>
             </AccordionSummary>
@@ -128,7 +133,7 @@ const TargetKpisBoxes = () => {
                 }}
               >
               {/* HIDDEN KPIS */}
-              {optionalKpis.map((kpi, index) => 
+              {/* {optionalKpis.map((kpi, index) => 
                   (<Chip 
                     key={index} 
                     label={kpi.variable}
@@ -152,14 +157,13 @@ const TargetKpisBoxes = () => {
             justifyContent: 'space-between',
           }}>
           {kpiCharts.map((kpi, index) => (kpi.boxCategory === box.category) && (<KpiChart key={index} variable={kpi.variable} continueData={kpi.continueData} targetThreshold={kpi.targetThreshold} timeFrame={kpi.timeFrame}/>))}
-     
         </DashboardBox>
-        </Box>
-      ))}
+        </Box> }
+      ))} } */}
     </>
-  );
-};
+  )
+}
 
-export default TargetKpisBoxes;
+export default TargetKpisBoxes
 
 

@@ -1,31 +1,26 @@
+import PatientService from '@/services/PatientService'
 import IPatient from '@/types/Patient'
-import { createContext, ReactNode, useContext, useState } from 'react'
-
-type Props = {
-  children?: ReactNode
-}
+import { useQuery } from '@tanstack/react-query'
+import { createContext, useContext } from 'react'
 
 type IPatientsContext = {
-    patients: IPatient[]
-    addPatients: (newPatients: IPatient[]) => void
+  patients: IPatient[] | undefined
+  status: string
+  error: any
 }
 
-const initialValue = {
-  patients: [],
-  addPatients: () => {}
+async function getAllPatients() {
+  const patientsFetched = await PatientService.findAll()
+  return patientsFetched
 }
 
-const PatientsContext = createContext<IPatientsContext>(initialValue);
+const PatientsContext = createContext<IPatientsContext>(undefined!);
 
-export function PatientsProvider({ children }: Props) {
-    const [patients, setPatients] = useState<IPatient[]>(initialValue.patients);
-
-    const addPatients = (newPatients: IPatient[]) => {
-      setPatients((patients) => [...patients, ...newPatients])
-    }
+export function PatientsProvider({ children }: { children: React.ReactNode }) {
+    const { status, error, data: patients } = useQuery({ queryKey : ["patients"], queryFn: getAllPatients })
     
     return (
-    <PatientsContext.Provider value={{ patients, addPatients }}>
+    <PatientsContext.Provider value={{ status, error, patients }}>
         {children}
     </PatientsContext.Provider>
     )

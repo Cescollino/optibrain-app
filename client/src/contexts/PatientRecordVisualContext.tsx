@@ -8,6 +8,3 @@ type PatientRecordVisualData = {
 const PatientRecordVisualContext = createContext<PatientRecordVisualData>({  selectedVisual: 'scan', updateVisualDisplay: () => {} });
 
 export default PatientRecordVisualContext;
-
-
-

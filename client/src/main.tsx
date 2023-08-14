@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom/client'
 import '@/index.css'
 import { PatientsProvider } from "@/contexts/PatientsContext"
 import { CurrentPatientProvider } from "@/contexts/CurrentPatientContext"
+import { AuthenticationProvider } from "@/contexts/AuthenticationContext"
 
 const queryClient = new QueryClient()
 

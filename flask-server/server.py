@@ -175,14 +175,9 @@ try:
     
     @app.route("/patient/noadmsip/<int:noadmsip>/deviationScores", methods=["GET"])
     def get_patient_deviation_scores(noadmsip):
-        all_kpis = {
-            "PAm": fetch_deviation_scores("PAm", noadmsip),
-            "ETCO2": fetch_deviation_scores("ETCO2", noadmsip),
-            "Glycemie": fetch_deviation_scores("Glycemie", noadmsip)
-        }
-
-        all_kpis_json_data = json.dumps(all_kpis, indent=4, cls=PatientEncoder)
-        return all_kpis_json_data
+        kpi = {"PAm": fetch_deviation_scores("PAm", noadmsip) }
+        kpis = json.dumps(kpi, indent=4, cls=PatientEncoder)
+        return kpis
 
     @app.route("/db/size", methods=["GET"])
     def get_db_size():  
@@ -477,7 +472,7 @@ try:
                 # file using reader object to format into the posgreSQL database
                 for row in reader_obj:
                     int_row = [int(element) for element in row[1:]]
-                    cursor.execute(f"INSERT INTO {table}Deviation (kpi, noadmsip, scores) VALUES ('{table}', {row[0]}, ARRAY{int_row});")
+                    cursor.execute(f"INSERT INTO {table}Deviation (kpi, noadmsip, scores) VALUES ('{table}', {row[0]}, INTEGER[]{int_row});")
                     cursor.execute("COMMIT;" )#end transaction
         
             print(f"all {table} data inserted in database")

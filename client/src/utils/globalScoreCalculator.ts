@@ -4,21 +4,14 @@ export interface IGlobalDeviationScore {
     value: number;
 }
 
-export function kpiGlobalScore(scores: number[]): IGlobalDeviationScore  {
-    let value = 0;
-    // Score data is calculated each hour (ask Gilles to know more)
-    const numberOfHours = scores.length
-
-    if (!numberOfHours) 
-        return { numberOfHours, value }
-
-    const sum = scores.reduce((accumulator, currentScore) => accumulator + currentScore, 0);
-    value = sum / numberOfHours * 100;
-    return { numberOfHours, value };
+function average(arrayOfScores: number[]): number {
+    const numberOfHours = arrayOfScores.length
+    const sum = arrayOfScores.reduce((accumulator, currentScore) => accumulator + currentScore, 0)
+    const value = sum / numberOfHours * 100
+    return value
 }
 
-export function kpisGlobalScore(scores:  ((0 | 1) []) []): number {
-    const kpisAverageScores = scores.map((kpiScores) => kpiGlobalScore(kpiScores).value)
-
-    return kpiGlobalScore(kpisAverageScores).value
+export function kpisGlobalScore(scores: number[]) {
+    const kpisAverageScores = average(scores)
+    return kpisAverageScores
 }

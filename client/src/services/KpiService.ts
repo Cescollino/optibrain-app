@@ -1,6 +1,4 @@
-import { KpiData } from "@/types/types"
-import { apiClient } from "./PatientService"
-import { useQuery } from "@tanstack/react-query"
+import { apiClient } from "@/services/PatientService"
 
 const KpiVariableOptions: string[] = [
     "PPC",
@@ -20,6 +18,7 @@ const KpiVariableOptions: string[] = [
 
 
 export interface ContinuKpiData {
+    id: number;
     kpi: string;
     noadmsip: number;
     value: number | string;
@@ -28,9 +27,24 @@ export interface ContinuKpiData {
     horodate: string; 
 }
 
+export interface KpisApiResponse {
+    "PPC": ContinuKpiData[],
+    "PICm": ContinuKpiData[],
+    "LICOX": ContinuKpiData[],
+    "Pupilles": ContinuKpiData[],
+    "PVCm": ContinuKpiData[],
+    "PAm": ContinuKpiData[],
+    "ETCO2": ContinuKpiData[],
+    "PaCO2": ContinuKpiData[],
+    "Glycemie": ContinuKpiData[],
+    "INR": ContinuKpiData[],
+    "Plaquettes": ContinuKpiData[],
+    "Temperature": ContinuKpiData[],
+    "TeteLit": ContinuKpiData[],
+}
 
 const findAll = async (noadmsip: number) => {
-    const response = await apiClient.get<KpiData[]>(`/patients/${noadmsip}/kpis`)
+    const response = await apiClient.get<KpisApiResponse>(`/patient/noadmsip/${noadmsip}/kpis`)
     return response.data
 }
   
@@ -38,12 +52,12 @@ const findByVariable = async (noadmsip: number, kpi: string) => {
     const filteredKpiOptions = KpiVariableOptions.filter((k) => k === kpi);
     if (!filteredKpiOptions) return;
 
-    const response = await apiClient.get<KpiData[]>(`/patients/${noadmsip}/kpis/${kpi}`)
+    const response = await apiClient.get<ContinuKpiData[]>(`/patient/noadmsip/${noadmsip}/kpis/${kpi}`)
     return response.data
 }
 
 const findAllByTimeFrame = async (noadmsip: number, timeFrame: number) => {
-    const response = await apiClient.get<KpiData[]>(`/patients/${noadmsip}/kpis/timeFrame/${timeFrame}`)
+    const response = await apiClient.get<ContinuKpiData[]>(`/patient/noadmsip/${noadmsip}/kpis/timeFrame/${timeFrame}`)
     return response.data
 }
   

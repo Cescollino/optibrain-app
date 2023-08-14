@@ -10,9 +10,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 const BrainDashboard = () => {
 
-  const { noadmsip } = useParams();
-  const navigate = useNavigate();
-
   return (
     <>
         <Grid 
