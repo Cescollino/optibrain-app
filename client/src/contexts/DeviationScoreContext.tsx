@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import DeviationScoreService, { DeviationApiResponse, IDeviationKpiData } from "@/services/DeviationScoreService";
+import DeviationScoreService, { DeviationApiResponse } from "@/services/DeviationScoreService";
 import { createContext, useContext } from "react";
 import { usePatient } from "@/contexts/CurrentPatientContext";
 

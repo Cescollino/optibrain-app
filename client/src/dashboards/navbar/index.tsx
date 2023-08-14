@@ -30,15 +30,15 @@ const Navbar = () => {
               growFlex: 1,
               flexDirection: 'column',
               width: '100%',
+              position: 'relative'
         }}
         >
         <DashboardBox display='inline-flex' alignItems="center" sx={{ width: '100%', justifyContent: 'space-between', padding: '1rem', flewWrap: 'wrap', boxShadow: 'none'}}>
           <Box display="flex" alignItems="center" gap="0.5rem">
-            {!state && (
-              <SearchPatientBar />
-            )}
+            <SearchPatientBar />
           </Box>
-          <Box display="flex" alignItems="center" gap="0.5rem" >
+          {/* Mes patients */}
+          <Box display="flex" alignItems="center" gap="0.5rem">
             <Typography variant="h4" fontSize="16px" sx={{ marginRight: '0.5rem', color: 'white' }}>
               Mes patients
             </Typography>
