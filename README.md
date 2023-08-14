@@ -1,10 +1,8 @@
-# Optibrain : A clinical decision support system (CDSS) interface for the evaluation of severe head trauma in PICUs
+# Optibrain : A CDSS interface for the evaluation of severe head trauma in PICUs
 
-## Using REACT & TYPESCRIPT with a FLASK API to connect with the CHUSJ PostgreSQL database.
+This project was conceived by the CHU Sainte-Justine research center. It is the first version based on a Figma prototype. This clinical decision support system (CDSS) is to help physicians in the pediatric intense care unit (PICUs).
 
-This project is the first version based on a Figma prototype. It'a tool to help clinicians in the pediatric intense care unit (PICUs) analyze the global state of children with severe head trauma. The application displays 15 key point indicators (KPIS) monitored and renders a diagnostic.
-
-This project was conceived by the CHU Sainte-Justine research center to help intensive care physicians make major decisions about the future treatment of a patient. The objective is to illustrate the trend of all the main indices used in the evaluation of severe head trauma so that physicians can have a clearer idea of the patient's condition and can administer care accordingly. They will be able to browse the interface to assimilate all the relevant information in the assessment of head trauma.
+The objective is to illustrate the trend of all the main indices (KPIS) used in the evaluation of severe head trauma to help intensive care physicians make major decisions about the future treatment of a patient. They will be able to browse the interface to assimilate all the relevant information in the assessment of head trauma.
 
 ## Programming langages
 
@@ -27,7 +25,7 @@ The frontend site is coded in TypeScript, more specifically using the React JS l
 4. for the back-end server use the command - npm run start-api
 5. for the front-end use - npm run dev
 
-## What's left todo
+## What's left todo ?
 
 * 
 
