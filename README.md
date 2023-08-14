@@ -8,7 +8,7 @@ The objective is to illustrate the trend of all the main indices (KPIS) used in 
 
 To establish the link between the backend and the frontend, we used the Axios 1.2.1 and React Query libraries. These libraries provide various methods for executing HTTPS requests. It's a Typescript React Application using Vite.
 
-Vite - https://vitejs.dev/guide/why.html
+Vite : https://vitejs.dev/guide/why.html
 
 ### Backend
 

@@ -1,3 +1,14 @@
+/**
+ * Current Patient Context
+ * 
+ * This context provides a way to manage and share the currently selected patient's information 
+ * after the all patients are fetched. It includes the current patient's details and a function 
+ * to update the selected patient.
+ * 
+ * @module CurrentPatientContext
+ */
+
+
 import IPatient from '@/types/Patient';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 import { usePatients } from '@/contexts/PatientsContext';

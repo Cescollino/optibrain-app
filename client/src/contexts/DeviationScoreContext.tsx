@@ -1,3 +1,13 @@
+/**
+ * Deviation Score Context
+ * 
+ * This context provides a way to manage and share the kpis threshold deviation scores. 
+ * It fetches the deviation scores data using the provided query function and the current patient's information.
+ * 
+ * @module DeviationScoreContext
+ */
+
+
 import { useQuery } from "@tanstack/react-query"
 import DeviationScoreService, { DeviationApiResponse } from "@/services/DeviationScoreService";
 import { createContext, useContext } from "react";

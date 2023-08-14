@@ -1,7 +1,13 @@
-/* 
-Author : GabrielIDNeto 
-Github repository : https://github.com/GabrielDNeto/React-Authentication-ContextAPI---react-router-dom.git
-*/
+/**
+ * Authentication Context
+ * 
+ * This context provides a way to manage and share the authentication state
+ * across different components in the application. It includes the
+ * current authentication status and a function to update that status.
+ * 
+ * @module AuthenticationContext
+ */
+
 
 import { createContext, ReactNode, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
@@ -15,7 +21,7 @@ type IAuthContext = {
   setAuthenticated: (newState: boolean) => void
 }
 
-const initialValue = {
+const initialValue: IAuthContext = {
   authenticated: false,
   setAuthenticated: () => {}
 }

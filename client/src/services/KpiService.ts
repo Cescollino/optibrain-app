@@ -16,8 +16,10 @@ const KpiVariableOptions: string[] = [
     "TeteLit",
 ]
 
+// eslint-disable-next-line no-template-curly-in-string
+const KPI_ENDPOINT = "/patient/noadmsip/${noadmsip}/kpis";
 
-export interface ContinuKpiData {
+export interface ContinuousData {
     id: number;
     kpi: string;
     noadmsip: number;
@@ -28,23 +30,12 @@ export interface ContinuKpiData {
 }
 
 export interface KpisApiResponse {
-    "PPC": ContinuKpiData[],
-    "PICm": ContinuKpiData[],
-    "LICOX": ContinuKpiData[],
-    "Pupilles": ContinuKpiData[],
-    "PVCm": ContinuKpiData[],
-    "PAm": ContinuKpiData[],
-    "ETCO2": ContinuKpiData[],
-    "PaCO2": ContinuKpiData[],
-    "Glycemie": ContinuKpiData[],
-    "INR": ContinuKpiData[],
-    "Plaquettes": ContinuKpiData[],
-    "Temperature": ContinuKpiData[],
-    "TeteLit": ContinuKpiData[],
+    [key: string]: ContinuousData[];
 }
+  
 
 const findAll = async (noadmsip: number) => {
-    const response = await apiClient.get<KpisApiResponse>(`/patient/noadmsip/${noadmsip}/kpis`)
+    const response = await apiClient.get<KpisApiResponse>(`${KPI_ENDPOINT}`)
     return response.data
 }
   
@@ -52,12 +43,12 @@ const findByVariable = async (noadmsip: number, kpi: string) => {
     const filteredKpiOptions = KpiVariableOptions.filter((k) => k === kpi);
     if (!filteredKpiOptions) return;
 
-    const response = await apiClient.get<ContinuKpiData[]>(`/patient/noadmsip/${noadmsip}/kpis/${kpi}`)
+    const response = await apiClient.get<ContinuousData[]>(`${KPI_ENDPOINT}/${kpi}`)
     return response.data
 }
 
 const findAllByTimeFrame = async (noadmsip: number, timeFrame: number) => {
-    const response = await apiClient.get<ContinuKpiData[]>(`/patient/noadmsip/${noadmsip}/kpis/timeFrame/${timeFrame}`)
+    const response = await apiClient.get<ContinuousData[]>(`${KPI_ENDPOINT}/timeFrame/${timeFrame}`)
     return response.data
 }
   

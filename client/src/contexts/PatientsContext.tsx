@@ -1,3 +1,14 @@
+/**
+ * Patients Context
+ * 
+ * This context provides a way to manage and share the patients' data across different
+ * components. It fetches the patients' data using the provided query function and provides
+ * status and error information as well.
+ * 
+ * @module PatientsContext
+ */
+
+
 import PatientService from '@/services/PatientService'
 import IPatient from '@/types/Patient'
 import { useQuery } from '@tanstack/react-query'

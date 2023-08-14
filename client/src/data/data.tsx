@@ -14,7 +14,7 @@ const PATIENT_PVC: Array<number> = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
 const createKpi = (
   variable: string,
-  targetData: Array<number> = PATIENT_RIGHT_EYE_LID,
+  targetData: Array<number>,
   targetThreshold: string,
   continueData:  KpisChartData,
   display: boolean = true,

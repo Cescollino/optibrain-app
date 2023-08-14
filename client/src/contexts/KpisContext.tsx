@@ -1,3 +1,13 @@
+/**
+ * KPIs Data Context
+ * 
+ * This context provides a way to manage and share the KPIs (Key Point Indicators) data.
+ * It fetches the KPIs data using the provided query function and the current patient's information.
+ * 
+ * @module KpisContext
+ */
+
+
 import { useQuery } from "@tanstack/react-query"
 import { createContext, useContext } from "react";
 import { usePatient } from "@/contexts/CurrentPatientContext";
