@@ -51,12 +51,12 @@ function getGlobalScore(scores: number[]) {
 const PatientRecordZone = () => {
   const { currentPatient } = usePatient()
   const { data: deviationData } = useDeviationScore()
-  const scores: number[] = [[]]
+  const scores: number[] = []
   const [ globalScore, updateGlobalScore ] = useState(0)
 
   useEffect(() => {
     if(deviationData && currentPatient) {
-        deviationData['PAm'].map((data) => scores.push(data.scores))
+        // deviationData['PAm'].map((data, i) => scores.push(data[i].scofres))
         const score = getGlobalScore(scores)
         updateGlobalScore(score)
         console.log('GLOBAL !', globalScore)

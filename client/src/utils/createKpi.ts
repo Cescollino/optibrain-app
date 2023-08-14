@@ -1,3 +1,5 @@
+import { KpiProps, KpisChartData } from "@/types/types";
+
 const createKpi = (
     variable: string,
     targetData: Array<number>,
