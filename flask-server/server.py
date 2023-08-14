@@ -343,19 +343,19 @@ try:
     # 3. LABORATORY MONITORING TARGETS
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    Glycemie(kpi TEXT , noadmsip INTEGER, value FLOAT, unitofmeasure TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip))""")
+    Glycemie(id SERIAL PRIMARY KEY, kpi TEXT , noadmsip INTEGER, value FLOAT, unitofmeasure TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip))""")
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_glycemie_noadmsip ON Glycemie (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_glycemie_horodate ON Glycemie (horodate)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    INR(kpi TEXT , noadmsip INTEGER, value FLOAT, unitofmeasure TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+    INR(id SERIAL PRIMARY KEY, kpi TEXT , noadmsip INTEGER, value FLOAT, unitofmeasure TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_inr_noadmsip ON INR (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_inr_horodate ON INR (horodate)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    Plaquettes(kpi TEXT , noadmsip INTEGER, value FLOAT, unitofmeasure TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+    Plaquettes(id SERIAL PRIMARY KEY, kpi TEXT , noadmsip INTEGER, value FLOAT, unitofmeasure TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_plaquettes_noadmsip ON Plaquettes (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_plaquettes_horodate ON Plaquettes (horodate)""")
@@ -363,13 +363,13 @@ try:
     # 4. GENERAL SUPPORT MONITORING TARGETS
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    TeteLit(kpi TEXT, noadmsip INTEGER, value TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+    TeteLit(id SERIAL PRIMARY KEY, kpi TEXT, noadmsip INTEGER, value TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_tetelit_noadmsip ON TeteLit (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_tetelit_horodate ON TeteLit (horodate)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    Temperature(kpi TEXT, noadmsip INTEGER, value TEXT, unitofmeasure TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip))""")
+    Temperature(id SERIAL PRIMARY KEY, kpi TEXT, noadmsip INTEGER, value TEXT, unitofmeasure TEXT, horodate TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip))""")
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_temp_noadmsip ON Temperature (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_temp_horodate ON Temperature (horodate)""")
@@ -383,7 +383,7 @@ try:
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_ppc_kpi ON PPC (kpi)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PICmDeviation(kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+    PICmDeviation(id SERIAL PRIMARY KEY, kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
     LICOXDeviationDeviation(kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
@@ -392,34 +392,34 @@ try:
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_licox_kpi ON PPC (kpi)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PupillesDeviation(kpi TEXT NOT NULL, noadmsip INTEGER, scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+    PupillesDeviation(id SERIAL PRIMARY KEY, kpi TEXT NOT NULL, noadmsip INTEGER, scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PVCmDeviation(kpi TEXT NOT NULL, noadmsip INTEGER, scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+    PVCmDeviation(id SERIAL PRIMARY KEY, kpi TEXT NOT NULL, noadmsip INTEGER, scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
     
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PAmDeviation(kpi TEXT NOT NULL, noadmsip INTEGER, scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+    PAmDeviation(id SERIAL PRIMARY KEY, kpi TEXT NOT NULL, noadmsip INTEGER, scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    ETCO2Deviation(kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+    ETCO2Deviation(id SERIAL PRIMARY KEY, kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PaCO2Deviation(kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+    PaCO2Deviation(id SERIAL PRIMARY KEY, kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    GlycemieDeviation(kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+    GlycemieDeviation(id SERIAL PRIMARY KEY, kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
     INRDeviation(kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    PlaquettesDeviation(kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+    PlaquettesDeviation(id SERIAL PRIMARY KEY, kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    TeteLitDeviation(kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+    TeteLitDeviation(id SERIAL PRIMARY KEY, kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    TemperatureDeviation(kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
+    TemperatureDeviation(id SERIAL PRIMARY KEY, kpi TEXT NOT NULL, noadmsip INTEGER , scores INTEGER[], lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(noadmsip) REFERENCES Patient(noadmsip) ON DELETE CASCADE)""")
    
 
     #Check if the patient already exists in the db
