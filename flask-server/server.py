@@ -113,31 +113,28 @@ try:
             print("Error executing SQL query:", str(e))
             # Optionally, raise the exception to propagate it further
             raise e
+    
+    kpis = [
+        "PPC", "PICm", "LICOX", "Pupilles", "PVCm", "PAm",
+        "ETCO2", "PaCO2", "Glycemie", "INR", "Plaquettes",
+        "TeteLit", "Temperature"
+    ]
 
     @app.route("/patient/noadmsip/<int:noadmsip>/kpis", methods=["GET"])
     def get_patient_kpis(noadmsip):
-        all_kpis = [
-            fetch_patient_kpi(noadmsip, "PPC" ),
-            fetch_patient_kpi(noadmsip, "PICm" ),
-            # fetch_patient_kpi("LICOX", noadmsip),
-            # fetch_patient_kpi("Pupilles", noadmsip),
-            # fetch_patient_kpi("PVCm", noadmsip),
-            # fetch_patient_kpi("PAm", noadmsip),
-            # fetch_patient_kpi("ETCO2", noadmsip),
-            # fetch_patient_kpi("PaCO2", noadmsip),
-            # fetch_patient_kpi("Glycemie", noadmsip),
-            # fetch_patient_kpi("INR", noadmsip),
-            # fetch_patient_kpi("Plaquettes", noadmsip),
-            # fetch_patient_kpi("Temperature", noadmsip),
-            # fetch_patient_kpi("TeteLit", noadmsip),
-        ]
+        kpisArray = []
+       
+        for kpi in kpis:
+            k = fetch_kpi(kpi, noadmsip)
+            kpi_json_data = json.dumps(k, indent=None, cls=PatientEncoder)
+            kpisArray.append(kpi_json_data)
 
-        return all_kpis
+        return kpisArray
     
     @app.route("/patient/noadmsip/<int:noadmsip>/kpis/<kpi>", methods=["GET"])
-    def fetch_patient_kpi(noadmsip, kpi):
-        kpi = { kpi: fetch_kpis(kpi, noadmsip) }
-
+    def fetch_patient_kpi(kpi, noadmsip):
+        kpi = fetch_kpi(kpi, noadmsip)
+        
         kpi_json_data = json.dumps(kpi, indent=4, cls=PatientEncoder)
         return  kpi_json_data
 
@@ -204,26 +201,18 @@ try:
             cursor.execute("COMMIT;")
 
 
-    def fetch_all(cursor):
-        # Fetch all rows from the query result
-        rows = cursor.fetchall()
-        # Get the column names to use as keys for the dictionaries
-        column_names = [desc[0] for desc in cursor.description]
-        # Convert the rows into a list of dictionaries
-        data = [dict(zip(column_names, row)) for row in rows]
-        return json.dumps(data, indent=4, cls=PatientEncoder)
-
-    def fetch_kpis(table_name, noadmsip):
+    def fetch_kpi(kpi, noadmsip):
         try:
             # Execute the query
-            cursor.execute(f"SELECT * FROM {table_name} WHERE noadmsip={noadmsip} ORDER BY horodate DESC;")
+            cursor.execute(f"SELECT * FROM {kpi} WHERE noadmsip={noadmsip} ORDER BY horodate DESC;")
               # Fetch all rows from the query result
             rows = cursor.fetchall()
             # Get the column names to use as keys for the dictionaries
             column_names = [desc[0] for desc in cursor.description]
             # Convert the rows into a list of dictionaries
             data = [dict(zip(column_names, row)) for row in rows]
-            return data
+    
+            return { kpi: data }
         except Exception as e:
             # Log the error message for debugging
             print("Error executing SQL query:", str(e))
@@ -331,11 +320,6 @@ try:
     # Create threshold deviation score tables for the 15 key point indicators (kpis)
 
     # List of key point indicators (kpis)
-    kpis = [
-        "PPC", "PICm", "LICOX", "Pupilles", "PVCm", "PAm",
-        "ETCO2", "PaCO2", "Glycemie", "INR", "Plaquettes",
-        "TeteLit", "Temperature"
-    ]
 
     def create_deviation_table(cursor, table_name):
         try:
