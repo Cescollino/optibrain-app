@@ -9,9 +9,9 @@
 
 
 import { useQuery } from "@tanstack/react-query"
-import DeviationScoreService, { DeviationApiResponse } from "@/services/DeviationScoreService";
+import DeviationScoreService, { DeviationApiResponse } from "@/api/services/DeviationScoreService";
 import { createContext, useContext } from "react";
-import { usePatient } from "@/contexts/CurrentPatientContext";
+import { useCurrentPatient } from "@/contexts/CurrentPatientContext";
 
 type Params = {
   queryKey: [string, { noadmsip: number | undefined }]
@@ -33,7 +33,7 @@ type DeviationContextType = {
 const DeviationScoreContext = createContext<DeviationContextType>(undefined!);
 
 export function DeviationScoreProvider({ children }: { children: React.ReactNode }) {
-  const { currentPatient } = usePatient()
+  const { currentPatient } = useCurrentPatient()
   const { data: deviationData } = useQuery({ queryKey : ["deviation", { noadmsip: currentPatient?.noadmsip }], queryFn: getDeviationScores, enabled: !!currentPatient })
 
  

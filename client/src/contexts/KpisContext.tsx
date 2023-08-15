@@ -8,35 +8,24 @@
  */
 
 
-import { useQuery } from "@tanstack/react-query"
-import { createContext, useContext } from "react";
-import { usePatient } from "@/contexts/CurrentPatientContext";
-import KpiService, { KpisApiResponse } from "@/services/KpiService";
-
-type Params = {
-  queryKey: [string, { noadmsip: number | undefined }]
-}
-
-async function getKpisData(params: Params) {
-  const [ , { noadmsip }] = params.queryKey;
-  if(!noadmsip) return undefined
-  
-  const response = await KpiService.findAll(noadmsip)
-
-  return response
-}
+import { createContext, useContext, useState } from "react";
+import { ContinuousData }  from "@/api/services/KpiService";
 
 type KpisContextType = {
-  data: KpisApiResponse | undefined
+  patientKpisData: ContinuousData[] | undefined
+  addKpisData: (newKpisData: ContinuousData[]) => void
 }
 
 const KpisContext = createContext<KpisContextType>(undefined!);
 
 export function KpisDataProvider({ children }: { children: React.ReactNode }) {
-  const { currentPatient } = usePatient()
-  const { data: kpisData } = useQuery({ queryKey : ["kpis", { noadmsip: currentPatient?.noadmsip }], queryFn: getKpisData, enabled: !!currentPatient })
+  const [patientKpisData, setPatientKpisData] = useState<ContinuousData[]>([])
 
-  return <KpisContext.Provider value={{ data: kpisData }}>
+  const addKpisData = (newKpiData: ContinuousData[]) => {
+    setPatientKpisData([...patientKpisData, ...newKpiData])
+  }
+
+  return <KpisContext.Provider value={{ patientKpisData, addKpisData }}>
             {children}
         </ KpisContext.Provider>;
 }

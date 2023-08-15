@@ -15,12 +15,13 @@ import { dateOfBirthToAge } from "@/utils/ageFormatting";
 
 import IPatient from "@/types/Patient"
 import IPatientRecordData  from "@/types/PatientRecord";
-import PatientDataService from "@/services/PatientService";
+import PatientDataService from "@/api/services/PatientService";
 import { useNavigate } from "react-router-dom";
-import { usePatient } from "@/contexts/CurrentPatientContext";
+
+import { useCurrentPatient } from "@/contexts/CurrentPatientContext";
 import scanImage from '@/assets/images/scan.png';
 import { useDeviationScore } from "@/contexts/DeviationScoreContext";
-import { IDeviationKpiData } from "@/services/DeviationScoreService";
+import { IDeviationKpiData } from "@/api/services/DeviationScoreService";
 import { kpisGlobalScore } from "@/utils/globalScoreCalculator";
 
 
@@ -49,18 +50,17 @@ function getGlobalScore(scores: number[]) {
 }
 
 const PatientRecordZone = () => {
-  const { currentPatient } = usePatient()
+  const { currentPatient } = useCurrentPatient()
   const { data: deviationData } = useDeviationScore()
   const scores: number[] = []
   const [ globalScore, updateGlobalScore ] = useState(0)
 
   useEffect(() => {
-    if(deviationData && currentPatient) {
-        // deviationData['PAm'].map((data, i) => scores.push(data[i].scofres))
-        const score = getGlobalScore(scores)
-        updateGlobalScore(score)
-        console.log('GLOBAL !', globalScore)
-    }
+      // deviationData['PAm'].map((data, i) => scores.push(data[i].scofres))
+      const score = getGlobalScore(scores)
+      updateGlobalScore(score)
+      console.log('GLOBAL !', globalScore)
+
   }, [deviationData])
     
   let patientAge: string | undefined = undefined
@@ -113,6 +113,7 @@ const PatientRecordZone = () => {
   const [tendenciesGraphVisible, setTendenciesGraphVisible] = useState(false)
 
   useEffect(() => {
+
   }, [scanImageVisible])
 
   useEffect(() => {

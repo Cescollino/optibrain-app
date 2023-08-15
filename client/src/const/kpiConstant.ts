@@ -1,7 +1,7 @@
   
 type MonitoringCategories = "neuro" | "cardio" | "labo" | "general"
 
-type KpiVariables = "ppc" | "pic" | "licox" | "pupilles" | "pvc" | "pam" | "etco2" | "paco2" | "glycemie" | "inr" | "plaquettes" | "analgo" | "nutrition" | "tete" | "temperature"
+export type KpiVariables = "ppc" | "pic" | "licox" | "pupilles" | "pvc" | "pam" | "etco2" | "paco2" | "glycemie" | "inr" | "plaquettes" | "analgo" | "nutrition" | "tete" | "temperature"
   
 
 type KpiHeader = string[]

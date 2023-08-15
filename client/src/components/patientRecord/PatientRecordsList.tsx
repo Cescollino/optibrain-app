@@ -14,7 +14,7 @@ const PatientRecordsList = () => {
       <Table>
         <TableHead />
         <TableBody>
-          {patients.map((record) => (
+          {patients!.map((record) => (
             <TableRow key={record.noadmsip} >
               <TableCell sx={{ color: 'white', justifyContent: "center", textAlign: 'center', border: 'solid', borderRadius: '60px', borderColor: palette.orangeStatus.main }}>#{record.noadmsip}</TableCell>
               <TableCell sx={{ color: 'white', border: 'none' }}>{record.firstname} {record.lastname}</TableCell>

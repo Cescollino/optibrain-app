@@ -1,4 +1,4 @@
-import { apiClient } from "@/services/PatientService"
+import { apiClient } from "@/api/client"
 
 const KpiVariableOptions: string[] = [
     "PPC",

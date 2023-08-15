@@ -19,15 +19,9 @@ HTTP DELETE api/patients/{id}   //Delete patient for given Id
 
 */
 
-import axios, { AxiosResponse } from "axios";
+import { apiClient } from "@/api/client";
 import IPatient from "@/types/Patient";
 
-export const apiClient = axios.create({
-  baseURL: "http://localhost:5000",
-  headers: {
-    "Content-type": "application/json"
-  }
-});
 
 const findAll = async () => {
   const response = await apiClient.get<IPatient[]>("/patients")

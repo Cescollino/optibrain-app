@@ -25,7 +25,7 @@ const StyledFab = styled(Fab)(({ theme }) => ({
 
 const TargetKpisBoxes = () => {
   const { data: deviationData } = useDeviationScore()
-  const { data: kpisData } = useKpisData()
+  const { patientKpisData } = useKpisData()
   const { selectedFrameLabel } = useContext(TimeFrameContext)
 
   const [kpiCharts, setKpiVisibleCharts] = useState<KpiProps[]>([])

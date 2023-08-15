@@ -11,7 +11,6 @@
 
 import IPatient from '@/types/Patient';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
-import { usePatients } from '@/contexts/PatientsContext';
 
 type Props = {
   children?: ReactNode;
@@ -19,28 +18,24 @@ type Props = {
 
 type IPatientContext = {
     currentPatient: IPatient | undefined
-    setCurrentPatient: (selectedPatient: IPatient) => void
+    setCurrentPatient: (selectedPatient: IPatient | undefined) => void
 }
 
-const CurrentPatientContext = createContext<IPatientContext>(undefined!)
+const initialValues = {
+  currentPatient: undefined,
+  setCurrentPatient: () => {}
+}
+
+const CurrentPatientContext = createContext<IPatientContext>(initialValues)
 
 export function CurrentPatientProvider({ children }: Props) {
-    const { patients } = usePatients()
-    const [currentPatient, setCurrentPatient] = useState<IPatient >()
+  const [currentPatient, setCurrentPatient] = useState<IPatient | undefined>(initialValues.currentPatient)
 
-    const noadmsip = 3563  /* Noadmsip : Numéro d'admission soins intensifs pédiatriques */
-    const scenarioPatient = patients?.find( patient => patient.noadmsip === noadmsip )
-
-    useEffect(() => {
-      if(patients && scenarioPatient) 
-        setCurrentPatient(scenarioPatient)
-    }, [scenarioPatient])
-
-    return (
+  return (
     <CurrentPatientContext.Provider value={{ currentPatient, setCurrentPatient }}>
         {children}
     </CurrentPatientContext.Provider>
-    )
+  )
 }
 
-export const usePatient = () => useContext(CurrentPatientContext)
+export const useCurrentPatient = () => useContext(CurrentPatientContext)
