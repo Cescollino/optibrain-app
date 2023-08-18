@@ -126,14 +126,14 @@ try:
        
         for kpi in kpis:
             k = fetch_kpi(kpi, noadmsip)
-            kpi_json_data = json.dumps(k, indent=None, cls=PatientEncoder)
-            kpisArray.append(kpi_json_data)
+            kpisArray.append(k)
 
         return kpisArray
     
     @app.route("/patient/noadmsip/<int:noadmsip>/kpis/<kpi>", methods=["GET"])
     def fetch_patient_kpi(kpi, noadmsip):
-        kpi = fetch_kpi(kpi, noadmsip)
+        fetched = fetch_kpi(kpi, noadmsip)
+        kpi = {kpi: fetched}
         
         kpi_json_data = json.dumps(kpi, indent=4, cls=PatientEncoder)
         return  kpi_json_data
@@ -204,15 +204,14 @@ try:
     def fetch_kpi(kpi, noadmsip):
         try:
             # Execute the query
-            cursor.execute(f"SELECT * FROM {kpi} WHERE noadmsip={noadmsip} ORDER BY horodate DESC;")
+            result = cursor.execute(f"SELECT * FROM {kpi} WHERE noadmsip={noadmsip} ORDER BY horodate DESC;")
               # Fetch all rows from the query result
-            rows = cursor.fetchall()
+            # rows = cursor.fetchall()
             # Get the column names to use as keys for the dictionaries
-            column_names = [desc[0] for desc in cursor.description]
-            # Convert the rows into a list of dictionaries
-            data = [dict(zip(column_names, row)) for row in rows]
-    
-            return { kpi: data }
+            # column_names = [desc[0] for desc in cursor.description]
+            # # Convert the rows into a list of dictionaries
+            data = [dict((cursor.description[i][0], value) for i, value in enumerate(row)) for row in cursor.fetchall()]
+            return data
         except Exception as e:
             # Log the error message for debugging
             print("Error executing SQL query:", str(e))
@@ -259,7 +258,7 @@ try:
     # 1. creates patient info table
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS
-    Patient(noadmsip INTEGER PRIMARY KEY, firstName TEXT, lastName TEXT, dateOfBirth DATE, gender TEXT, lifetimenumber INT, weight FLOAT, idealWeight FLOAT, height FLOAT, primaryDiagnosis TEXT, inTime TIMESTAMP, outTime TIMESTAMP, lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP)""")
+    Patients(noadmsip INTEGER PRIMARY KEY, firstName TEXT, lastName TEXT, dateOfBirth DATE, gender TEXT, lifetimenumber INT, weight FLOAT, idealWeight FLOAT, height FLOAT, primaryDiagnosis TEXT, inTime TIMESTAMP, outTime TIMESTAMP, lastLoadingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP)""")
 
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_patient_noadmsip ON Patient (noadmsip)""")
     cursor.execute("""CREATE INDEX IF NOT EXISTS idx_patient_lastLoadingTime ON Patient (lastLoadingTime)""")
