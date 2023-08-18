@@ -1,16 +1,16 @@
-import { Fab, Grid, Typography } from "@mui/material";
-import TargetKpisBoxes from "@/components/adherence/TargetKpisBoxes";
-import KpiBox from "@/components/kpi/KpiBox";
-import { useContext, useState } from "react";
-import TimeFrameContext from "@/contexts/TimeFrameContext";
+import { Fab, Grid, Typography } from "@mui/material"
+import TargetKpisBoxes from "@/components/adherence/TargetKpisBoxes"
+import KpiBox from "@/components/kpi/KpiBox"
+import { useContext, useState } from "react"
+import TimeFrameContext from "@/contexts/TimeFrameContext"
 
 const TimeFrameBar = () => {
-  const frameOptions: Array<string> = ['3', '6', '24'];
-  const { selectedFrameLabel, updateFrameTime } = useContext(TimeFrameContext);
+  const frameOptions: Array<string> = ['3', '6', '24']
+  const { selectedFrameLabel, updateFrameTime } = useContext(TimeFrameContext)
 
   const handleFrameTimeSelection = (option: string) => {
-    updateFrameTime(option);
-  };
+    updateFrameTime(option)
+  }
 
   return (
     <KpiBox
@@ -40,15 +40,15 @@ const TimeFrameBar = () => {
         </Fab>
       ))}
     </KpiBox>
-  );
-};
+  )
+}
 
 const AdherenceZone = () => {
-  const [selectedFrameLabel, setSelectedFrameLabel] = useState('3');
+  const [selectedFrameLabel, setSelectedFrameLabel] = useState('3')
 
   const updateFrameTime = (option: string) => {
-    setSelectedFrameLabel(option);
-  };
+    setSelectedFrameLabel(option)
+  }
 
   return (
     <>
@@ -68,7 +68,7 @@ const AdherenceZone = () => {
       </Grid>
       </TimeFrameContext.Provider>
     </>
-  );
-};
+  )
+}
 
-export default AdherenceZone;
+export default AdherenceZone

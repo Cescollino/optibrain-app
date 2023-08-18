@@ -10,10 +10,10 @@
 
 
 import IPatient from '@/types/Patient';
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
+import { createContext, ReactNode, useContext, useState } from 'react'
 
 type Props = {
-  children?: ReactNode;
+  children?: ReactNode
 }
 
 type IPatientContext = {

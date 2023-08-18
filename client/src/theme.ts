@@ -24,7 +24,7 @@ export const tokens = {
 export const themeSettings = {
   palette: { 
     /* Primary is the color displayed most frequently across the app's screens and components 
-    where using this color as the background */
+       in this application it's the background color */
     primary: {
       main: "#27263899",
       dark: "#040405eb",

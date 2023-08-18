@@ -60,7 +60,7 @@ export default function Sidebar() {
       icon: <GastroIcon />,
       color: palette.blue.main,
     },
-  ];
+  ]
 
   return (
     <>

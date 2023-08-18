@@ -1,18 +1,19 @@
-import { Box, Typography, useTheme } from "@mui/material";
-import React from "react";
-import FlexBetween from "./FlexBetween";
-import KpiProgressBox from "./kpi/KpiProgressBox";
-import TargetIcon from "./icons/TargetIcon";
+import { Box, Typography, useTheme } from "@mui/material"
+import { ReactNode } from "react"
+
+import FlexBetween from "@/components/FlexBetween"
+import KpiProgressBox from "@/components/kpi/KpiProgressBox"
+import TargetIcon from "@/components/icons/TargetIcon"
 
 type Props = {
-  title: string;
-  lastValue: number;
-  targetThreshold?: string;
-  icon?: React.ReactNode;
-};
+  title: string
+  lastValue: number
+  targetThreshold?: string
+  icon?: ReactNode
+}
 
 const ChartHeader = ({ icon, title, lastValue, targetThreshold }: Props) => {
-  const { palette } = useTheme();
+  const { palette } = useTheme()
   return (
     <Box color={palette.grey[400]} margin="1.5rem 1rem 0 1rem" sx={{ display: 'flex', justifyContent: 'space-between' }}>
       <FlexBetween>
@@ -31,7 +32,7 @@ const ChartHeader = ({ icon, title, lastValue, targetThreshold }: Props) => {
         </KpiProgressBox>
       </Typography>
     </Box>
-  );
-};
+  )
+}
 
-export default ChartHeader;
+export default ChartHeader

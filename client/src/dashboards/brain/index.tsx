@@ -1,12 +1,11 @@
-import { Grid } from '@mui/material';
-import PatientRecordZone from '@/dashboards/brain/PatientRecordZone';
-import SideBar from './SideBar';
-import AdherenceZone from './AdherenceZone';
-import Navbar from '../navbar';
-import Clock from '@/components/Clock';
-import { useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-
+import { Grid } from '@mui/material'
+import PatientRecordZone from '@/dashboards/brain/PatientRecordZone'
+import SideBar from './SideBar'
+import AdherenceZone from './AdherenceZone'
+import Navbar from '../../components/navbar'
+import Clock from '@/components/Clock'
+import { useEffect } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 
 const BrainDashboard = () => {
 
@@ -22,10 +21,10 @@ const BrainDashboard = () => {
             {/* <Clock /> */}
           </Grid>
           <Grid item xs={12}>
-            <Navbar />
+            {/* <Navbar /> */}
           </Grid>
           <Grid item xs={12}>
-            <PatientRecordZone />
+            {/* <PatientRecordZone /> */}
           </Grid>
           <Grid container item xs={true}>
             <Grid item>
@@ -37,10 +36,10 @@ const BrainDashboard = () => {
           </Grid>     
       </Grid>
     </>
-  );
-};
+  )
+}
 
-export default BrainDashboard;
+export default BrainDashboard
 
 
 

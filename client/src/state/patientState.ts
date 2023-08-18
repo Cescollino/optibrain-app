@@ -1,3 +1,5 @@
+// TODO : when you have all the data, a Patient class with reducers and actions would be better
+
 export enum StatusColor {
     GREEN = '#00C48C',
     SHADOW_GREEN = '#00C48C4D',

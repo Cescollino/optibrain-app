@@ -1,12 +1,12 @@
-import { Box } from "@mui/material";
-import { ReactNode } from "react";
+import { Box } from "@mui/material"
+import { ReactNode } from "react"
 
 type PatientRecordBoxProps = {
-  header: ReactNode;
-  content: ReactNode;
-  visualContent?: ReactNode;
-  fab?: ReactNode;
-};
+  header: ReactNode
+  content: ReactNode
+  visualContent?: ReactNode
+  fab?: ReactNode
+}
 
 const PatientRecordBox = ({ header, content, fab, visualContent }: PatientRecordBoxProps) => {
   return (
@@ -20,8 +20,8 @@ const PatientRecordBox = ({ header, content, fab, visualContent }: PatientRecord
       </Box>
       {fab}
     </Box>
-  );
-};
+  )
+}
 
-export default PatientRecordBox;
+export default PatientRecordBox
 

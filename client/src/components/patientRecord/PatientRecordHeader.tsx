@@ -1,10 +1,10 @@
 import { Typography, Box } from '@mui/material'
 
 type Props = {
-    title: string;
-    indicator?: string;
-    indicatorColor?: string;
-};
+    title: string
+    indicator?: string
+    indicatorColor?: string
+}
 
 const PatientRecordHeader = ({ title, indicator, indicatorColor }: Props) => {
     return (
@@ -17,4 +17,4 @@ const PatientRecordHeader = ({ title, indicator, indicatorColor }: Props) => {
   )
 }
 
-export default PatientRecordHeader;
+export default PatientRecordHeader

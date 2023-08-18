@@ -4,7 +4,7 @@ import { styled } from "@mui/system";
 import InsertChartIcon from '@mui/icons-material/InsertChart';
 import NeurologicalStateBar from "@/components/patientRecord/NeurologicalStateBar";
 import KpiCircularProgressBar from "@/components/kpi/KpiCircularProgressBar";
-import GlasgowScoresBar from "@/components/glasgowScore/GlasgowScoresBar";
+import GlasgowScoresBar from "@/components/patientRecord/GlasgowScoresBar";
 import PatientRecordBox from "@/components/patientRecord/PatientRecordBox";
 import PatientRecordHeader from "@/components/patientRecord/PatientRecordHeader";
 import { useContext, useEffect, useState } from "react";
@@ -14,16 +14,15 @@ import NeurologicalStateChart from "@/components/patientRecord/NeurologicalState
 import { dateOfBirthToAge } from "@/utils/ageFormatting";
 
 import IPatient from "@/types/Patient"
-import IPatientRecordData  from "@/types/PatientRecord";
-import PatientDataService from "@/api/services/PatientService";
-import { useNavigate } from "react-router-dom";
+import IPatientRecordData  from "@/types/PatientRecord"
+import PatientDataService from "@/api/services/PatientService"
+import { useNavigate } from "react-router-dom"
 
-import { useCurrentPatient } from "@/contexts/CurrentPatientContext";
-import scanImage from '@/assets/images/scan.png';
-import { useDeviationScore } from "@/contexts/DeviationScoreContext";
-import { IDeviationKpiData } from "@/api/services/DeviationScoreService";
-import { kpisGlobalScore } from "@/utils/globalScoreCalculator";
-
+import { useCurrentPatient } from "@/contexts/CurrentPatientContext"
+import scanImage from '@/assets/images/scan.png'
+import { useDeviationScore } from "@/contexts/DeviationScoreContext"
+import { IDeviationKpiData } from "@/api/services/DeviationScoreService"
+import { kpisGlobalScore } from "@/utils/globalScoreCalculator"
 
 
 const ScanImageContainer = styled(Grid) (
@@ -40,7 +39,6 @@ const ScanImageContainer = styled(Grid) (
     backgroundPosition: 'center',
   }
 )
-
 
 function getGlobalScore(scores: number[]) {
   const value = kpisGlobalScore(scores)
@@ -68,7 +66,7 @@ const PatientRecordZone = () => {
     patientAge = dateOfBirthToAge(currentPatient.dateofbirth)
   }
 
-  const globalAdherenceData: { day: string; score: number; }[] = [
+  const globalAdherenceData: { day: string; score: number }[] = [
     { day: "J0", score: 40 },
     { day: "J01", score: 40 },
     { day: "J02", score: 40 },
@@ -80,7 +78,7 @@ const PatientRecordZone = () => {
     { day: "J08", score: 80 },
     { day: "J09", score: 80 },
     { day: "J10", score: 80 },
-  ];
+  ]
   
   const neurologicalStateData: { time: string; state: number; }[] = [
       { time: "4:00", state: 2 },

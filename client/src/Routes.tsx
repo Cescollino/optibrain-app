@@ -2,7 +2,7 @@ import { useContext, useEffect } from 'react'
 import {Routes as Router, Route, Navigate, Outlet, useNavigate} from 'react-router-dom'
 import { AuthenticationContext } from '@/contexts/AuthenticationContext'
 import BrainDashboard from "@/dashboards/brain";
-import Login from '@/dashboards/login'
+import Login from '@/components/login'
 import { usePatients } from './contexts/PatientsContext';
 import { useCurrentPatient } from './contexts/CurrentPatientContext';
 import IPatient from '@/types/Patient';
@@ -28,18 +28,19 @@ const Routes = (fetchedData: Props) => {
   const { currentPatient, setCurrentPatient } = useCurrentPatient()
   const { patientKpisData, addKpisData } = useKpisData()
 
+  // TODO : manage fetching to optimize the cache of the data by react query library
   useEffect(() => {
     addPatients(fetchedData.patients)
-  }, [fetchedData.patients])
+  }, [fetchedData.patients, addPatients])
 
   useEffect(() => {
     setCurrentPatient(fetchedData.currentPatient)
-  }, [fetchedData.currentPatient])
+  }, [fetchedData.currentPatient, setCurrentPatient])
 
   
   useEffect(() => {
     addKpisData(fetchedData.kpisData)
-  }, [fetchedData.kpisData])
+  }, [fetchedData.kpisData, addKpisData])
 
   console.log('patients', patients)
   console.log('current patient : ', currentPatient)

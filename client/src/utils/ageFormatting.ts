@@ -1,5 +1,6 @@
 
-// Function to format age in years, months, and days 
+/* Function to convert date of birth and format age in years, months, and days */
+
 export function dateOfBirthToAge(dateofbirth: string): string {
     const today = new Date();
     const birthDate = new Date(dateofbirth);
