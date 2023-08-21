@@ -1,13 +1,13 @@
 import { MouseEvent, KeyboardEvent, useState } from 'react'
 import { Box, Button, Typography } from '@mui/material'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import PatientsRecordList from '@/components/navbar/PatientListTableGrid'
+import PatientsRecordList from '@/dashboards/brain/navbar/PatientListTableGrid'
 import { Link } from 'react-router-dom'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import LogoutIcon from '@mui/icons-material/Logout'
 import SearchPatientBar from './SearchPatientBar'
 import DashboardBox from '@/components/DashboardBox'
-import SquarePatientStateCount from '@/components/navbar/SquarePatientStateCount'
+import SquarePatientStateCount from '@/dashboards/brain/navbar/SquarePatientStateCount'
 import { PatientStatus } from '@/state/patientState'
 
 const Navbar = () => {
@@ -30,10 +30,10 @@ const Navbar = () => {
               growFlex: 1,
               flexDirection: 'column',
               width: '100%',
-              position: 'relative'
+              position: 'relative',
         }}
         >
-        <DashboardBox display='inline-flex' alignItems="center" sx={{ width: '100%', justifyContent: 'space-between', padding: '1rem', flewWrap: 'wrap', boxShadow: 'none'}}>
+        <DashboardBox display='inline-flex' alignItems="center" sx={{ justifyContent: 'space-between', padding: '1rem', flewWrap: 'wrap', boxShadow: 'none'}}>
           <Box display="flex" alignItems="center" gap="0.5rem">
             <SearchPatientBar />
           </Box>

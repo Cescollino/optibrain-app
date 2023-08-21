@@ -13,13 +13,13 @@ const PatientListTableGrid = () => {
       <Table>
         <TableHead />
         <TableBody>
-          {patients!.map((record) => (
+          {patients?.map((record) => (
             <TableRow key={record.noadmsip} >
               <TableCell sx={{ color: 'white', justifyContent: "center", textAlign: 'center', border: 'solid', borderRadius: '60px', borderColor: palette.orangeStatus.main }}>#{record.noadmsip}</TableCell>
               <TableCell sx={{ color: 'white', border: 'none' }}>{record.firstname} {record.lastname}</TableCell>
               <TableCell sx={{ color: 'white', border: 'none' }}>{record.dateofbirth}</TableCell>
               <TableCell sx={{ color: 'white', border: 'none' }}>{record.weight}</TableCell>
-              <TableCell sx={{ color: 'white', border: 'none' }}><Typography>Junknown </Typography></TableCell>
+              <TableCell sx={{ color: 'white', border: 'none' }}><Typography>J4 </Typography></TableCell>
               <TableCell sx={{ color: 'white', border: 'none' }}>{record.primarydiagnosis}</TableCell>
               <TableCell sx={{ color: 'white', border: 'none' }}>
                 <Typography>unknown scans</Typography>

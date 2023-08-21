@@ -1,19 +1,19 @@
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useMemo, useState } from "react";
-import KpiService, { ContinuousData } from "@/api/services/KpiService";
-import PatientService from "@/api/services/PatientService";
-import { ThemeProvider, Typography, createTheme } from "@mui/material";
-import IPatient from "@/types/Patient";
+import { useQuery } from "@tanstack/react-query"
+import { useEffect, useMemo, useState } from "react"
+import KpiService, { ContinuousData } from "@/api/services/KpiService"
+import PatientService from "@/api/services/PatientService"
+import { ThemeProvider, createTheme } from "@mui/material/styles"
+import IPatient from "@/types/Patient"
 
 
 import { AuthenticationProvider } from "@/contexts/AuthenticationContext";
-import Routes from "@/Routes";
-import { BrowserRouter } from "react-router-dom";
-import { PatientsProvider, usePatients } from "@/contexts/PatientsContext";
-import { CurrentPatientProvider, useCurrentPatient } from "@/contexts/CurrentPatientContext";
+import Routes from "@/Routes"
+import { BrowserRouter } from "react-router-dom"
+import { PatientsProvider, usePatients } from "@/contexts/PatientsContext"
+import { CurrentPatientProvider, useCurrentPatient } from "@/contexts/CurrentPatientContext"
 import { KpisDataProvider } from "./contexts/KpisContext";
-import BrainDashboard from "./dashboards/brain";
-import { themeSettings } from "./theme";
+import BrainDashboard from "@/dashboards/brain"
+import { themeSettings } from "@/theme"
 
 
 // type Params = {
@@ -61,10 +61,14 @@ export function App() {
   return (
     <div className="app" >
       <ThemeProvider theme={theme} >
-      <BrainDashboard />
+         <BrowserRouter>
+          <PatientsProvider>
+            <BrainDashboard />
+          </PatientsProvider>
+        </BrowserRouter>
       </ThemeProvider>
-      {/* <BrowserRouter>
-      <PatientsProvider>
+     
+      {/*
         <CurrentPatientProvider>
           <KpisDataProvider>
           <AuthenticationProvider>
@@ -73,8 +77,8 @@ export function App() {
           </AuthenticationProvider>
           </KpisDataProvider>
         </CurrentPatientProvider>
-      </PatientsProvider>
-      </BrowserRouter> */}
+     
+       */}
     </div>
   )
 }

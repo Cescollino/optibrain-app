@@ -36,6 +36,7 @@ if __name__ == '__main__':
     recreate_database()
     # add_data()
 
+    # This is our scenario patient selected by Guillaume Emeriaud
     patient = Patient(
         noadmsip = 3563,
         firstname = 'M', 
