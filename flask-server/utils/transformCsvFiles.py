@@ -1,3 +1,4 @@
+# This was the original csv files provided by Gilles, needed transformation
 import csv
 
 def rows_into_pg_schema():
