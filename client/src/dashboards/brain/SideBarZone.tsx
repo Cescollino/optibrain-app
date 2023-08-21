@@ -1,31 +1,31 @@
-import React, { useState } from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import { useTheme } from '@mui/material';
-import DashboardBox from '@/components/DashboardBox';
-import HomeIcon from '@/components/icons/HomeIcon';
-import PatientIcon from '@/components/icons/PatientIcon';
-import BrainIcon from '@/components/icons/BrainIcon';
-import GastroIcon from '@/components/icons/GastroIcon';
-import HeartIcon from '@/components/icons/HeartIcon';
-import InfectionIcon from '@/components/icons/InfectionIcon';
-import KidneyIcon from '@/components/icons/KidneyIcon';
-import LungsIcon from '@/components/icons/LungsIcon';
+import React, { useState } from 'react'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
+import { useTheme } from '@mui/material'
+import DashboardBox from '@/components/DashboardBox'
+import HomeIcon from '@/components/icons/HomeIcon'
+import PatientIcon from '@/components/icons/PatientIcon'
+import BrainIcon from '@/components/icons/BrainIcon'
+import GastrointestinalIcon from '@/components/icons/GastrointestinalIcon'
+import HeartIcon from '@/components/icons/HeartIcon'
+import InfectionIcon from '@/components/icons/InfectionIcon'
+import KidneyIcon from '@/components/icons/KidneyIcon'
+import LungsIcon from '@/components/icons/LungsIcon'
 
 function a11yProps(index: number) {
   return {
     id: `vertical-tab-${index}`,
     'aria-controls': `vertical-tabpanel-${index}`,
-  };
+  }
 }
 
-export default function Sidebar() {
-  const { palette } = useTheme();
-  const [selectedTabIndex, setSelectedTabIndex] = useState<number>(0);
+export default function SidebarZone() {
+  const { palette } = useTheme()
+  const [selectedTabIndex, setSelectedTabIndex] = useState<number>(0)
 
   const handleTabChange = (newValue: number) => {
-    setSelectedTabIndex(newValue);
-  };
+    setSelectedTabIndex(newValue)
+  }
 
   const tabsData = [
     {
@@ -57,7 +57,7 @@ export default function Sidebar() {
       color: palette.blue.main,
     },
     {
-      icon: <GastroIcon />,
+      icon: <GastrointestinalIcon />,
       color: palette.blue.main,
     },
   ]
@@ -96,5 +96,5 @@ export default function Sidebar() {
         </Tabs>
       </DashboardBox>
     </>
-  );
+  )
 }

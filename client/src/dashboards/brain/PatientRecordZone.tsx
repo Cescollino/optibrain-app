@@ -20,9 +20,7 @@ import { useNavigate } from "react-router-dom"
 
 import { useCurrentPatient } from "@/contexts/CurrentPatientContext"
 import scanImage from '@/assets/images/scan.png'
-import { useDeviationScore } from "@/contexts/DeviationScoreContext"
-import { IDeviationKpiData } from "@/api/services/DeviationScoreService"
-import { kpisGlobalScore } from "@/utils/globalScoreCalculator"
+
 
 
 const ScanImageContainer = styled(Grid) (
@@ -32,40 +30,23 @@ const ScanImageContainer = styled(Grid) (
     flexGrow: 1, 
     padding: 0, 
     margin: 0,
-    width: '100%',
-    height: '100%',
+    width: 189,
+    height: 196,
     backgroundImage: `url(${scanImage})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
   }
 )
 
-function getGlobalScore(scores: number[]) {
-  const value = kpisGlobalScore(scores)
-
-  console.log('DEVIATION SCORE : ', value)
-  return value
-}
-
 const PatientRecordZone = () => {
   const { currentPatient } = useCurrentPatient()
-  const { data: deviationData } = useDeviationScore()
-  const scores: number[] = []
-  const [ globalScore, updateGlobalScore ] = useState(0)
 
-  useEffect(() => {
-      // deviationData['PAm'].map((data, i) => scores.push(data[i].scofres))
-      const score = getGlobalScore(scores)
-      updateGlobalScore(score)
-      console.log('GLOBAL !', globalScore)
-
-  }, [deviationData])
-    
   let patientAge: string | undefined = undefined
   if(currentPatient) {
     patientAge = dateOfBirthToAge(currentPatient.dateofbirth)
   }
 
+  // TODO : implement a function to separate the data in days
   const globalAdherenceData: { day: string; score: number }[] = [
     { day: "J0", score: 40 },
     { day: "J01", score: 40 },
@@ -107,17 +88,11 @@ const PatientRecordZone = () => {
 
   const { palette } = useTheme()
   
-  const [scanImageVisible, setScanImageVisible] = useState(false)
-  const [tendenciesGraphVisible, setTendenciesGraphVisible] = useState(false)
+  const [isVisualContentDisplayed, setIsVisualContentDisplayed] = useState<boolean>(false)
 
-  useEffect(() => {
-
-  }, [scanImageVisible])
-
-  useEffect(() => {
-
-  }, [tendenciesGraphVisible])
-
+  const handleVisualContentClick = () => {
+    setIsVisualContentDisplayed(!isVisualContentDisplayed)
+  }
 
   return (
       <DashboardBox 
@@ -128,9 +103,9 @@ const PatientRecordZone = () => {
 
           justifyContent: 'space-between',
           padding: '2rem',
-          gap: 1,
         }}
       >
+
         {/* First item */}
         <PatientRecordBox
           header={<PatientRecordHeader title={`${currentPatient?.firstname} ${currentPatient?.lastname} (${currentPatient?.gender})`} />}
@@ -140,7 +115,7 @@ const PatientRecordZone = () => {
                 Trauma crânien sévère
               </Typography>
               <Typography variant="h5" fontSize="14px">
-                {patientAge}
+                Âge: {patientAge}
               </Typography>
               <Typography variant="h5" fontSize="14px">
                 Poids: {currentPatient?.weight} kg
@@ -150,7 +125,7 @@ const PatientRecordZone = () => {
               </Typography>
             </>
           }
-          visualContent={scanImageVisible && (<ScanImageContainer />)}
+          visualContent={isVisualContentDisplayed && (<ScanImageContainer />)}
           fab={
             <Fab
               variant="extended"
@@ -161,51 +136,34 @@ const PatientRecordZone = () => {
                 backgroundColor: palette.primary.dark,
                 textTransform: "none",
               }}
-              onClick={() => setScanImageVisible(!scanImageVisible)}
+              onClick={handleVisualContentClick}
             >
             <InsertChartIcon sx={{ fontSize: "22px", color: "white" }} />
             <Typography sx={{ fontSize: "12px", ml: 1 }} variant="h4">
-              {scanImageVisible ? "Fermer CT" : "Accès CT"}
+              {isVisualContentDisplayed ? "Fermer details" : "Accès détails"}
             </Typography>
           </Fab>}
           />
       
         {/* Global adherence */}
         <PatientRecordBox
-          header={<PatientRecordHeader title="Adhérence global" indicator="70%" indicatorColor={palette.greenStatus.main} />}
-          content={!tendenciesGraphVisible && <KpiCircularProgressBar score={globalScore} arrow="true" />}
-          visualContent={tendenciesGraphVisible && <GlobalAdherenceChart data={globalAdherenceData} />}
-          fab={
-          <Fab
-            variant="extended"
-            aria-label="scan"
-            sx={{
-              width: "165px",
-              height: "27px",
-              backgroundColor: palette.primary.dark,
-              textTransform: "none",
-            }}
-          onClick={() => setTendenciesGraphVisible(!tendenciesGraphVisible)}
-          >
-          <InsertChartIcon sx={{ fontSize: "22px", color: "white" }} />
-          <Typography sx={{ fontSize: "12px", ml: 1 }} variant="h4">
-            {tendenciesGraphVisible ? "Fermer tendances": "Accès tendances"}
-          </Typography>
-        </Fab>}
+          header={<PatientRecordHeader title="Adhérence global" indicator="70%" indicatorColor={palette.redStatus.main} />}
+          content={!isVisualContentDisplayed && <KpiCircularProgressBar score={70} arrow="true" />}
+          visualContent={isVisualContentDisplayed && <GlobalAdherenceChart data={globalAdherenceData} />}
         />
       
         {/* Third item */}
         <PatientRecordBox
           header={<PatientRecordHeader title="État neurologique" indicator="Hyperthémie" indicatorColor={palette.orangeStatus.main} />}
-          content={!tendenciesGraphVisible && <NeurologicalStateBar score={80} />}
-          visualContent={tendenciesGraphVisible && <NeurologicalStateChart data={neurologicalStateData} />}
+          content={!isVisualContentDisplayed && <NeurologicalStateBar score={80} />}
+          visualContent={isVisualContentDisplayed && <NeurologicalStateChart data={neurologicalStateData} />}
           
         />
         {/* Fourth item */}
         <PatientRecordBox
           header={<PatientRecordHeader title="Score de Glasgow" indicator="grave" indicatorColor={palette.redStatus.main} />}
-          content={!tendenciesGraphVisible && <GlasgowScoresBar score={25} />}
-          visualContent={tendenciesGraphVisible && <GlasgowScoreChart data={glasgowScoreData} />}
+          content={!isVisualContentDisplayed && <GlasgowScoresBar score={25} />}
+          visualContent={isVisualContentDisplayed && <GlasgowScoreChart data={glasgowScoreData} />}
         />
       </DashboardBox>
   )

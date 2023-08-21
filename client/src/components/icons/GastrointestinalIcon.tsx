@@ -1,6 +1,6 @@
 import { IconProps } from "@/state/patientState";
 
-const GastroIcon = ( { color } : IconProps ) => {
+const GastrointestinalIcon = ( { color } : IconProps ) => {
     const width = 30;
     const height = 32;
     const selectedColor = color ? color : '#000';
@@ -26,4 +26,4 @@ const GastroIcon = ( { color } : IconProps ) => {
     )
 }
 
-export default GastroIcon;
+export default GastrointestinalIcon

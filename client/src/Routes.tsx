@@ -29,6 +29,7 @@ const Routes = (fetchedData: Props) => {
   const { patientKpisData, addKpisData } = useKpisData()
 
   // TODO : manage fetching to optimize the cache of the data by react query library
+  // staleTime, fetchOnWindowFocus etc ...
   useEffect(() => {
     addPatients(fetchedData.patients)
   }, [fetchedData.patients, addPatients])

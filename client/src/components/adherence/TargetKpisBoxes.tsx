@@ -12,6 +12,7 @@ import { KpisBoxProps, KpiProps } from '@/types/types'
 import { kpisBoxes, optionalKpis } from '@/data/data'
 import { useDeviationScore } from '@/contexts/DeviationScoreContext'
 import TimeFrameContext from '@/contexts/TimeFrameContext'
+import OptionalKpisAccordion from './OptionalKpisAccordion'
 
 const TargetKpisBoxes = () => {
   // const { data: deviationData } = useDeviationScore()
@@ -23,12 +24,6 @@ const TargetKpisBoxes = () => {
 
   const [expanded, setExpanded] = useState<string | false>(false)
 
-  const ExpandedIcon = (newExpanded: boolean) => 
-    newExpanded ? <RemoveCircleOutlineIcon sx={{ display: 'flex', flexGrow: 1, height: '34px', width: '34px', color: 'white'}} /> 
-    : <AddCircleOutlineIcon sx={{ display: 'flex', flexGrow: 1, height: '34px', width: '34px', color: 'white'}} />
-
-  const [expandedIcon, setExpandedIcon] = useState(ExpandedIcon(false))
-  
   const handleKpiClick = (selectedKpi: KpiProps, box: KpisBoxProps) => () => {
     setKpiVisibleCharts( prevCharts => {
       const chartIndex = prevCharts.findIndex((chart) => chart.variable === selectedKpi.variable)
@@ -47,7 +42,6 @@ const TargetKpisBoxes = () => {
 
   const handleChange = (box: string) => (e: SyntheticEvent, newExpanded: boolean) => {
     setExpanded(newExpanded ? box : false)
-    setExpandedIcon(ExpandedIcon(newExpanded))
   }
 
 
@@ -98,43 +92,15 @@ const TargetKpisBoxes = () => {
               <Kpi key={index} variable={data.kpi} onClick={handleKpiClick(data, index)} targetData={data.scores} targetThreshold={kpi.targetThreshold} timeFrame={parseInt(selectedFrameLabel)} /> 
             )}
           {/* OPTIONAL KPIS */}
-          {box.optional &&
-            (<Accordion expanded={expanded === box.category} sx={{ backgroundColor: "transparent", width: "100%"}} onChange={handleChange(box.category)}>
-              <AccordionSummary
-                aria-controls="panel-content" 
-                id="panel-header" 
-                sx={{
-                    '& .MuiAccordionSummary-content': {
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      placeItems: 'center',
-                    },
-                }}
-                expandIcon={expandedIcon}
-                >
-              </AccordionSummary>
-              <AccordionDetails>
-                <Box
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(2, 1fr)',
-                    gap: '4px',
-                    backgroundColor: 'none',
-                    placeItems: 'center', 
-                  }}
-                >
-              {/* HIDDEN KPIS */}
-              {optionalKpis.map((kpi, index) => 
-                  (<Chip 
-                    key={index} 
-                    label={kpi.variable}
-                    sx={{ width: '137px', height: '30px', backgroundColor: '#070818', color: 'white'}}
-                    onClick={handleKpiChipClick(kpi, box)}
-                  />)
-              )}
-              </Box>
-            </AccordionDetails>
-          </Accordion>)}
+          {box.optional && (
+            <OptionalKpisAccordion
+              expanded={expanded}
+              box={box}
+              handleChange={handleChange}
+              optionalKpis={optionalKpis}
+              handleKpiChipClick={handleKpiChipClick}
+              handleKpiClick={handleKpiClick} 
+            />)}
         </DashboardBox>
         <DashboardBox key={box.category}
           sx={{

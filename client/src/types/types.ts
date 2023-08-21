@@ -22,13 +22,13 @@ export interface KpiData {
 }
 
 export interface KpisBoxProps {
-  category: string;
-  kpis: Array<KpiProps>;
-  optional: boolean;
+  category: string
+  kpis: KpiProps[]
+  optional: boolean
 }
 
 export interface KpisChartData {
-  data: number[];
-  time: string;
-  value: number;
+  data: number[]
+  time: string
+  value: number
 }
