@@ -35,4 +35,6 @@ flask-server/continu_data
 flask-server/deviation_data
 flask-server/.venv/*
 
+__pycache__/
+
 
