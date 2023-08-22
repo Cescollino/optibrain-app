@@ -32,8 +32,8 @@ const GlobalAdherenceChart = ( { data }: GlobalAdherenceData) => {
 
   return (
     <>
-      <DashboardBox sx={{ display: "flex", minWidth: 259, maxHeight: 278, backgroundColor: palette.primary.dark, opacity: '40%', flexGrow: 1, placeItems: "center", justifyContent: "center" }}>
-        <ResponsiveContainer minWidth={245} maxHeight={201}>
+      <DashboardBox sx={{ display: "flex", minWidth: 270, maxHeight: 278, backgroundColor: palette.primary.dark, opacity: '40%', flexGrow: 1, placeItems: "center", justifyContent: "center" }}>
+        <ResponsiveContainer width={'99%'}>
           <LineChart
             width={219}
             height={179}

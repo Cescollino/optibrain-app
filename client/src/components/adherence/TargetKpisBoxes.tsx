@@ -86,8 +86,10 @@ const TargetKpisBoxes = () => {
           >
             <BoxHeader title={box.category}/>
           {/* DISPLAYED KPIS */}
-          {box.kpis.map((kpi, index) =>
-              <Kpi key={index} variable={kpi.variable} onClick={handleKpiClick(kpi, box)} targetData={kpi.targetData} targetThreshold={kpi.targetThreshold} timeFrame={parseInt(selectedFrameLabel)} /> 
+          {box.kpis.map((kpi, index) => kpi.display && 
+          (
+            <Kpi key={index} variable={kpi.variable} onClick={handleKpiClick(kpi, box)} targetData={kpi.targetData} targetThreshold={kpi.targetThreshold} timeFrame={parseInt(selectedFrameLabel)} /> 
+          )
           )}
           {/* OPTIONAL KPIS */}
           {box.optional && (
@@ -97,7 +99,6 @@ const TargetKpisBoxes = () => {
               handleChange={handleChange}
               optionalKpis={optionalKpis}
               handleKpiChipClick={handleKpiChipClick}
-              handleKpiClick={handleKpiClick} 
             />)}
         </DashboardBox>
         <DashboardBox key={box.category}

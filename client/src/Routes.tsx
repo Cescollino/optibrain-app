@@ -48,7 +48,7 @@ const Routes = (fetchedData: Props) => {
   useEffect(() => {
     addPatients(fetchedData.patients)
     setCurrentPatient(fetchedData.currentPatient)
-  }, [fetchedData.currentPatient, fetchedData.patients, addPatients, setCurrentPatient])
+  }, [])
 
 
   // TODO : manage the case where the patient is not found and navigate events

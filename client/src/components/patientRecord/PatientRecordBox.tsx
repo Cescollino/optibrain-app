@@ -15,7 +15,9 @@ const PatientRecordBox = ({ header, content, fab, visualContent }: PatientRecord
       <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
         {content}
       </Box>
+      <Box sx={{ display: 'flex', flexGrow: 1 }}>
       {visualContent}
+      </Box>
       {fab}
     </Box>
   )

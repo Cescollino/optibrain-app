@@ -24,7 +24,7 @@ export function dateOfBirthToAge(dateOfBirth: string): string {
     ageMonth += 12
     }
 
-    return `Age: ${ageYear}a ${ageMonth}m ${ageDay}j`
+    return `${ageYear}a ${ageMonth}m ${ageDay}j`
 
 }
 

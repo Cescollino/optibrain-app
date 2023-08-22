@@ -18,9 +18,9 @@ export enum PatientStatus {
 }
 
 
-export interface IconProps { color?: string };
+export interface IconProps { color?: string, opacity?: number }
 
 export default interface PatientState {
-    state: PatientStatus;
-    color: StatusColor;
+    state: PatientStatus
+    color: StatusColor
 }

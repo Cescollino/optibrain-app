@@ -13,8 +13,7 @@ interface OptionalKpisAccordionProps {
   box: KpisBoxProps
   handleChange: (box: string) => (event: React.SyntheticEvent, expanded: boolean) => void
   optionalKpis: KpiProps[]
-  handleKpiChipClick: (selectedKpi: KpiProps, box: KpisBoxProps) => void
-  handleKpiClick: (selectedKpi: KpiProps, box: KpisBoxProps) => () => void 
+  handleKpiChipClick: (selectedKpi: KpiProps, box: KpisBoxProps) => () => void
 }
 
 interface OptionalKpisAccordionState {
@@ -44,7 +43,6 @@ class OptionalKpisAccordion extends Component<OptionalKpisAccordionProps, Option
       handleChange, 
       optionalKpis, 
       handleKpiChipClick,
-      handleKpiClick, 
 
     } = this.props
     const expandedIcon = this.ExpandedIcon(expanded === box.category)
@@ -80,10 +78,7 @@ class OptionalKpisAccordion extends Component<OptionalKpisAccordionProps, Option
                 key={index}
                 label={kpi.variable}
                 sx={{ width: '137px', height: '30px', backgroundColor: '#070818', color: 'white' }}
-                onClick={() => {
-                  handleKpiChipClick(kpi, box)
-                  handleKpiClick(kpi, box)
-                }}
+                onClick={handleKpiChipClick(kpi, box)}
               />
             ))}
           </Box>

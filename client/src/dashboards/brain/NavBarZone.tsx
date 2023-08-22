@@ -58,7 +58,7 @@ const NavBarZone = () => {
             </Button>
             </Box>
             <Box sx={{ '&:hover': { color: 'white' }, marginRight: '1rem' }}>
-              <Link to="/profile" style={{ color: 'white', textDecoration: 'inherit' }}>
+              <Link to="/profil" style={{ color: 'white', textDecoration: 'inherit' }}>
                 <AccountCircleIcon sx={{ fontSize: '28px' }} />
               </Link>
             </Box>
@@ -71,7 +71,7 @@ const NavBarZone = () => {
           </Box>
         </DashboardBox>
         {isOpen && (
-        <DashboardBox sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem' }}>
+        <DashboardBox sx={{ width: '100%', display: 'flex', padding: '0.5rem' }}>
           <PatientsRecordList /> 
         </DashboardBox>
         )}
