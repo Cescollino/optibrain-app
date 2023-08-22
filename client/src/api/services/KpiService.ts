@@ -2,12 +2,11 @@ import { apiClient } from "@/api/client"
 
 
 // eslint-disable-next-line no-template-curly-in-string
-const KPI_ENDPOINT = "/patient/noadmsip/${noadmsip}/kpis";
+const KPI_ENDPOINT = "/patient/noadmsip"
 
+export type KPI_VARIABLES = "PPC" | "PICm" | "LICOX" | "Pupilles" | "PVCm" | "PAm" | "ETCO2" | "PACO2" | "Glycemie" | "INR" | "Plaquettes" | "Analgo" | "Nutrition" | "TeteLit" | "Temperature"
 
-export type KpiVariables = "PPC" | "PICm" | "LICOX" | "Pupilles" | "PVCm" | "PAm" | "ETCO2" | "PACO2" | "Glycemie" | "INR" | "Plaquettes" | "Analgo" | "Nutrition" | "TeteLit" | "Temperature"
-
-export interface Data {
+export interface IKpiData {
     horodate: string
     id: number
     kpi: string
@@ -19,11 +18,11 @@ export interface Data {
 }
 
 export type ContinuousData = {
-    [key in KpiVariables]: Data[]
+    [key in KPI_VARIABLES]: IKpiData[]
 }
 
 const findAll = async (noadmsip: number) => {
-    const response = await apiClient.get<ContinuousData[]>(`/patient/noadmsip/${noadmsip}/kpis`)
+    const response = await apiClient.get<ContinuousData[]>(`${KPI_ENDPOINT}/${noadmsip}/kpis`)
     response.data.map(kpi => kpi as ContinuousData)
     return response.data
 }
@@ -34,7 +33,7 @@ const findByVariable = async (noadmsip: number, kpi: string) => {
 }
 
 const findAllByTimeFrame = async (noadmsip: number, timeFrame: number) => {
-    const response = await apiClient.get<ContinuousData>(`${KPI_ENDPOINT}/timeFrame/${timeFrame}`)
+    const response = await apiClient.get<ContinuousData>(`/patient/noadmsip/${noadmsip}/kpis/timeFrame/${timeFrame}`)
     return response.data
 }
   

@@ -4,13 +4,21 @@ export interface KpiProps {
     targetThreshold: string
     display?: boolean
 
+    // Between 0 and 1 
     targetData?: number[]
-    continueData?: KpisChartData
+    continueData?: DefaultChartData
     boxCategory?: string
     timeFrame: number
 
     onClick?: () => void
 }
+
+export interface DefaultChartData {
+  data: number[]
+  time: string
+  value: number
+}
+
 
 export interface KpiData {
   id: number
@@ -28,7 +36,7 @@ export interface KpisBoxProps {
 }
 
 export interface KpisChartData {
-  data: number[]
+  data: number | string | null
   time: string
   value: number
 }

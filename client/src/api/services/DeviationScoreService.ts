@@ -1,4 +1,5 @@
 import { apiClient } from "@/api/client"
+import { IDeviationKpiData } from "@/types/DeviationData"
 
 const KpiVariableOptions: string[] = [
     "PPC",
@@ -16,38 +17,27 @@ const KpiVariableOptions: string[] = [
     "TeteLit",
 ]
 
-const DEV_SCORE_ENDPOINT = "/patient/noadmsip";
-// eslint-disable-next-line no-template-curly-in-string
-const DEVIATION_SCORES_ENDPOINT = "${DEV_SCORE_ENDPOINT}/${noadmsip}/deviationScores";
-
-export interface IDeviationKpiData { 
-    kpi: string;
-    noadmsip: number;
-    scores: number[];
-    uniteofmesure?: string;
-    lastLoadingTime: string;
-}
+const DEV_SCORE_ENDPOINT = "/patient/noadmsip"
 
 export interface DeviationApiResponse {
     "PAm": IDeviationKpiData[]  
 }
 
-
 const findAll = async (noadmsip: number) => {
-    const response = await apiClient.get<DeviationApiResponse>(`${DEVIATION_SCORES_ENDPOINT}`)
+    const response = await apiClient.get<DeviationApiResponse>(`${DEV_SCORE_ENDPOINT}/${noadmsip}/deviationScores`)
     return response.data
 }
   
 const findByKpi = async (noadmsip: number, kpi: string) => {
-    const filteredKpiOptions = KpiVariableOptions.filter((k) => k === kpi);
-    if (!filteredKpiOptions) return;
+    const filteredKpiOptions = KpiVariableOptions.filter((k) => k === kpi)
+    if (!filteredKpiOptions) return
 
-    const response = await apiClient.get<IDeviationKpiData[]>(`${DEVIATION_SCORES_ENDPOINT}/kpi/${kpi}`)
+    const response = await apiClient.get<IDeviationKpiData[]>(`${DEV_SCORE_ENDPOINT}/${noadmsip}/deviationScores/kpi/${kpi}`)
     return response.data
 }
 
 const findAllByTimeFrame = async (noadmsip: number, timeFrame: number) => {
-    const response = await apiClient.get<IDeviationKpiData[]>(`${DEVIATION_SCORES_ENDPOINT}/timeFrame/${timeFrame}`)
+    const response = await apiClient.get<IDeviationKpiData[]>(`${DEV_SCORE_ENDPOINT}/${noadmsip}/deviationScores/timeFrame/${timeFrame}`)
     return response.data
 }
 

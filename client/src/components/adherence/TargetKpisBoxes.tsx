@@ -1,7 +1,5 @@
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-import { Accordion, AccordionSummary, AccordionDetails, Chip, Box} from '@mui/material'
+import { Box } from '@mui/material'
 import { useContext, useState, useEffect, SyntheticEvent } from 'react'
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 
 import BoxHeader from '@/components/BoxHeader'
 import DashboardBox from '@/components/DashboardBox'
@@ -10,9 +8,9 @@ import KpiChart from '@/components/kpi/KpiChart'
 
 import { KpisBoxProps, KpiProps } from '@/types/types'
 import { kpisBoxes, optionalKpis } from '@/data/data'
-import { useDeviationScore } from '@/contexts/DeviationScoreContext'
 import TimeFrameContext from '@/contexts/TimeFrameContext'
 import OptionalKpisAccordion from './OptionalKpisAccordion'
+// import { useDeviationScore } from '@/contexts/DeviationScoreContext'
 
 const TargetKpisBoxes = () => {
   // const { data: deviationData } = useDeviationScore()
@@ -88,9 +86,9 @@ const TargetKpisBoxes = () => {
           >
             <BoxHeader title={box.category}/>
           {/* DISPLAYED KPIS */}
-            {/* {deviationData?.map((data, index) =>
-              <Kpi key={index} variable={data.kpi} onClick={handleKpiClick(data, index)} targetData={data.scores} targetThreshold={kpi.targetThreshold} timeFrame={parseInt(selectedFrameLabel)} /> 
-            )}
+          {box.kpis.map((kpi, index) =>
+              <Kpi key={index} variable={kpi.variable} onClick={handleKpiClick(kpi, box)} targetData={kpi.targetData} targetThreshold={kpi.targetThreshold} timeFrame={parseInt(selectedFrameLabel)} /> 
+          )}
           {/* OPTIONAL KPIS */}
           {box.optional && (
             <OptionalKpisAccordion

@@ -1,6 +1,6 @@
 /* The props are all in lowercase because otherwise typescript cannot read the data sent from postgreSQL database */
 
-export default interface IPatient {
+export interface IPatient {
     noadmsip: number
     firstname: string
     lastname: string

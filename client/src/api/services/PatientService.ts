@@ -1,6 +1,6 @@
 /* CRUD functions 
 
-* CREATE: create (we won't use it in this appliation)
+* CREATE: create
 * RETRIEVE: findAll, findById
 * UPDATE: update
 * DELETE: deleteById, deleteAll
@@ -20,7 +20,7 @@ HTTP DELETE api/patients/{id}   //Delete patient for given Id
 */
 
 import { apiClient } from "@/api/client";
-import IPatient from "@/types/Patient";
+import { IPatient } from "@/types/Patient";
 
 
 const findAll = async () => {

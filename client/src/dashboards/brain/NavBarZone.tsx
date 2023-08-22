@@ -1,16 +1,18 @@
 import { MouseEvent, KeyboardEvent, useState } from 'react'
-import { Box, Button, Typography } from '@mui/material'
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import PatientsRecordList from '@/dashboards/brain/navbar/PatientListTableGrid'
 import { Link } from 'react-router-dom'
+
+import { Box, Button, Typography } from '@mui/material'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import LogoutIcon from '@mui/icons-material/Logout'
-import SearchPatientBar from './SearchPatientBar'
+
 import DashboardBox from '@/components/DashboardBox'
-import SquarePatientStateCount from '@/dashboards/brain/navbar/SquarePatientStateCount'
+import PatientsRecordList from '@/components/navbar/PatientListTableGrid'
+import SearchPatientBar from '@/components/navbar/SearchPatientBar'
+import SquarePatientStateCount from '@/components/navbar/SquarePatientStateCount'
 import { PatientStatus } from '@/state/patientState'
 
-const Navbar = () => {
+const NavBarZone = () => {
   const [isOpen, setIsOpenPatientList] = useState(false)
 
   const togglePatientList = (open: boolean) =>
@@ -21,18 +23,18 @@ const Navbar = () => {
           (event as KeyboardEvent).key === 'Shift')
       ) { return }
       setIsOpenPatientList(open)
-    }
+  }
 
   return (
-     <DashboardBox 
-        sx={{
-              display: 'flex',
-              growFlex: 1,
-              flexDirection: 'column',
-              width: '100%',
-              position: 'relative',
-        }}
-        >
+    <DashboardBox 
+      sx={{
+        display: 'flex',
+        growFlex: 1,
+        flexDirection: 'column',
+        width: '100%',
+        position: 'relative',
+      }}
+      >
         <DashboardBox display='inline-flex' alignItems="center" sx={{ justifyContent: 'space-between', padding: '1rem', flewWrap: 'wrap', boxShadow: 'none'}}>
           <Box display="flex" alignItems="center" gap="0.5rem">
             <SearchPatientBar />
@@ -67,14 +69,14 @@ const Navbar = () => {
               </Link>
             </Box>
           </Box>
-          </DashboardBox>
-          {isOpen && (
-          <DashboardBox sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem' }}>
-            <PatientsRecordList /> 
-          </DashboardBox>
-          )}
         </DashboardBox>
+        {isOpen && (
+        <DashboardBox sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem' }}>
+          <PatientsRecordList /> 
+        </DashboardBox>
+        )}
+    </DashboardBox>
   )
 }
 
-export default Navbar
+export default NavBarZone

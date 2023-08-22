@@ -17,6 +17,9 @@ import DB
 import csv
 from utils.transformCsvFiles import *
 
+# TODO: create the cache database, but react-query manages the cache for us
+
+# This file was created to create an api between PostgreSQL and React application
 class PatientEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, (datetime.datetime, datetime.date)):
@@ -98,14 +101,14 @@ try:
     def searchPatient(noadmsip):   
         try:
             cursor.execute(f"SELECT * FROM Patient WHERE noadmsip={noadmsip};")
-            # Fetch all the rows as a list of tuples
+            
             # Get the column names to use as keys for the dictionary
             column_names = [desc[0] for desc in cursor.description]
             # Fetch the first row from the query result
             row = cursor.fetchone()
             # Convert the row into a dictionary
             data = dict(zip(column_names, row))
-                # Convert the dictionaries patients list into a JSON list
+            # Convert the dictionaries patients list into a JSON list
             patient = json.dumps(data, indent=4, cls=PatientEncoder)
             return patient
         except Exception as e:
@@ -113,7 +116,8 @@ try:
             print("Error executing SQL query:", str(e))
             # Optionally, raise the exception to propagate it further
             raise e
-    
+        
+    # List of key point indicators (kpis)
     kpis = [
         "PPC", "PICm", "LICOX", "Pupilles", "PVCm", "PAm",
         "ETCO2", "PaCO2", "Glycemie", "INR", "Plaquettes",
@@ -205,12 +209,10 @@ try:
         try:
             # Execute the query
             result = cursor.execute(f"SELECT * FROM {kpi} WHERE noadmsip={noadmsip} ORDER BY horodate DESC;")
-              # Fetch all rows from the query result
-            # rows = cursor.fetchall()
-            # Get the column names to use as keys for the dictionaries
-            # column_names = [desc[0] for desc in cursor.description]
-            # # Convert the rows into a list of dictionaries
+
+            # Convert the rows into a list of dictionaries
             data = [dict((cursor.description[i][0], value) for i, value in enumerate(row)) for row in cursor.fetchall()]
+
             return data
         except Exception as e:
             # Log the error message for debugging
@@ -222,7 +224,8 @@ try:
     def fetch_kpis_time(cursor, table_name, noadmsip, timeframe):
         try:
             cursor.execute(f"SELECT * FROM {table_name} WHERE noadmsip=%s AND horodate > %s ORDER BY horodate DESC;", (noadmsip, timeframe))
-            fetch_all()
+            data = [dict((cursor.description[i][0], value) for i, value in enumerate(row)) for row in cursor.fetchall()]
+            return data
         except Exception as e:
             print("Error executing SQL query:", str(e))
             raise e
@@ -231,7 +234,8 @@ try:
     def fetch_deviation_scores(kpi, noadmsip):
         try:
             cursor.execute(f"SELECT * FROM {kpi}Deviation WHERE noadmsip={noadmsip};")
-            fetch_all(cursor)
+            data = [dict((cursor.description[i][0], value) for i, value in enumerate(row)) for row in cursor.fetchall()]
+            return data
         except Exception as e:
             print("Error executing SQL query:", str(e))
             raise e
@@ -317,9 +321,7 @@ try:
 
 
     # Create threshold deviation score tables for the 15 key point indicators (kpis)
-
-    # List of key point indicators (kpis)
-
+    # TODO : replace the id by the kpi attribute (change in the sql query to fetch data)
     def create_deviation_table(cursor, table_name):
         try:
             create_query = f"""
@@ -354,7 +356,7 @@ try:
     connection.commit()
     
     
-    #Check if the patient already exists in the db
+    # Check if the patient already exists in the db
     cursor.execute('SELECT noadmsip FROM Patient WHERE noadmsip=3563')  
     patients = cursor.fetchone()
     
@@ -384,7 +386,7 @@ try:
                     cursor.execute(f"INSERT INTO {table} (kpi, noadmsip, value, horodate) VALUES ({values});")
                     cursor.execute("COMMIT;" )#end transaction
             
-            print(f"all {table} data inserted in database")
+                print(f"all {table} data inserted in database")
 
         # deviation insertion
         folder_name = 'deviation_data'
@@ -408,7 +410,7 @@ try:
                         cursor.execute(f"INSERT INTO {table}Deviation (kpi, noadmsip, score, hour, lastLoadingTime) VALUES ('{table}', {row[0]}, {element}, {index}, CURRENT_TIMESTAMP);")
                         cursor.execute("COMMIT;" )#end transaction
         
-            print(f"all {table} data inserted in database")
+                print(f"all {table} data inserted in database")
         
 except Exception as error:
     print(error)

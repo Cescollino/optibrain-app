@@ -9,7 +9,7 @@
  */
 
 
-import IPatient from '@/types/Patient';
+import { IPatient } from '@/types/Patient';
 import { createContext, ReactNode, useContext, useState } from 'react'
 
 type Props = {

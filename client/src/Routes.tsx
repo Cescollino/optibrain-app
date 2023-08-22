@@ -1,18 +1,20 @@
 import { useContext, useEffect } from 'react'
-import {Routes as Router, Route, Navigate, Outlet, useNavigate} from 'react-router-dom'
-import { AuthenticationContext } from '@/contexts/AuthenticationContext'
-import BrainDashboard from "@/dashboards/brain";
+import {Routes as Router, Route, Navigate, Outlet } from 'react-router-dom'
+
+import BrainDashboard from "@/dashboards/brain"
+import { ContinuousData } from '@/api/services/KpiService'
 import Login from '@/components/login'
-import { usePatients } from './contexts/PatientsContext';
-import { useCurrentPatient } from './contexts/CurrentPatientContext';
-import IPatient from '@/types/Patient';
-import { ContinuousData } from './api/services/KpiService';
-import { useKpisData } from './contexts/KpisContext';
+import { IPatient } from '@/types/Patient'
+
+import { AuthenticationContext } from '@/contexts/AuthenticationContext'
+import { useCurrentPatient } from '@/contexts/CurrentPatientContext'
+import { useKpisData } from '@/contexts/KpisContext'
+import { usePatients } from '@/contexts/PatientsContext'
 
 type Props = {
   patients: IPatient[],
-  currentPatient: IPatient | undefined
-  kpisData: ContinuousData[]
+  currentPatient: IPatient,
+  // kpisData: ContinuousData[],
 }
 
 const PrivateRoutes = () => {
@@ -24,34 +26,38 @@ const PrivateRoutes = () => {
 }
  
 const Routes = (fetchedData: Props) => {
-  const { patients, addPatients } = usePatients()
-  const { currentPatient, setCurrentPatient } = useCurrentPatient()
-  const { patientKpisData, addKpisData } = useKpisData()
+  const { addPatients } = usePatients()
+  const { setCurrentPatient } = useCurrentPatient()
+  // const { addKpisData } = useKpisData()
 
   // TODO : manage fetching to optimize the cache of the data by react query library
   // staleTime, fetchOnWindowFocus etc ...
-  useEffect(() => {
-    addPatients(fetchedData.patients)
-  }, [fetchedData.patients, addPatients])
+  // useEffect(() => {
+  //   addPatients(fetchedData.patients)
+  // }, [fetchedData.patients, addPatients])
 
-  useEffect(() => {
-    setCurrentPatient(fetchedData.currentPatient)
-  }, [fetchedData.currentPatient, setCurrentPatient])
+  // useEffect(() => {
+  //   setCurrentPatient(fetchedData.currentPatient)
+  // }, [fetchedData.currentPatient, setCurrentPatient])
 
   
-  useEffect(() => {
-    addKpisData(fetchedData.kpisData)
-  }, [fetchedData.kpisData, addKpisData])
+  // useEffect(() => {
+  //   addKpisData(fetchedData.kpisData)
+  // }, [fetchedData.kpisData, addKpisData])
 
-  console.log('patients', patients)
-  console.log('current patient : ', currentPatient)
-  console.log('kpis : ', patientKpisData)
+  useEffect(() => {
+    addPatients(fetchedData.patients)
+    setCurrentPatient(fetchedData.currentPatient)
+  }, [fetchedData.currentPatient, fetchedData.patients, addPatients, setCurrentPatient])
+
+
+  // TODO : manage the case where the patient is not found and navigate events
   return (
       <Router>
         <Route path='/login' element={<Login />}/>
         <Route element={<PrivateRoutes />}>
           {/* <Route path='/logout' element={<Login />}/> */}
-          <Route path='/dashboard/brain/noadmsip/:noadmsip' element={<BrainDashboard />} />
+          <Route path='/dashboard/brain/:noadmsip' element={<BrainDashboard />} />
         </Route>
       </Router>
   )

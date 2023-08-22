@@ -8,7 +8,7 @@
  * @module PatientsContext
  */
 
-import IPatient from '@/types/Patient'
+import { IPatient } from '@/types/Patient'
 import { ReactNode, createContext, useContext, useState } from 'react'
 
 

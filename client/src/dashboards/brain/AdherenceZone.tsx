@@ -4,6 +4,8 @@ import KpiBox from "@/components/kpi/KpiBox"
 import { useContext, useState } from "react"
 import TimeFrameContext from "@/contexts/TimeFrameContext"
 
+
+// Time frame bar influence all of the data displayed, this is why it was implemented as a provider
 const TimeFrameBar = () => {
   const frameOptions: string[] = ['3', '6', '24']
   const { selectedFrameLabel, updateFrameTime } = useContext(TimeFrameContext)

@@ -50,7 +50,7 @@ const Login = () => {
 
     if (username === admin.username && password === admin.password)
       setAuthenticated(true);
-      navigate(`/dashboard/brain/noadmsip/${currentPatient?.noadmsip}`);
+      navigate(`/dashboard/brain/${currentPatient?.noadmsip}`);
   }
 
   return (

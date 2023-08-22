@@ -1,9 +1,7 @@
-  
 type MonitoringCategories = "neuro" | "cardio" | "labo" | "general"
 
-export type KpiVariables = "ppc" | "pic" | "licox" | "pupilles" | "pvc" | "pam" | "etco2" | "paco2" | "glycemie" | "inr" | "plaquettes" | "analgo" | "nutrition" | "tete" | "temperature"
+type KpiVariablesType = "ppc" | "pic" | "licox" | "pupilles" | "pvc" | "pam" | "etco2" | "paco2" | "glycemie" | "inr" | "plaquettes" | "analgo" | "nutrition" | "tete" | "temperature"
   
-
 type KpiHeader = string[]
 
 type MonitoringHeaderMap = {
@@ -25,7 +23,7 @@ export const monitoringHeaders: MonitoringHeaderMap = {
   ],
   cardio: [
     "PVC: 30-40%",
-    "PAM: 66-70mmHg",
+    "PAm: 66-70mmHg",
     "ETCO2: 35-45mmHg",
     "PaCO2: 35-40mmHg",
   ],
@@ -45,19 +43,19 @@ export const monitoringHeaders: MonitoringHeaderMap = {
  
 const getKpisConstants = (): {
   [key in MonitoringCategories]: {
-    [kpiKey in KpiVariables]?: IKpiConstant
+    [kpiKey in KpiVariablesType]?: IKpiConstant
   }
 } => {
   return {
     neuro: {
       ppc: { variable: "PPC", threshold: "60-70", unitOfMeasure: "mmHg" },
-      pic: { variable: "PIC", threshold: "< 20", unitOfMeasure: "mmHg" },
+      pic: { variable: "PICm", threshold: "< 20", unitOfMeasure: "mmHg" },
       licox: { variable: "LICOX", threshold: "25-35", unitOfMeasure: "mmHg" },
       pupilles: { variable: "Pupilles", threshold: "1", unitOfMeasure: "fois/hrs" },
     },
     cardio: {
-      pvc: { variable: "PVC", threshold: "30-40", unitOfMeasure: "%" },
-      pam: { variable: "PAM", threshold: "66-70", unitOfMeasure: "mmHg" },
+      pvc: { variable: "PVCm", threshold: "30-40", unitOfMeasure: "%" },
+      pam: { variable: "PAm", threshold: "66-70", unitOfMeasure: "mmHg" },
       etco2: { variable: "ETCO2", threshold: "35-45", unitOfMeasure: "mmHg" },
       paco2: { variable: "PaCO2", threshold: "35-40", unitOfMeasure: "mmHg" },
     },
