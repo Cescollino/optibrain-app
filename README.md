@@ -6,7 +6,7 @@ The objective is to illustrate the trend of all the main indices (KPIS) used in 
 
 ## Programming langages
 
-To establish the link between the backend and the frontend, we used the Axios 1.2.1 and React Query libraries. These libraries provide various methods for executing HTTPS requests. It's a Typescript React Application using Vite.
+To establish the link between the backend and the frontend, I used the Axios 1.2.1 and React Query libraries. These libraries provide various methods for executing HTTPS requests. Typescript React Application using Vite
 
 Vite : https://vitejs.dev/guide/why.html
 
@@ -22,14 +22,14 @@ The frontend site is coded in TypeScript, more specifically using the React JS l
 ## Use Optibrain
 
 1. clone this project
-2. you need a valid username and password to connect to the CHUSJ database
+2. you need a valid username and password to access CHUSJ database
 3. open two terminals from the root directory
-4. for the back-end server use the command - npm run start-api
-5. for the front-end use - npm run dev
+4. create a virtual environnement in flask-server
+5. insert your mot_de_passe_sql.txt file in the flask-server directory
+6. install all the packages with (.venv) source .venv/bin/activate && pip install -r requirements.txt
+7. for the back-end server use the command - npm run start-api
+8. for the front-end use - npm run dev
 
-## What's left todo ?
-
-* 
 
 
 
