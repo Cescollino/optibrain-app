@@ -28,13 +28,9 @@ dist-ssr
 *.sln
 *.sw?
 
-flask-api/mot_de_passe_SQL.txt
-flask-api/Patients.db
-flask-api/patients/data/*
-flask-server/continu_data
-flask-server/deviation_data
+flask-server/mot_de_passe_SQL.txt
 flask-server/.venv/*
 
-__pycache__/
+__pycache__/*
 
 
