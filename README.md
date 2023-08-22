@@ -23,12 +23,11 @@ The frontend site is coded in TypeScript, more specifically using the React JS l
 
 1. clone this project
 2. you need a valid username and password to access CHUSJ database
-3. open two terminals from the root directory
-4. create a virtual environnement in flask-server
-5. insert your mot_de_passe_sql.txt file in the flask-server directory
-6. install all the packages with (.venv) source .venv/bin/activate && pip install -r requirements.txt
-7. for the back-end server use the command - npm run start-api
-8. for the front-end use - npm run dev
+3. from /flask-server create a virtual environnement
+4. install all the packages with (.venv) source .venv/bin/activate && pip install -r requirements.txt
+5. from /client directory from open two terminals
+6. for the back-end server use the command - npm run start-api
+7. for the front-end use - npm run dev
 
 
 
